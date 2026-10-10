@@ -292,6 +292,20 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); cu
 .facts { margin: 0; padding-left: 20px; font-size: 1.05rem; line-height: 1.45; }
 .facts li { margin-bottom: 6px; }
 
+/* Multi-cell: the five levels, cell to organism. */
+.ladder { display: grid; gap: 8px; margin-bottom: 12px; }
+.ladder .btn { display: flex; align-items: center; gap: 12px; text-align: left; min-height: 48px; }
+.ladder .num {
+  flex: none; display: grid; place-items: center;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 2px solid var(--ink); background: var(--surface); color: var(--text);
+  font-weight: 900;
+}
+.ladder .level { display: block; font-size: .8rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.ladder .btn[aria-pressed="true"] .level { color: var(--pill-ink); }
+.btn:disabled { opacity: .45; cursor: default; transform: none; box-shadow: 0 4px 0 var(--ink); }
+.level-card { font-size: 1.05rem; font-weight: 800; background: var(--surface); }
+
 /* Yeast: sugar left and the dough rising. */
 .meter {
   height: 18px; margin: 4px 0 14px;
