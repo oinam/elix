@@ -104,8 +104,8 @@ export function createExplorer({
     const rect = renderer.domElement.getBoundingClientRect();
     pointer.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
     raycaster.setFromCamera(pointer, camera);
-    const hits = raycaster.intersectObjects(pickables.filter((o) => o.visible), true)
-      .filter((h) => h.object.visible && parts[h.object.userData.part]);
+    const hits = raycaster.intersectObjects(pickables.filter(isShown), true)
+      .filter((h) => isShown(h.object) && parts[h.object.userData.part]);
     if (!hits.length) {
       onEmptyTap?.(raycaster);
       return;
@@ -124,6 +124,12 @@ export function createExplorer({
     showInfo(key);
     highlight(target);
   });
+
+  // Visible only if it and every parent are visible.
+  function isShown(object) {
+    for (let o = object; o; o = o.parent) if (!o.visible) return false;
+    return true;
+  }
 
   // ---------- Stars ----------
 

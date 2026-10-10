@@ -229,6 +229,15 @@ a.card:hover, a.card:focus-visible {
   font-size: .95rem; font-weight: 700; pointer-events: none;
 }
 
+.counter {
+  position: absolute; top: 14px; right: 14px;
+  padding: 6px 14px; border-radius: 999px;
+  border: 2px solid var(--ink); box-shadow: 0 3px 0 var(--ink);
+  background: var(--yellow); color: var(--pill-ink);
+  font-size: 1.15rem; font-weight: 900; pointer-events: none;
+}
+.has-counter .hint { max-width: calc(100% - 150px); }
+
 .info {
   position: absolute; left: 14px; bottom: 14px;
   max-width: min(400px, calc(100% - 190px));
@@ -275,6 +284,8 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); cu
 }
 .btn.big { grid-column: 1 / -1; background: var(--teal); color: var(--pill-ink); font-size: 1.25rem; }
 .btn[aria-pressed="true"] { background: var(--yellow); color: var(--pill-ink); }
+.buttons.three { grid-template-columns: repeat(3, 1fr); }
+.buttons.three .btn { padding: 6px 4px; font-size: .95rem; }
 
 .facts { margin: 0; padding-left: 20px; font-size: 1.05rem; line-height: 1.45; }
 .facts li { margin-bottom: 6px; }

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bacteria · ELIX</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../index.html" aria-label="Back to all topics">←<span class="wide-only">&nbsp;Back</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🦠 </span>Bacteria</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky has-counter" id="stage">
+      <div class="hint">Drag to spin · Pinch to zoom · Tap a part to learn about it</div>
+      <div class="counter" id="counter" aria-live="polite"></div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Pick a shape</span></h2>
+        <div class="buttons three">
+          <button class="btn press" data-shape="round" aria-pressed="false">⚪ Round</button>
+          <button class="btn press" data-shape="rod" aria-pressed="true">💊 Rod</button>
+          <button class="btn press" data-shape="spiral" aria-pressed="false">🌀 Spiral</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Grow them</span></h2>
+        <label class="control">
+          <span class="name">Temperature <output id="temp-out"></output></span>
+          <input type="range" id="temp" min="2" max="100" step="1" value="25">
+          <span class="ends"><span>Fridge</span><span>Boiling</span></span>
+        </label>
+        <div class="buttons">
+          <button class="btn big press" id="restart">🔄 Start with one</button>
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="xray" aria-pressed="false">🔍 See inside</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset view</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="shapes">Look at all <b>3 shapes</b>: round, rod, and spiral.</li>
+          <li data-challenge="grow">Make it <b>Body warm</b> and grow <b>64 bacteria</b> from just one.</li>
+          <li data-challenge="fridge">Put the bacteria in the <b>Fridge</b>. What happens to the growing?</li>
+          <li data-challenge="boil">Heat them all the way to <b>Boiling</b>.</li>
+          <li data-challenge="parts">Tap all <b>7 parts</b> to learn their names. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Bacteria are <b>single cells</b>, and they are the tiniest living things. Thousands could fit on the dot of this i.</li>
+          <li>They have <b>no nucleus</b>. Their DNA floats loose in the cell.</li>
+          <li>They make more bacteria by <b>splitting in two</b>. In warm food, some can double every 20 minutes!</li>
+          <li><b>Helpful</b> bacteria turn milk into curd and live in your tummy to help digest food.</li>
+          <li><b>Harmful</b> ones can make you sick. Washing hands, boiling water, and keeping food cold keep them away.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/bacteria.js"></script>
+</body>
+</html>
