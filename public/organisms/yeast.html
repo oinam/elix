@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yeast · ELIX</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../index.html" aria-label="Back to all topics">←<span class="wide-only">&nbsp;Back</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🍞 </span>Yeast</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint">Drag to spin · Pinch to zoom · Tap a part to learn about it</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Feed it</span></h2>
+        <div class="control">
+          <span class="name">Sugar left</span>
+          <div class="meter" role="presentation"><span id="sugar-bar"></span></div>
+        </div>
+        <label class="control">
+          <span class="name">Water <output id="temp-out"></output></span>
+          <input type="range" id="temp" min="2" max="80" step="1" value="30">
+          <span class="ends"><span>Cold</span><span>Too hot</span></span>
+        </label>
+        <div class="buttons">
+          <button class="btn big press" id="sugar">🍬 Add sugar</button>
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="xray" aria-pressed="false">🔍 See inside</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset view</button>
+          <button class="btn press" id="restart" style="grid-column: 1 / -1">🔄 Start again</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Bread dough</span> <span class="count" id="dough-out"></span></h2>
+        <div class="dough-bowl" aria-hidden="true"><div class="dough" id="dough"></div></div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="sugar">Tap <b>Add sugar</b> to wake the yeast up.</li>
+          <li data-challenge="bud">Keep it warm and watch the big cell grow a <b>bud</b> that breaks off.</li>
+          <li data-challenge="dough">Make the bread dough rise to <b>2×</b> its size.</li>
+          <li data-challenge="hot">Slide the water to <b>Too hot</b>. What happens to the yeast?</li>
+          <li data-challenge="parts">Tap all <b>6 parts</b> to learn their names. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Yeast is a <b>fungus</b>, a cousin of mushrooms. But each yeast is just <b>one cell</b>.</li>
+          <li>It makes more yeast by <b>budding</b>: a baby cell grows out of the parent and breaks off.</li>
+          <li>It eats sugar and gives off <b>carbon dioxide gas</b>. Changing sugar like this is called <b>fermentation</b>.</li>
+          <li>The gas bubbles make bread dough <b>rise</b>. That's why bread is soft and full of tiny holes!</li>
+          <li>Dry yeast from the shop is <b>asleep</b>. Warm water and sugar wake it up. The oven's heat kills it.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/yeast.js"></script>
+</body>
+</html>

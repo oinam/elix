@@ -40,6 +40,7 @@
   --overlay: rgba(23, 33, 44, .85);
   --info-bg: rgba(34, 48, 63, .97);
   --stage-bg: #0b2233; /* read by js/scene.js */
+  --dough: #e8c387;
   --radius: 22px;
   --line: 3px;
   font-family: "Nunito Variable", Nunito, "Trebuchet MS", system-ui, sans-serif;
@@ -63,6 +64,7 @@
   --overlay: rgba(255, 250, 242, .9);
   --info-bg: rgba(255, 255, 255, .97);
   --stage-bg: #cfe8f2;
+  --dough: #f6dca8;
 }
 
 * { box-sizing: border-box; }
@@ -289,6 +291,28 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); cu
 
 .facts { margin: 0; padding-left: 20px; font-size: 1.05rem; line-height: 1.45; }
 .facts li { margin-bottom: 6px; }
+
+/* Yeast: sugar left and the dough rising. */
+.meter {
+  height: 18px; margin: 4px 0 14px;
+  border: var(--line) solid var(--ink); border-radius: 999px;
+  background: var(--surface-2); overflow: hidden;
+}
+.meter span { display: block; height: 100%; width: 0; background: var(--pink); transition: width .3s; }
+.dough-bowl {
+  height: 130px; display: flex; align-items: flex-end; justify-content: center;
+  border-bottom: var(--line) solid var(--ink);
+}
+.dough {
+  --rise: 1;
+  width: 150px; height: 46px;
+  background: var(--dough);
+  border: var(--line) solid var(--ink);
+  border-radius: 50% 50% 14px 14px / 90% 90% 14px 14px;
+  transform-origin: bottom center;
+  transform: scale(calc(.85 + var(--rise) * .15), var(--rise));
+  transition: transform .4s;
+}
 
 /* "Try this!" ticks itself off as each experiment is done. */
 .try { list-style: none; margin: 0; padding: 0; font-size: 1.05rem; line-height: 1.4; }
