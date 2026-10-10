@@ -1,7 +1,7 @@
 {
   "name": "elix",
   "private": true,
-  "description": "ELIX: Explain Like I’m 10",
+  "description": "ELIx: Explain Like I’m 10",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"
