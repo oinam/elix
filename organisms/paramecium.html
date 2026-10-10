@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Paramecium · ELIX</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/nunito@5.3.0/index.css">
   <link rel="stylesheet" href="../css/style.css">
   <script src="../js/theme.js"></script>
   <script type="importmap">
@@ -19,36 +20,50 @@
 <body>
   <div class="explorer">
     <header class="topbar">
-      <a class="back" href="../index.html" aria-label="Back to all topics">← Back</a>
-      <h1>🥿 Paramecium</h1>
-      <button class="theme-toggle" data-theme-toggle></button>
+      <a class="back press" href="../index.html" aria-label="Back to all topics">←<span class="wide-only">&nbsp;Back</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🥿 </span>Paramecium</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
     </header>
 
-    <main class="stage" id="stage">
-      <div class="hint">Drag to spin · Pinch or scroll to zoom · Tap a part to learn about it</div>
-      <div class="info" id="info" hidden>
+    <main class="stage chunky" id="stage">
+      <div class="hint">Drag to spin · Pinch to zoom · Tap a part to learn about it</div>
+      <div class="info chunky" id="info" hidden>
         <button class="close" id="info-close" aria-label="Close">×</button>
         <h3 id="info-title"></h3>
         <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
       </div>
+      <div class="mascot-dock" id="mascot"></div>
     </main>
 
     <aside class="panel">
-      <section>
-        <h2>Play</h2>
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Play</span></h2>
         <div class="buttons">
-          <button class="btn big" id="feed">🍽️ Drop food</button>
-          <button class="btn" id="swim" aria-pressed="true">🏊 Swim</button>
-          <button class="btn" id="labels" aria-pressed="false">🏷️ Labels</button>
-          <button class="btn" id="xray" aria-pressed="false">🔍 See inside</button>
-          <button class="btn" id="bump">💥 Bump it!</button>
-          <button class="btn" id="pause" aria-pressed="false">⏸️ Pause</button>
-          <button class="btn" id="reset">🎥 Reset view</button>
+          <button class="btn big press" id="feed">🍽️ Drop food</button>
+          <button class="btn press" id="swim" aria-pressed="true">🏊 Swim</button>
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="xray" aria-pressed="false">🔍 See inside</button>
+          <button class="btn press" id="bump">💥 Bump it!</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset view</button>
         </div>
       </section>
 
-      <section>
-        <h2>Tinker</h2>
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="eat">Drop food and watch it get swept into the mouth.</li>
+          <li data-challenge="stop">Slide the cilia speed to <b>Stopped</b>. Can it still swim or eat?</li>
+          <li data-challenge="salty">Make the water <b>salty</b>. What happens to the star-shaped pumps?</li>
+          <li data-challenge="bump">Tap <b>Bump it!</b> and watch it back up and turn.</li>
+          <li data-challenge="parts">Tap all <b>10 parts</b> to learn their names. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--purple)">Tinker</span></h2>
         <label class="control">
           <span class="name">Cilia speed <output id="speed-out"></output></span>
           <input type="range" id="speed" min="0" max="10" step="1" value="6">
@@ -66,18 +81,8 @@
         </label>
       </section>
 
-      <section>
-        <h2>Try this!</h2>
-        <ol class="try">
-          <li>Drop food and watch it get swept into the mouth.</li>
-          <li>Slide the cilia speed to <b>Stopped</b>. Can it still swim or eat?</li>
-          <li>Make the water <b>salty</b>. What happens to the star-shaped pumps?</li>
-          <li>Tap <b>Bump it!</b> and watch it back up and turn.</li>
-        </ol>
-      </section>
-
-      <section>
-        <h2>Fast facts</h2>
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
         <ul class="facts">
           <li>A Paramecium is <b>one single cell</b>, but it can swim, eat, and get rid of waste.</li>
           <li>It is about <b>0.25 mm</b> long. You need a microscope to see it.</li>

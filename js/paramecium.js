@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import { createStage, makeLabel } from './scene.js';
+import { createMascot, celebrate } from './mascot.js';
+import { loadProgress, saveProgress, clearProgress } from './progress.js';
 
 // ---------- Kid-friendly descriptions of each part ----------
 
@@ -329,6 +331,7 @@ function addFoodVacuole() {
   cell.add(mesh);
   tagPart(mesh, 'foodVacuole');
   foodVacuoles.push({ mesh, age: 0 });
+  onEat();
 }
 
 const wastes = [];
@@ -490,7 +493,10 @@ function updateSwim(dt, power) {
 
     // Bumped into the edge of the pond? Back up and try another way.
     const flat = new THREE.Vector3(cell.position.x, 0, cell.position.z);
-    if (!reversing && swim.turning <= 0 && flat.length() > POOL_RADIUS && flat.dot(forward) > 0) bump();
+    if (!reversing && swim.turning <= 0 && flat.length() > POOL_RADIUS && flat.dot(forward) > 0) {
+      bump();
+      cello.say('Oops, the edge of the pond! Back up and turn.', { mood: 'wow', important: false });
+    }
   }
 
   cell.rotation.set(swim.roll, swim.yaw, 0);
@@ -559,6 +565,8 @@ function showInfo(key) {
   document.getElementById('info-title').textContent = PARTS[key].name;
   document.getElementById('info-text').textContent = PARTS[key].text;
   infoEl.hidden = false;
+  onPartFound(key);
+  document.getElementById('info-found').textContent = `⭐ ${progress.parts.length} of ${PART_COUNT} parts found`;
 }
 
 document.getElementById('info-close').addEventListener('click', () => { infoEl.hidden = true; });
@@ -581,6 +589,75 @@ stage.renderer.domElement.addEventListener('pointerup', (e) => {
   highlight(target);
 });
 
+// ---------- Stars and Cello ----------
+// "Try this!" ticks itself off as each experiment happens, and Cello cheers.
+
+const TOPIC = 'paramecium';
+const CHALLENGES = ['eat', 'stop', 'salty', 'bump', 'parts'];
+const PART_COUNT = Object.keys(PARTS).length;
+let progress = loadProgress(TOPIC);
+const cello = createMascot(document.getElementById('mascot'));
+
+function renderProgress() {
+  document.querySelectorAll('[data-challenge]').forEach((li) => {
+    li.classList.toggle('done', progress.done.includes(li.dataset.challenge));
+  });
+  document.getElementById('try-count').textContent = `⭐ ${progress.done.length} of ${CHALLENGES.length}`;
+  document.getElementById('parts-count').textContent = `(${progress.parts.length} of ${PART_COUNT})`;
+}
+
+// Returns true the first time a challenge is done.
+function complete(id) {
+  if (progress.done.includes(id)) return false;
+  progress.done.push(id);
+  progress.total = CHALLENGES.length;
+  saveProgress(TOPIC, progress);
+  renderProgress();
+  if (progress.done.length === CHALLENGES.length) {
+    celebrate(stageEl, 90);
+    setTimeout(() => cello.say("Every star! You're a real scientist! 🔬", { ms: 7000 }), 1200);
+  } else {
+    celebrate(stageEl, 24);
+  }
+  return true;
+}
+
+const YUMS = ['Yum!', 'Om nom nom!', 'Crunchy bacteria!', 'Another food vacuole!'];
+
+function onEat() {
+  if (complete('eat')) {
+    cello.say('Yum! The cilia swept that food right into the mouth.');
+  } else if (Math.random() < 0.3) {
+    cello.say(YUMS[Math.floor(Math.random() * YUMS.length)], { ms: 1800, important: false });
+  }
+}
+
+function onPartFound(key) {
+  if (progress.parts.includes(key)) return;
+  progress.parts.push(key);
+  saveProgress(TOPIC, progress);
+  renderProgress();
+  if (progress.parts.length === PART_COUNT && complete('parts')) {
+    cello.say('You found all 10 parts! You know this cell inside out.', { mood: 'wow', ms: 5000 });
+  } else {
+    cello.say(`You found the ${PARTS[key].name.toLowerCase()}!`, { ms: 2500 });
+  }
+}
+
+document.getElementById('reset-stars').addEventListener('click', () => {
+  clearProgress(TOPIC);
+  progress = loadProgress(TOPIC);
+  renderProgress();
+  cello.say("Fresh start! Let's explore again.");
+});
+
+renderProgress();
+setTimeout(() => {
+  cello.say(progress.done.length
+    ? 'Welcome back! Can you get every star?'
+    : "Hi! I'm Cello. Tap Drop food to feed this Paramecium!", { ms: 6000 });
+}, 600);
+
 // ---------- Controls ----------
 
 const settings = { speed: 6, count: 1200, water: 0 };
@@ -600,9 +677,25 @@ function bindSlider(id, format, onChange) {
 // Saltier water means less water sneaks in, so the pumps can slow down.
 const pumpPeriod = (water = settings.water) => THREE.MathUtils.lerp(3, 14, water / 100);
 
-bindSlider('speed', (v) => (v === 0 ? 'stopped' : `${v} / 10`), (v) => { settings.speed = v; });
-bindSlider('count', (v) => `${v}`, (v) => { settings.count = v; });
-bindSlider('water', (v) => `pump every ${pumpPeriod(v).toFixed(0)} s`, (v) => { settings.water = v; });
+bindSlider('speed', (v) => (v === 0 ? 'stopped' : `${v} / 10`), (v) => {
+  settings.speed = v;
+  if (v === 0) {
+    complete('stop');
+    cello.say('Uh oh! No rowing means no swimming, and no food comes to the mouth.', { mood: 'sad', ms: 5000 });
+  }
+});
+bindSlider('count', (v) => `${v}`, (v) => {
+  settings.count = v;
+  if (v === 0) cello.say('No cilia at all? Now it can only drift.', { mood: 'sad', important: false });
+});
+bindSlider('water', (v) => `pump every ${pumpPeriod(v).toFixed(0)} s`, (v) => {
+  const wasSalty = settings.water >= 70;
+  settings.water = v;
+  if (v >= 70 && !wasSalty) {
+    complete('salty');
+    cello.say('Salty water! Less water sneaks in, so the pumps can slow down.', { mood: 'wow', ms: 5000 });
+  }
+});
 
 function bindToggle(id, onChange) {
   const button = document.getElementById(id);
@@ -627,7 +720,11 @@ bindToggle('xray', (on) => {
 });
 bindToggle('pause', (on) => stage.setPaused(on));
 document.getElementById('feed').addEventListener('click', dropFood);
-document.getElementById('bump').addEventListener('click', bump);
+document.getElementById('bump').addEventListener('click', () => {
+  bump();
+  complete('bump');
+  cello.say('Ouch! Back up, turn, and try a new way!', { mood: 'wow' });
+});
 
 const CAMERA_OFFSET = new THREE.Vector3(0, 3, 7);
 document.getElementById('reset').addEventListener('click', () => {
