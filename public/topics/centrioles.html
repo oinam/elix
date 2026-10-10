@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Centrioles · ELIx</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../index.html" aria-label="Back to all topics">←<span class="wide-only">&nbsp;Back</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🧵 </span>Centrioles</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="step-card" aria-live="polite"></div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Look</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-view="close" aria-pressed="true">🔍 Up close</button>
+          <button class="btn press" data-view="cell" aria-pressed="false">🧫 In a cell</button>
+          <button class="btn press" id="endon" aria-pressed="false">👀 Look end-on</button>
+          <button class="btn press" id="plant" aria-pressed="false">🌿 Plant cell</button>
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset view</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--purple)">Split the cell</span></h2>
+        <label class="control">
+          <span class="name">Step <output id="time-out"></output></span>
+          <input type="range" id="time" min="0" max="50" step="1" value="0">
+          <span class="ends"><span>One cell</span><span>Two cells</span></span>
+        </label>
+        <div class="buttons">
+          <button class="btn big press" id="play" aria-pressed="false">▶️ Play the split</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Count them</span></h2>
+        <p class="riddle" id="count-question"></p>
+        <div class="buttons">
+          <button class="btn press" data-count="0"></button>
+          <button class="btn press" data-count="1"></button>
+          <button class="btn press" data-count="2"></button>
+          <button class="btn press" data-count="3"></button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="endon">Look at a centriole <b>end-on</b>. What shape do the tubes make?</li>
+          <li data-challenge="count">Count the <b>bundles</b>, and the <b>tubes</b> in each bundle.</li>
+          <li data-challenge="copy">Watch the centrioles <b>make a copy</b> of themselves.</li>
+          <li data-challenge="split">Play the whole split, from <b>one cell to two</b>.</li>
+          <li data-challenge="plant">Split a <b>plant cell</b>. What’s different?</li>
+          <li data-challenge="parts">Tap all <b>7 parts</b> to learn their names. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Centrioles come in <b>pairs</b>, set at right angles to each other, next to the nucleus.</li>
+          <li>Each one is a ring of <b>9 bundles</b>, with <b>3 tiny tubes</b> in each bundle.</li>
+          <li>Before a cell splits, the pair makes a <b>copy</b>, so each new cell gets one pair.</li>
+          <li>Animal cells have centrioles. Most <b>plant cells don’t</b>, but they still split!</li>
+          <li>The same kind of tube sits at the root of <b>cilia</b>, like the tiny hairs on a <a href="../organisms/paramecium.html">Paramecium</a>.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/centrioles.js"></script>
+</body>
+</html>
