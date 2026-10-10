@@ -53,12 +53,18 @@ js/scene.js              createStage(): renderer, camera, lights, orbit controls
 js/explorer.js           createExplorer(): tap-to-learn parts, labels, glow, info card,
                          self-ticking "Try this!" stars, Cello, Labels/Pause buttons;
                          bindSlider(), bindToggle()
+js/cellparts.js          Shared 3D cell parts: blob shapes, nucleus (pores, nucleolus,
+                         threads that coil into chromosomes), mitochondria, vacuoles,
+                         centrioles, chloroplasts, ER, Golgi body, ribosomes
 js/mascot.js             Cello the cell: createMascot(dock).say(text, { mood }), celebrate()
 js/progress.js           Stars per topic in localStorage (the home card shows "⭐ 3 of 5")
 organisms/<name>.html    One page per organism (paramecium, amoeba, bacteria, yeast):
                          topbar, 3D stage, control panel
-topics/<name>.html       Concept pages: single-cell (one cell, every job; riddles) and
-                         multi-cell (cell → tissue → organ → organ system → organism)
+topics/<name>.html       Concept pages: single-cell (one cell, every job; riddles),
+                         multi-cell (cell → tissue → organ → organ system → organism),
+                         and "Inside a cell": microscope (parts, eyepiece view drawn in
+                         2D, timeline), cell (membrane gatekeeper, nucleus), cytoplasm,
+                         centrioles (cell splitting step by step), plant-vs-animal
 js/<name>.js             That page's models, animation, and controls
 ```
 
@@ -77,3 +83,4 @@ To add an organism: copy `organisms/paramecium.html` for the page shell, write `
 - Cello reacts to what she does: first-time successes, mistakes, and discoveries. Keep the lines short, warm, and never scolding.
 - Big type and touch-sized controls (at least 44px). Give every scene Pause and Reset view.
 - Keep the science right, even when it’s simplified. Check facts against the NCERT Grade 5 to 8 books. Easy ones to get wrong: bacteria have no nucleus; yeast is a fungus and buds; the fridge stops bacteria growing but doesn’t kill them; boiling does.
+- More to keep right: magnification is eyepiece × objective; Leeuwenhoek used a single-lens microscope; the first electron microscope was 1931 (Ruska and Knoll; NCERT says 1940). Centrioles set up the spindle, but the spindle fibers do the pulling; most plant cells have no centrioles and build a new wall instead of pinching. Animal cells have small vacuoles, not none. Mitochondria are in both plant and animal cells.
