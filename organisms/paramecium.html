@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Paramecium · ELIX</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link rel="stylesheet" href="../css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back" href="../index.html" aria-label="Back to all topics">← Back</a>
+      <h1>🥿 Paramecium</h1>
+    </header>
+
+    <main class="stage" id="stage">
+      <div class="hint">Drag to spin · Pinch or scroll to zoom · Tap a part to learn about it</div>
+      <div class="info" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+      </div>
+    </main>
+
+    <aside class="panel">
+      <section>
+        <h2>Play</h2>
+        <div class="buttons">
+          <button class="btn big" id="feed">🍽️ Drop food</button>
+          <button class="btn" id="swim" aria-pressed="true">🏊 Swim</button>
+          <button class="btn" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn" id="xray" aria-pressed="false">🔍 See inside</button>
+          <button class="btn" id="bump">💥 Bump it!</button>
+          <button class="btn" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn" id="reset">🎥 Reset view</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Tinker</h2>
+        <label class="control">
+          <span class="name">Cilia speed <output id="speed-out"></output></span>
+          <input type="range" id="speed" min="0" max="10" step="1" value="6">
+          <span class="ends"><span>Stopped</span><span>Super fast</span></span>
+        </label>
+        <label class="control">
+          <span class="name">Number of cilia <output id="count-out"></output></span>
+          <input type="range" id="count" min="0" max="2000" step="50" value="1200">
+          <span class="ends"><span>None</span><span>Lots</span></span>
+        </label>
+        <label class="control">
+          <span class="name">Water <output id="water-out"></output></span>
+          <input type="range" id="water" min="0" max="100" step="1" value="0">
+          <span class="ends"><span>Fresh pond</span><span>Salty</span></span>
+        </label>
+      </section>
+
+      <section>
+        <h2>Try this!</h2>
+        <ol class="try">
+          <li>Drop food and watch it get swept into the mouth.</li>
+          <li>Slide the cilia speed to <b>Stopped</b>. Can it still swim or eat?</li>
+          <li>Make the water <b>salty</b>. What happens to the star-shaped pumps?</li>
+          <li>Tap <b>Bump it!</b> and watch it back up and turn.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Fast facts</h2>
+        <ul class="facts">
+          <li>A Paramecium is <b>one single cell</b>, but it can swim, eat, and get rid of waste.</li>
+          <li>It is about <b>0.25 mm</b> long. You need a microscope to see it.</li>
+          <li>It lives in ponds and puddles.</li>
+          <li>Its shape looks like the sole of a <b>slipper</b>.</li>
+          <li>Real ones have <b>thousands</b> of cilia!</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/paramecium.js"></script>
+</body>
+</html>

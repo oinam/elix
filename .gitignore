@@ -1,0 +1,25 @@
+# Scratch space, never committed
+tmp/
+
+# macOS
+.DS_Store
+._*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Dependencies and builds, if ever added
+node_modules/
+dist/
+
+# Logs and local environment
+*.log
+.env
+.env.*
+
+# Local-only Claude Code files
+.claude/settings.local.json
+CLAUDE.local.md
