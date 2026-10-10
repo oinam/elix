@@ -21,9 +21,16 @@ Let's try with these topics for now;
 
 ### Stack
 
-- Plain HTML, CSS, and ES modules. No build step, no npm dependencies.
+- Plain HTML, CSS, and ES modules. No build step. The only npm dependency is Wrangler (dev and deploy).
 - Three.js `0.186.1` from jsDelivr through an import map in each page. `three/addons/` maps to `examples/jsm/` (OrbitControls, CSS2DRenderer). Bump the version in every page's import map together.
-- Serve with `python3 -m http.server 8000`; `file://` won't load modules.
+- Run locally with `npm run dev` (Wrangler, http://localhost:8787). It matches production: clean URLs and the 404 page. No-install fallback: `python3 -m http.server 8000 -d public`. `file://` won't load modules.
+
+### Deploy (Cloudflare)
+
+- A Cloudflare Worker named `elix` serves `public/` as static assets, at `https://elix.oinam.com` (custom domain in `wrangler.jsonc`).
+- Deploys from GitHub: Cloudflare Workers Builds runs `npx wrangler deploy` on every push to `main`. Manual deploy: `npm run deploy`.
+- `public/` is the web root. Everything in it is public, and nothing outside it is served.
+- Server-side code later: add a `main` Worker script to `wrangler.jsonc`; static files keep coming from `public/`.
 
 ### README.md is human-edited
 
@@ -33,7 +40,10 @@ Let's try with these topics for now;
 
 ### Layout
 
+Everything below lives in `public/`.
+
 ```
+404.html                 "Lost in the pond" page (Cloudflare serves it for missing paths)
 index.html               Home: topic cards ("Play now" / "Coming next")
 css/style.css            All styles, shared by every page
 js/theme.js              Light/dark toggle (plain script in <head>). Follows the OS

@@ -23,3 +23,7 @@ dist/
 # Local-only Claude Code files
 .claude/settings.local.json
 CLAUDE.local.md
+
+# Cloudflare Wrangler
+.wrangler/
+.dev.vars

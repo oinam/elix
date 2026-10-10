@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "elix",
+  "compatibility_date": "2026-10-10",
+  // Static site for now: everything in public/ is the website.
+  // Add "main" (a Worker script) here when the site needs server-side code.
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "elix.oinam.com", "custom_domain": true }
+  ]
+}
