@@ -339,7 +339,7 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); cu
 
 /* Microscope: the round view through the eyepiece, and the timeline. */
 .eyepiece {
-  position: absolute; inset: 0; z-index: 1;
+  position: absolute; inset: 0; z-index: 2; /* over the 3D labels */
   display: grid; place-items: center;
   background: var(--eyepiece-bg);
 }

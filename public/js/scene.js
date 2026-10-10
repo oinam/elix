@@ -27,6 +27,7 @@ export function createStage(container) {
   labelRenderer.domElement.style.position = 'absolute';
   labelRenderer.domElement.style.inset = '0';
   labelRenderer.domElement.style.pointerEvents = 'none';
+  labelRenderer.domElement.style.zIndex = '1'; // under the hint, info card, and Cello
   container.appendChild(labelRenderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);

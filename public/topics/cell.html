@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The cell · ELIx</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../index.html" aria-label="Back to all topics">←<span class="wide-only">&nbsp;Back</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🥚 </span>The cell</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint" id="hint">Drag to spin · Tap a part to learn about it</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Play</span></h2>
+        <div class="buttons">
+          <button class="btn big press" id="zoom" aria-pressed="false">🔍 Zoom into the nucleus</button>
+          <button class="btn press" id="coil" aria-pressed="false">🧬 Get ready to split</button>
+          <button class="btn press" id="orders">📨 Send orders</button>
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset view</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--purple)">Gatekeeper</span> <span class="count" id="gate-count"></span></h2>
+        <p class="riddle" id="gate-question"></p>
+        <div class="buttons">
+          <button class="btn press" data-gate="yes">✅ Let it through</button>
+          <button class="btn press" data-gate="no">⛔ Stop it</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="gate3">Be the <b>gatekeeper</b>: get 3 right.</li>
+          <li data-challenge="gate">Get <b>all 7</b> gatekeeper questions right.</li>
+          <li data-challenge="zoom">Zoom into the <b>nucleus</b>, the control center.</li>
+          <li data-challenge="coil">Get the cell <b>ready to split</b>. Watch the threads coil into X shapes.</li>
+          <li data-challenge="orders">Watch the nucleus <b>send orders</b> out through its pores.</li>
+          <li data-challenge="parts">Tap all <b>8 parts</b> to learn their names. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Your body is made of <b>trillions</b> of cells.</li>
+          <li>The <b>cell membrane</b> lets some things in and keeps others out. Scientists say it’s <b>selectively permeable</b>.</li>
+          <li>The <b>nucleus</b> is the control center. It has its own membrane, with tiny holes called pores.</li>
+          <li><b>Chromosomes</b> in the nucleus carry <b>genes</b>, which pass from parents to children. That’s one reason you may look like your parents!</li>
+          <li>Plant cells also have a hard <b>cell wall</b> outside the membrane. Animal cells don’t.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/cell.js"></script>
+</body>
+</html>
