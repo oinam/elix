@@ -19,6 +19,7 @@ export function createExplorer({
   outer = [], // parts on the outside that win a tap even over a skin
   resolve = (hit) => hit.object.userData.part, // which part a hit means (one mesh can be two parts)
   onEmptyTap = null, // (raycaster) => {} when a tap hits no part
+  onPart = null, // (key) => {} after every tap on a part
   allPartsLine = `You found all ${Object.keys(parts).length} parts! You know this cell inside out.`,
 }) {
   const { scene, camera, renderer } = stage;
@@ -93,6 +94,7 @@ export function createExplorer({
     infoEl.hidden = false;
     onPartFound(key);
     document.getElementById('info-found').textContent = `⭐ ${progress.parts.length} of ${partCount} parts found`;
+    onPart?.(key);
   }
 
   document.getElementById('info-close').addEventListener('click', () => { infoEl.hidden = true; });
