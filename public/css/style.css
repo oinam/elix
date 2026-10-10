@@ -41,6 +41,7 @@
   --info-bg: rgba(34, 48, 63, .97);
   --stage-bg: #0b2233; /* read by js/scene.js */
   --dough: #e8c387;
+  --eyepiece-bg: #03070b; /* the dark around the view in a microscope */
   --radius: 22px;
   --line: 3px;
   font-family: "Nunito Variable", Nunito, "Trebuchet MS", system-ui, sans-serif;
@@ -65,6 +66,7 @@
   --info-bg: rgba(255, 255, 255, .97);
   --stage-bg: #cfe8f2;
   --dough: #f6dca8;
+  --eyepiece-bg: #26313b;
 }
 
 * { box-sizing: border-box; }
@@ -239,6 +241,7 @@ a.card:hover, a.card:focus-visible {
   font-size: 1.15rem; font-weight: 900; pointer-events: none;
 }
 .has-counter .hint { max-width: calc(100% - 150px); }
+.stage > .hint, .stage > .counter, .stage > .info, .stage > .mascot-dock { z-index: 2; }
 
 .info {
   position: absolute; left: 14px; bottom: 14px;
@@ -333,6 +336,36 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); cu
   transform: scale(calc(.85 + var(--rise) * .15), var(--rise));
   transition: transform .4s;
 }
+
+/* Microscope: the round view through the eyepiece, and the timeline. */
+.eyepiece {
+  position: absolute; inset: 0; z-index: 1;
+  display: grid; place-items: center;
+  background: var(--eyepiece-bg);
+}
+.eyepiece[hidden] { display: none; }
+.lens {
+  border-radius: 50%; overflow: hidden;
+  border: 8px solid var(--ink);
+  box-shadow: 0 0 0 6px var(--surface-2), 0 0 0 9px var(--ink);
+  cursor: grab; touch-action: none;
+}
+.lens:active { cursor: grabbing; }
+.lens canvas { display: block; width: 100%; height: 100%; }
+.panel .sub { margin: 14px 0 8px; font-weight: 800; color: var(--muted); }
+.panel .sub:first-of-type { margin-top: 0; }
+.panel .buttons + .control { margin-top: 16px; }
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.timeline .btn { width: 100%; display: flex; align-items: center; gap: 10px; text-align: left; min-height: 48px; }
+.timeline .year {
+  flex: none; min-width: 64px; padding: 2px 8px; border-radius: 999px;
+  border: 2px solid var(--ink); background: var(--surface); color: var(--text);
+  font-size: .9rem; font-weight: 900; text-align: center;
+}
+.timeline .btn.seen:not([aria-pressed="true"]) .year { background: var(--orange); color: var(--pill-ink); }
+.tl-card { margin-top: 12px; font-size: 1.05rem; line-height: 1.45; }
+.tl-card[hidden] { display: none; }
+.tl-card p { margin: 0 0 10px; }
 
 /* "Try this!" ticks itself off as each experiment is done. */
 .try { list-style: none; margin: 0; padding: 0; font-size: 1.05rem; line-height: 1.4; }
