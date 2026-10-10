@@ -46,7 +46,7 @@ organisms/<name>.html    One page per organism: topbar, 3D stage, control panel
 js/<name>.js             That organism's model, animation, and controls
 ```
 
-The look follows https://coolphabets.com in spirit: Nunito (fontsource on jsDelivr), cream dot-grid page, chunky ink outlines (`.chunky`), hard shadows with press-down buttons (`.press`), pastel pills and tiles, wavy underlines (`.wavy`), and a slight tilt on cards. Keep tilts at 2° or less, and put any motion behind `prefers-reduced-motion`.
+The look follows https://coolphabets.com in spirit: Nunito (self-hosted in `fonts/`, Latin and Latin Extended only), cream dot-grid page, chunky ink outlines (`.chunky`), hard shadows with press-down buttons (`.press`), pastel pills and tiles, wavy underlines (`.wavy`), and a slight tilt on cards. Keep tilts at 2° or less, and put any motion behind `prefers-reduced-motion`.
 
 Colors live in CSS variables in `css/style.css`, with a `[data-theme="light"]` block. Never hard-code a color in a rule; add a variable to both themes.
 
