@@ -15,8 +15,10 @@ export function createExplorer({
   stage,
   stageEl,
   greeting,
-  skins = ['membrane'], // see-through parts; taps go to whatever is inside them
+  skins = ['membrane'], // see-through layers, outermost first; taps go to whatever is inside them
   outer = [], // parts on the outside that win a tap even over a skin
+  resolve = (hit) => hit.object.userData.part, // which part a hit means (one mesh can be two parts)
+  onEmptyTap = null, // (raycaster) => {} when a tap hits no part
   allPartsLine = `You found all ${Object.keys(parts).length} parts! You know this cell inside out.`,
 }) {
   const { scene, camera, renderer } = stage;
@@ -104,14 +106,21 @@ export function createExplorer({
     raycaster.setFromCamera(pointer, camera);
     const hits = raycaster.intersectObjects(pickables.filter((o) => o.visible), true)
       .filter((h) => h.object.visible && parts[h.object.userData.part]);
-    if (!hits.length) return;
+    if (!hits.length) {
+      onEmptyTap?.(raycaster);
+      return;
+    }
+    // Only skins hit? Take the innermost one, e.g. cytoplasm over membrane.
+    const innermostSkin = () => hits.reduce((best, h) =>
+      (skins.indexOf(h.object.userData.part) > skins.indexOf(best.object.userData.part) ? h : best));
     const hit = outer.includes(hits[0].object.userData.part)
       ? hits[0]
-      : hits.find((h) => !skins.includes(h.object.userData.part)) ?? hits[0];
-    const key = hit.object.userData.part;
+      : hits.find((h) => !skins.includes(h.object.userData.part)) ?? innermostSkin();
+    const key = resolve(hit);
     // Glow the whole part, not just the piece that was hit.
     let target = hit.object;
-    while (target.parent && target.parent !== scene && target.parent.userData.part === key) target = target.parent;
+    const tagged = hit.object.userData.part;
+    while (target.parent && target.parent !== scene && target.parent.userData.part === tagged) target = target.parent;
     showInfo(key);
     highlight(target);
   });
