@@ -50,6 +50,9 @@ js/theme.js              Light/dark toggle (plain script in <head>). Follows the
                          until a choice is saved; window.elixTheme.watch(fn) for 3D colors
 js/scene.js              createStage(): renderer, camera, lights, orbit controls,
                          labels, resize, and the animation loop (onFrame, pause)
+js/explorer.js           createExplorer(): tap-to-learn parts, labels, glow, info card,
+                         self-ticking "Try this!" stars, Cello, Labels/Pause buttons;
+                         bindSlider(), bindToggle()
 js/mascot.js             Cello the cell: createMascot(dock).say(text, { mood }), celebrate()
 js/progress.js           Stars per topic in localStorage (the home card shows "⭐ 3 of 5")
 organisms/<name>.html    One page per organism: topbar, 3D stage, control panel
@@ -60,7 +63,7 @@ The look follows https://coolphabets.com in spirit: Nunito (self-hosted in `font
 
 Colors live in CSS variables in `css/style.css`, with a `[data-theme="light"]` block. Never hard-code a color in a rule; add a variable to both themes.
 
-To add an organism: copy `organisms/paramecium.html` for the page shell, write `js/<name>.js` on top of `createStage()`, then turn its home card into a link with the "Play now" badge.
+To add an organism: copy `organisms/paramecium.html` for the page shell, write `js/<name>.js` on top of `createStage()` and `createExplorer()`, list its challenges as `<li data-challenge="id">`, then turn its home card into a link with the "Play now" pill and a `<span class="pill stars" id="stars-<topic>" hidden>`.
 
 ### For the audience (a 10-year-old)
 

@@ -83,14 +83,18 @@
     import { loadProgress } from './js/progress.js';
 
     const cello = createMascot(document.getElementById('mascot'));
-    const progress = loadProgress('paramecium');
-    const stars = document.getElementById('stars-paramecium');
-    if (progress.done.length) {
+
+    // Each live card has <span id="stars-<topic>"> for the stars earned there.
+    let earned = 0;
+    document.querySelectorAll('[id^="stars-"]').forEach((stars) => {
+      const progress = loadProgress(stars.id.slice('stars-'.length));
+      if (!progress.done.length) return;
+      earned += progress.done.length;
       stars.textContent = `⭐ ${progress.done.length} of ${progress.total}`;
       stars.hidden = false;
-    }
+    });
     cello.say(
-      progress.done.length
+      earned
         ? 'Welcome back, scientist! Ready to explore again?'
         : "Hi! I'm Cello, a cell. Want to meet my tiny friends?",
       { ms: 0 },

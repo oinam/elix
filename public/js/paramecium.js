@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import { createStage, makeLabel } from './scene.js';
-import { createMascot, celebrate } from './mascot.js';
-import { loadProgress, saveProgress, clearProgress } from './progress.js';
+import { createStage } from './scene.js';
+import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 
 // ---------- Kid-friendly descriptions of each part ----------
 
@@ -58,22 +57,15 @@ const cell = new THREE.Group();
 cell.rotation.order = 'YXZ'; // yaw (turn) first, then roll around the body
 scene.add(cell);
 
-const pickables = [];
-const labels = [];
-
-function addLabel(key, parent, position) {
-  const label = makeLabel(PARTS[key].name);
-  label.position.copy(position);
-  label.visible = false;
-  parent.add(label);
-  labels.push(label);
-  return label;
-}
-
-function tagPart(object, key) {
-  object.traverse((o) => { o.userData.part = key; });
-  pickables.push(object);
-}
+const explorer = createExplorer({
+  topic: 'paramecium',
+  parts: PARTS,
+  stage,
+  stageEl,
+  outer: ['cilia'],
+  greeting: "Hi! I'm Cello. Tap Drop food to feed this Paramecium!",
+});
+const { addLabel, tagPart, complete, cello } = explorer;
 
 // ---------- Body shape ----------
 // The body is built around the x axis: +x is the front (anterior), -x the back.
@@ -194,7 +186,7 @@ const ciliaData = [];
   }
 }
 
-const ciliaLabel = addLabel('cilia', cell, new THREE.Vector3(1.6, 0.9, 0.3));
+addLabel('cilia', cell, new THREE.Vector3(1.6, 0.9, 0.3), { hideWith: cilia });
 
 // ---------- Oral groove and mouth ----------
 
@@ -348,7 +340,7 @@ function updateFoodVacuoles(dt) {
     if (t >= 1) {
       cell.remove(v.mesh);
       v.mesh.material.dispose();
-      pickables.splice(pickables.indexOf(v.mesh), 1);
+      explorer.untagPart(v.mesh);
       foodVacuoles.splice(i, 1);
       spitWaste();
     }
@@ -530,97 +522,7 @@ function updateCilia(dt, settings) {
   cilia.instanceMatrix.needsUpdate = true;
 }
 
-// ---------- Highlight a tapped part ----------
-
-let flash = null;
-
-function highlight(object) {
-  if (flash) flash.materials.forEach((m) => m.emissive.copy(m.userData.baseEmissive));
-  const materials = new Set();
-  object.traverse((o) => { if (o.material?.emissive) materials.add(o.material); });
-  materials.forEach((m) => {
-    m.userData.baseEmissive ??= m.emissive.clone();
-  });
-  flash = { materials: [...materials], time: 1.2 };
-}
-
-function updateFlash(dt) {
-  if (!flash) return;
-  flash.time -= dt;
-  const glow = Math.max(flash.time, 0) * Math.abs(Math.sin(flash.time * 9));
-  flash.materials.forEach((m) => {
-    m.emissive.copy(m.userData.baseEmissive).lerp(new THREE.Color(0xffd166), Math.min(glow, 1));
-  });
-  if (flash.time <= 0) flash = null;
-}
-
-// ---------- Tapping parts ----------
-
-const infoEl = document.getElementById('info');
-const raycaster = new THREE.Raycaster();
-const pointer = new THREE.Vector2();
-let downAt = null;
-
-function showInfo(key) {
-  document.getElementById('info-title').textContent = PARTS[key].name;
-  document.getElementById('info-text').textContent = PARTS[key].text;
-  infoEl.hidden = false;
-  onPartFound(key);
-  document.getElementById('info-found').textContent = `⭐ ${progress.parts.length} of ${PART_COUNT} parts found`;
-}
-
-document.getElementById('info-close').addEventListener('click', () => { infoEl.hidden = true; });
-
-stage.renderer.domElement.addEventListener('pointerdown', (e) => { downAt = { x: e.clientX, y: e.clientY }; });
-stage.renderer.domElement.addEventListener('pointerup', (e) => {
-  if (!downAt || Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y) > 6) return;
-  const rect = stage.renderer.domElement.getBoundingClientRect();
-  pointer.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
-  raycaster.setFromCamera(pointer, camera);
-  const hits = raycaster.intersectObjects(pickables.filter((o) => o.visible), true);
-  if (!hits.length) return;
-  // The skin is see-through, so prefer whatever is inside it.
-  const hit = hits[0].object.userData.part === 'cilia'
-    ? hits[0]
-    : hits.find((h) => h.object.userData.part !== 'membrane') ?? hits[0];
-  let target = hit.object;
-  while (target.parent && target.parent !== cell && target.parent !== scene) target = target.parent;
-  showInfo(hit.object.userData.part);
-  highlight(target);
-});
-
 // ---------- Stars and Cello ----------
-// "Try this!" ticks itself off as each experiment happens, and Cello cheers.
-
-const TOPIC = 'paramecium';
-const CHALLENGES = ['eat', 'stop', 'salty', 'bump', 'parts'];
-const PART_COUNT = Object.keys(PARTS).length;
-let progress = loadProgress(TOPIC);
-const cello = createMascot(document.getElementById('mascot'));
-
-function renderProgress() {
-  document.querySelectorAll('[data-challenge]').forEach((li) => {
-    li.classList.toggle('done', progress.done.includes(li.dataset.challenge));
-  });
-  document.getElementById('try-count').textContent = `⭐ ${progress.done.length} of ${CHALLENGES.length}`;
-  document.getElementById('parts-count').textContent = `(${progress.parts.length} of ${PART_COUNT})`;
-}
-
-// Returns true the first time a challenge is done.
-function complete(id) {
-  if (progress.done.includes(id)) return false;
-  progress.done.push(id);
-  progress.total = CHALLENGES.length;
-  saveProgress(TOPIC, progress);
-  renderProgress();
-  if (progress.done.length === CHALLENGES.length) {
-    celebrate(stageEl, 90);
-    setTimeout(() => cello.say("Every star! You're a real scientist! 🔬", { ms: 7000 }), 1200);
-  } else {
-    celebrate(stageEl, 24);
-  }
-  return true;
-}
 
 const YUMS = ['Yum!', 'Om nom nom!', 'Crunchy bacteria!', 'Another food vacuole!'];
 
@@ -632,47 +534,9 @@ function onEat() {
   }
 }
 
-function onPartFound(key) {
-  if (progress.parts.includes(key)) return;
-  progress.parts.push(key);
-  saveProgress(TOPIC, progress);
-  renderProgress();
-  if (progress.parts.length === PART_COUNT && complete('parts')) {
-    cello.say('You found all 10 parts! You know this cell inside out.', { mood: 'wow', ms: 5000 });
-  } else {
-    cello.say(`You found the ${PARTS[key].name.toLowerCase()}!`, { ms: 2500 });
-  }
-}
-
-document.getElementById('reset-stars').addEventListener('click', () => {
-  clearProgress(TOPIC);
-  progress = loadProgress(TOPIC);
-  renderProgress();
-  cello.say("Fresh start! Let's explore again.");
-});
-
-renderProgress();
-setTimeout(() => {
-  cello.say(progress.done.length
-    ? 'Welcome back! Can you get every star?'
-    : "Hi! I'm Cello. Tap Drop food to feed this Paramecium!", { ms: 6000 });
-}, 600);
-
 // ---------- Controls ----------
 
 const settings = { speed: 6, count: 1200, water: 0 };
-
-function bindSlider(id, format, onChange) {
-  const input = document.getElementById(id);
-  const out = document.getElementById(`${id}-out`);
-  const update = () => {
-    const value = Number(input.value);
-    out.textContent = format(value);
-    onChange(value);
-  };
-  input.addEventListener('input', update);
-  update();
-}
 
 // Saltier water means less water sneaks in, so the pumps can slow down.
 const pumpPeriod = (water = settings.water) => THREE.MathUtils.lerp(3, 14, water / 100);
@@ -697,28 +561,12 @@ bindSlider('water', (v) => `pump every ${pumpPeriod(v).toFixed(0)} s`, (v) => {
   }
 });
 
-function bindToggle(id, onChange) {
-  const button = document.getElementById(id);
-  button.addEventListener('click', () => {
-    const on = button.getAttribute('aria-pressed') !== 'true';
-    button.setAttribute('aria-pressed', String(on));
-    onChange(on);
-  });
-}
-
 bindToggle('swim', (on) => { swim.on = on; });
-function showLabels() {
-  const on = document.getElementById('labels').getAttribute('aria-pressed') === 'true';
-  labels.forEach((l) => { l.visible = on && (l !== ciliaLabel || cilia.visible); });
-}
-
-bindToggle('labels', showLabels);
 bindToggle('xray', (on) => {
   cilia.visible = !on;
-  showLabels();
+  explorer.showLabels();
   bodyMaterial.opacity = on ? 0.14 : 0.42;
 });
-bindToggle('pause', (on) => stage.setPaused(on));
 document.getElementById('feed').addEventListener('click', dropFood);
 document.getElementById('bump').addEventListener('click', () => {
   bump();
@@ -760,7 +608,6 @@ stage.onFrame((dt) => {
   updateFoods(dt, power);
   updateFoodVacuoles(dt);
   updateWastes(dt);
-  updateFlash(dt);
 
   // Keep the camera gently following the swimmer.
   lastTarget.copy(controls.target);
