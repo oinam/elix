@@ -129,6 +129,8 @@ addLabel('membrane', cell, bodyPoint(0.55, Math.PI * 0.75).multiplyScalar(1.12))
 
 // ---------- Cytoplasm specks ----------
 
+const speckMaterial = new THREE.PointsMaterial({ size: 0.035 });
+
 {
   const n = 260;
   const positions = new Float32Array(n * 3);
@@ -141,7 +143,7 @@ addLabel('membrane', cell, bodyPoint(0.55, Math.PI * 0.75).multiplyScalar(1.12))
   }
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  const specks = new THREE.Points(geo, new THREE.PointsMaterial({ color: 0xc8f5e6, size: 0.035 }));
+  const specks = new THREE.Points(geo, speckMaterial);
   cell.add(specks);
   addLabel('cytoplasm', cell, new THREE.Vector3(-0.9, -0.15, -0.35));
 }
@@ -156,7 +158,7 @@ const CILIUM_LENGTH = 0.15;
 
 const ciliumGeo = new THREE.CylinderGeometry(0.004, 0.009, CILIUM_LENGTH, 4, 1);
 ciliumGeo.translate(0, CILIUM_LENGTH / 2, 0);
-const ciliaMaterial = new THREE.MeshStandardMaterial({ color: 0xe4fff6, roughness: 0.6 });
+const ciliaMaterial = new THREE.MeshStandardMaterial({ roughness: 0.6 });
 const cilia = new THREE.InstancedMesh(ciliumGeo, ciliaMaterial, MAX_CILIA);
 cilia.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 cilia.frustumCulled = false;
@@ -631,6 +633,21 @@ const CAMERA_OFFSET = new THREE.Vector3(0, 3, 7);
 document.getElementById('reset').addEventListener('click', () => {
   controls.target.copy(cell.position);
   camera.position.copy(cell.position).add(CAMERA_OFFSET);
+});
+
+// ---------- Theme ----------
+// Pale cilia and specks show up on dark water; light water needs deeper colors.
+
+const THEME_COLORS = {
+  dark: { body: 0x8fe3cf, cilia: 0xe4fff6, specks: 0xc8f5e6 },
+  light: { body: 0x4cc4a6, cilia: 0x1f7f6b, specks: 0x2f8f7a },
+};
+
+window.elixTheme.watch((theme) => {
+  const colors = THEME_COLORS[theme];
+  bodyMaterial.color.set(colors.body);
+  ciliaMaterial.color.set(colors.cilia);
+  speckMaterial.color.set(colors.specks);
 });
 
 // ---------- Main loop ----------

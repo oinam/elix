@@ -4,10 +4,17 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
-export function createStage(container, { background = 0x0b2233 } = {}) {
+export function createStage(container) {
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(background);
-  scene.fog = new THREE.Fog(background, 14, 30);
+  scene.background = new THREE.Color();
+  scene.fog = new THREE.Fog(0x000000, 14, 30);
+
+  // The water color comes from the page theme (--stage-bg in css/style.css).
+  window.elixTheme.watch(() => {
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--stage-bg').trim();
+    scene.background.set(color);
+    scene.fog.color.set(color);
+  });
 
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.set(0, 3, 7);

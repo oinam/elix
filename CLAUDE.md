@@ -30,11 +30,15 @@ Let's try with these topics for now;
 ```
 index.html               Home: topic cards ("Play now" / "Coming next")
 css/style.css            All styles, shared by every page
+js/theme.js              Light/dark toggle (plain script in <head>). Follows the OS
+                         until a choice is saved; window.elixTheme.watch(fn) for 3D colors
 js/scene.js              createStage(): renderer, camera, lights, orbit controls,
                          labels, resize, and the animation loop (onFrame, pause)
 organisms/<name>.html    One page per organism: topbar, 3D stage, control panel
 js/<name>.js             That organism's model, animation, and controls
 ```
+
+Colors live in CSS variables in `css/style.css`, with a `[data-theme="light"]` block. Never hard-code a color in a rule; add a variable to both themes.
 
 To add an organism: copy `organisms/paramecium.html` for the page shell, write `js/<name>.js` on top of `createStage()`, then turn its home card into a link with the "Play now" badge.
 
