@@ -267,9 +267,9 @@ export function makeGolgi(size = 0.7, { color = 0xff9bb5 } = {}) {
 }
 
 // Lots of tiny dots spread through a ball: free ribosomes.
-export function makeRibosomes(count, radius, { color = 0x2f4d8a, seed = 5, avoid = [] } = {}) {
+export function makeRibosomes(count, radius, { color = 0x2f4d8a, seed = 5, avoid = [], size = 0.03 } = {}) {
   const rand = seeded(seed);
-  const mesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.03, 6, 4), solid(color), count);
+  const mesh = new THREE.InstancedMesh(new THREE.SphereGeometry(size, 6, 4), solid(color), count);
   const m = new THREE.Matrix4();
   const p = new THREE.Vector3();
   for (let i = 0; i < count; i++) {
