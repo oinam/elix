@@ -25,6 +25,12 @@ Let's try with these topics for now;
 - Three.js `0.186.1` from jsDelivr through an import map in each page. `three/addons/` maps to `examples/jsm/` (OrbitControls, CSS2DRenderer). Bump the version in every page's import map together.
 - Serve with `python3 -m http.server 8000`; `file://` won't load modules.
 
+### README.md is human-edited
+
+- `README.md` is written and edited by me (Brajeshwar). Keep it machine readable (plain Markdown, clear headings), but it's mine.
+- Never write to `README.md` without my explicit permission, asked for and given in chat for that specific change. This includes small fixes, run instructions, and status tables.
+- Reading it is fine. If something in it is out of date, tell me and suggest the change; don't make it.
+
 ### Layout
 
 ```
