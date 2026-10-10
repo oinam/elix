@@ -55,8 +55,11 @@ js/explorer.js           createExplorer(): tap-to-learn parts, labels, glow, inf
                          bindSlider(), bindToggle()
 js/mascot.js             Cello the cell: createMascot(dock).say(text, { mood }), celebrate()
 js/progress.js           Stars per topic in localStorage (the home card shows "⭐ 3 of 5")
-organisms/<name>.html    One page per organism: topbar, 3D stage, control panel
-js/<name>.js             That organism's model, animation, and controls
+organisms/<name>.html    One page per organism (paramecium, amoeba, bacteria, yeast):
+                         topbar, 3D stage, control panel
+topics/<name>.html       Concept pages: single-cell (one cell, every job; riddles) and
+                         multi-cell (cell → tissue → organ → organ system → organism)
+js/<name>.js             That page's models, animation, and controls
 ```
 
 The look follows https://coolphabets.com in spirit: Nunito (self-hosted in `fonts/`, Latin and Latin Extended only), cream dot-grid page, chunky ink outlines (`.chunky`), hard shadows with press-down buttons (`.press`), pastel pills and tiles, wavy underlines (`.wavy`), and a slight tilt on cards. Keep tilts at 2° or less, and put any motion behind `prefers-reduced-motion`.
@@ -72,4 +75,4 @@ To add an organism: copy `organisms/paramecium.html` for the page shell, write `
 - Include a "Try this!" list of experiments that ticks itself off (`data-challenge`) and earns stars, plus a "Fast facts" list.
 - Cello reacts to what she does: first-time successes, mistakes, and discoveries. Keep the lines short, warm, and never scolding.
 - Big type and touch-sized controls (at least 44px). Give every scene Pause and Reset view.
-- Keep the science right, even when it's simplified. Check facts against the NCERT Grade 5 to 8 books.
+- Keep the science right, even when it's simplified. Check facts against the NCERT Grade 5 to 8 books. Easy ones to get wrong: bacteria have no nucleus; yeast is a fungus and buds; the fridge stops bacteria growing but doesn't kill them; boiling does.

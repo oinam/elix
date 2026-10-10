@@ -39,9 +39,16 @@ export function createStage(container) {
   sun.position.set(3, 6, 4);
   scene.add(sun);
 
+  // On tall, narrow screens (phones), widen the view so the scene still
+  // fits from side to side instead of being cut off.
+  const FOV = 45;
+  const MIN_ASPECT = 1.2;
   function resize() {
     const { clientWidth: w, clientHeight: h } = container;
     camera.aspect = w / h;
+    camera.fov = camera.aspect >= MIN_ASPECT
+      ? FOV
+      : THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(FOV / 2)) * MIN_ASPECT / camera.aspect));
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
     labelRenderer.setSize(w, h);
