@@ -11,7 +11,7 @@ const PARTS = {
   },
   pseudopod: {
     name: 'Pseudopodium (false foot)',
-    text: 'A finger of jelly that pokes out of the cell. The Amoeba uses these "false feet" to crawl and to grab food. It can make a new one anywhere!',
+    text: 'A finger of jelly that pokes out of the cell. The Amoeba uses these “false feet” to crawl and to grab food. It can make a new one anywhere!',
   },
   cytoplasm: {
     name: 'Cytoplasm',

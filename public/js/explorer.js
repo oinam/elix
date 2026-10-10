@@ -151,7 +151,7 @@ export function createExplorer({
     renderProgress();
     if (progress.done.length === challenges.length) {
       celebrate(stageEl, 90);
-      setTimeout(() => cello.say("Every star! You're a real scientist! 🔬", { ms: 7000 }), 1200);
+      setTimeout(() => cello.say("Every star! You’re a real scientist! 🔬", { ms: 7000 }), 1200);
     } else {
       celebrate(stageEl, 24);
     }
@@ -174,7 +174,7 @@ export function createExplorer({
     clearProgress(topic);
     progress = loadProgress(topic);
     renderProgress();
-    cello.say("Fresh start! Let's explore again.");
+    cello.say("Fresh start! Let’s explore again.");
   });
 
   // ---------- Shared buttons ----------

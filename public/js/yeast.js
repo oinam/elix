@@ -19,7 +19,7 @@ const PARTS = {
   },
   nucleus: {
     name: 'Nucleus',
-    text: 'The control center with the cell\'s instructions. Before a bud breaks off, the nucleus makes a copy for it.',
+    text: 'The control center with the cell’s instructions. Before a bud breaks off, the nucleus makes a copy for it.',
   },
   vacuole: {
     name: 'Vacuole',

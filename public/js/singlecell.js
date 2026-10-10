@@ -16,7 +16,7 @@ const JOBS = {
     paramecium: 'Rows with thousands of tiny hairs (cilia), spinning as it swims.',
     amoeba: 'Crawls by pushing out false feet and flowing into them.',
     bacterium: 'Spins its whip-like flagellum like a propeller.',
-    yeast: 'It can\'t swim or crawl! It just floats wherever the water takes it.',
+    yeast: 'It can’t swim or crawl! It just floats wherever the water takes it.',
   },
   eat: {
     title: 'Eat',
@@ -28,7 +28,7 @@ const JOBS = {
   },
   waste: {
     title: 'Get rid of waste',
-    ask: 'How does each one get rid of what it doesn\'t need?',
+    ask: 'How does each one get rid of what it doesn’t need?',
     paramecium: 'Star-shaped pumps squirt out extra water. Leftover waste leaves through the waste exit.',
     amoeba: 'A pump squeezes out extra water. Leftover waste is pushed out of the cell.',
     bacterium: 'Waste just seeps out through its wall.',
@@ -51,7 +51,7 @@ const RIDDLES = [
   ['I swim using thousands of tiny hairs called cilia.', 'paramecium'],
   ['I have no fixed shape. I move with false feet.', 'amoeba'],
   ['I have no nucleus at all!', 'bacterium'],
-  ['I\'m a fungus, and I help make bread rise.', 'yeast'],
+  ['I’m a fungus, and I help make bread rise.', 'yeast'],
   ['I make more of me by budding.', 'yeast'],
   ['My shape looks like the sole of a slipper.', 'paramecium'],
   ['I wrap my false feet around food to eat it.', 'amoeba'],
@@ -355,7 +355,7 @@ const triedJobs = new Set(['move']);
 const jobCard = document.getElementById('job-card');
 
 const JOB_LINES = {
-  move: 'Watch how each one moves. One of them can\'t move by itself!',
+  move: 'Watch how each one moves. One of them can’t move by itself!',
   eat: 'Two of them swallow food. Two just soak it up!',
   waste: 'Blue drops are extra water being pumped out. Bubbles are gas.',
   grow: 'Three split in two. One grows a bud instead. Can you spot it?',
@@ -407,7 +407,7 @@ document.querySelectorAll('[data-answer]').forEach((b) => {
       if (solved.size === RIDDLES.length && complete('quiz')) {
         cello.say('You solved every riddle! You really know your single cells.', { mood: 'wow', ms: 6000 });
       } else if (right >= 3 && complete('quiz3')) {
-        cello.say('Three right! You\'re getting good at this.', { mood: 'wow' });
+        cello.say('Three right! You’re getting good at this.', { mood: 'wow' });
       } else {
         cello.say(['Yes!', 'Correct!', 'You got it!', 'Spot on!'][right % 4], { ms: 1800 });
       }

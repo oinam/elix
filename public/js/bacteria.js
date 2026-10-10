@@ -20,11 +20,11 @@ const PARTS = {
   },
   dna: {
     name: 'DNA (no nucleus!)',
-    text: 'The cell\'s instructions. Bacteria have NO nucleus, so their DNA just floats in the cytoplasm as a tangled loop.',
+    text: 'The cell’s instructions. Bacteria have NO nucleus, so their DNA just floats in the cytoplasm as a tangled loop.',
   },
   ribosomes: {
     name: 'Ribosomes',
-    text: 'Tiny builders. They read the DNA\'s instructions and build the things the cell needs to live and grow.',
+    text: 'Tiny builders. They read the DNA’s instructions and build the things the cell needs to live and grow.',
   },
   flagellum: {
     name: 'Flagellum',
@@ -339,7 +339,7 @@ function onDoubled() {
 
 function onBoiled() {
   complete('boil');
-  cello.say('Boiling killed the bacteria. That\'s why we boil milk and water! Tap Start with one to grow more.', { mood: 'sad', ms: 7000 });
+  cello.say('Boiling killed the bacteria. That’s why we boil milk and water! Tap Start with one to grow more.', { mood: 'sad', ms: 7000 });
 }
 
 // ---------- Controls ----------
@@ -354,7 +354,7 @@ bindSlider('temp', (v) => `${tempName(v)} · ${v} °C`, (v) => {
   settings.temp = v;
   if (v <= 8 && !wasCold && colony.length >= 2 && deadFade === 0) {
     complete('fridge');
-    cello.say('Brrr! In the fridge they stop growing. They are not dead, just very slow. That\'s why we keep food cold.', { mood: 'wow', ms: 7000 });
+    cello.say('Brrr! In the fridge they stop growing. They are not dead, just very slow. That’s why we keep food cold.', { mood: 'wow', ms: 7000 });
   } else if (v >= 30 && v <= 45 && wasCold) {
     cello.say('Warm again, so they start multiplying!', { important: false });
   }

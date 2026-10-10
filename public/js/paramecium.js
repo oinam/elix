@@ -35,7 +35,7 @@ const PARTS = {
   },
   micronucleus: {
     name: 'Micronucleus',
-    text: 'A small helper. It keeps a spare copy of the cell\'s instructions, used when making new Paramecia.',
+    text: 'A small helper. It keeps a spare copy of the cell’s instructions, used when making new Paramecia.',
   },
   vacuole: {
     name: 'Contractile vacuole',
@@ -63,7 +63,7 @@ const explorer = createExplorer({
   stage,
   stageEl,
   outer: ['cilia'],
-  greeting: "Hi! I'm Cello. Tap Drop food to feed this Paramecium!",
+  greeting: "Hi! I’m Cello. Tap Drop food to feed this Paramecium!",
 });
 const { addLabel, tagPart, complete, cello } = explorer;
 

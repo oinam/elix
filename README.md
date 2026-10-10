@@ -2,7 +2,7 @@
 
 > Explain Like I’m X
 
-My daughter is 10-years old and is in Grade-5 at a school whose curriculum is CBSE with NCERT Books. This website is to "Explain Like I’m 10-years" for her on topics taught at her school books.
+My daughter is 10-years old and is in Grade-5 at a school whose curriculum is CBSE with NCERT Books. This website is to “Explain Like I’m 10-years” for her on topics taught at her school books.
 
 Live at <https://elix.oinam.com>.
 
