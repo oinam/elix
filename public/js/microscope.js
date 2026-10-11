@@ -746,7 +746,7 @@ function showStop(i) {
   seen.add(i);
   document.getElementById('timeline-count').textContent = `(${seen.size} of ${TIMELINE.length})`;
   if (seen.size === TIMELINE.length && complete('timeline')) {
-    cello.say('You walked the whole timeline, from eyeglasses to atoms!', { mood: 'wow', ms: 5500 });
+    cello.say('You walked the whole timeline, from eyeglasses to today’s frozen snapshots!', { mood: 'wow', ms: 5500 });
   } else if (passedLight) {
     cello.say('Whoa, past light’s limit! Now we can see even smaller things.', { mood: 'wow', ms: 4500 });
   }
