@@ -46,7 +46,10 @@ Everything below lives in `public/`.
 
 ```
 404.html                 "Lost in the pond" page (Cloudflare serves it for missing paths)
-index.html               Home: topic cards ("Play now" / "Coming next")
+index.html               Home: the bookshelf (Science; Mathematics and Social Science coming)
+science/index.html       Science: its units (Unit 4 so far)
+science/unit-4.html      Unit 4: Organization in Systems. Topic cards in the book's order,
+                         "Play now" or "Coming next". Every topic page's Back goes here
 css/style.css            All styles, shared by every page
 js/theme.js              Light/dark toggle (plain script in <head>). Follows the OS
                          until a choice is saved; window.elixTheme.watch(fn) for 3D colors
@@ -59,7 +62,8 @@ js/cellparts.js          Shared 3D cell parts: blob shapes, nucleus (pores, nucl
                          threads that coil into chromosomes), mitochondria, vacuoles,
                          centrioles, chloroplasts, ER, Golgi body, ribosomes
 js/mascot.js             Cello the cell: createMascot(dock).say(text, { mood }), celebrate()
-js/progress.js           Stars per topic in localStorage (the home card shows "⭐ 3 of 5")
+js/progress.js           Stars per topic in localStorage; showStars() fills the menu pills
+                         ("⭐ 3 of 5" per topic, or a total for data-topics="a b c")
 organisms/<name>.html    One page per organism (paramecium, amoeba, bacteria, yeast):
                          topbar, 3D stage, control panel
 topics/<name>.html       Concept pages: single-cell (one cell, every job; riddles),
@@ -74,7 +78,9 @@ The look follows https://coolphabets.com in spirit: Nunito (self-hosted in `font
 
 Colors live in CSS variables in `css/style.css`, with a `[data-theme="light"]` block. Never hard-code a color in a rule; add a variable to both themes.
 
-To add an organism: copy `organisms/paramecium.html` for the page shell, write `js/<name>.js` on top of `createStage()` and `createExplorer()`, list its challenges as `<li data-challenge="id">`, then turn its home card into a link with the “Play now” pill and a `<span class="pill stars" id="stars-<topic>" hidden>`.
+To add an organism: copy `organisms/paramecium.html` for the page shell, write `js/<name>.js` on top of `createStage()` and `createExplorer()`, list its challenges as `<li data-challenge="id">`, then turn its card on the unit page (`science/unit-4.html`) into a link with the “Play now” pill and a `<span class="pill stars" id="stars-<topic>" hidden>`, and add the topic id to the `data-topics` lists on `index.html` and `science/index.html`.
+
+Books: the scanned chapters live in `tmp/Books/` (gitignored, never published). Each unit page follows its chapter’s order; explainers are in our own words, never copied from the book.
 
 ### For the audience (a 10-year-old)
 

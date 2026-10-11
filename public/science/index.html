@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Science · ELIx</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <main class="home menu">
+    <header class="topbar">
+      <a class="back press" href="../index.html" aria-label="Back to Books">←<span class="wide-only">&nbsp;Books</span></a>
+      <h1><span aria-hidden="true">🔬 </span>Science</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <div class="menu-mascot" id="mascot"></div>
+
+    <section class="topic">
+      <p class="kicker wavy" style="--wave: var(--purple)">📖 Units</p>
+      <h2>Pick a unit.</h2>
+      <p>More units show up here as new chapters get added.</p>
+
+      <div class="cards">
+        <a class="card chunky" href="unit-4.html">
+          <span class="pill live">Play now!</span>
+          <span class="tile" style="--tile: var(--teal)" aria-hidden="true">🧫</span>
+          <h3>Unit 4: Organization in Systems</h3>
+          <p>From one tiny cell to a whole living thing, and how every part has a job.</p>
+          <span class="pill stars" data-topics="paramecium amoeba bacteria yeast singlecell multicell microscope cell cytoplasm centrioles plantanimal" hidden></span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module">
+    import { createMascot } from '../js/mascot.js';
+    import { showStars } from '../js/progress.js';
+
+    const cello = createMascot(document.getElementById('mascot'));
+    cello.say(showStars() ? 'Welcome back! Ready for more science?' : 'Pick a unit, and I’ll show you around!', { ms: 0 });
+  </script>
+</body>
+</html>

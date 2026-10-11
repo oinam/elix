@@ -27,3 +27,26 @@ export function clearProgress(topic) {
     // Nothing to clear.
   }
 }
+
+// Fill in the star pills on a menu page, and return how many stars they show.
+// <span id="stars-<topic>"> shows one topic: "⭐ 3 of 5".
+// <span data-topics="<topic> <topic> …"> adds up a whole book or unit: "⭐ 12".
+export function showStars() {
+  const seen = new Set();
+  const stars = (topic) => {
+    seen.add(topic);
+    return loadProgress(topic).done.length;
+  };
+  document.querySelectorAll('[id^="stars-"]').forEach((pill) => {
+    const topic = pill.id.slice('stars-'.length);
+    const done = stars(topic);
+    pill.textContent = `⭐ ${done} of ${loadProgress(topic).total}`;
+    pill.hidden = !done;
+  });
+  document.querySelectorAll('[data-topics]').forEach((pill) => {
+    const done = pill.dataset.topics.split(/\s+/).reduce((sum, topic) => sum + stars(topic), 0);
+    pill.textContent = `⭐ ${done}`;
+    pill.hidden = !done;
+  });
+  return [...seen].reduce((sum, topic) => sum + loadProgress(topic).done.length, 0);
+}

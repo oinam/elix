@@ -194,6 +194,15 @@ a.card:hover, a.card:focus-visible {
 .pill.stars { background: var(--yellow); color: var(--pill-ink); top: auto; bottom: -14px; transform: rotate(2deg); }
 .pill.stars[hidden] { display: none; }
 
+/* Menu pages (a book's units, a unit's topics): a topbar over the cards. */
+.menu .topbar { padding-top: 0; }
+.menu .topbar h1 { white-space: normal; }
+.big-questions { margin-top: 30px; padding: 6px 24px 14px; background: var(--surface); }
+.big-questions h2 { margin: 18px 0 10px; }
+.big-questions .facts { font-size: 1.15rem; }
+.menu-mascot { display: flex; flex-direction: row-reverse; justify-content: flex-end; align-items: flex-end; gap: 8px; margin-top: 18px; }
+.menu-mascot .mascot { width: 84px; }
+
 /* ---------- Explorer page ---------- */
 
 .explorer {
