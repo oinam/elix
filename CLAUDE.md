@@ -46,6 +46,10 @@ Everything below lives in `public/`.
 
 ```
 404.html                 "Lost in the pond" page (Cloudflare serves it for missing paths)
+favicon.ico, favicon-*.png, apple-touch-icon.png, android-chrome-*.png
+                         Icons copied from ~/dev/oinam.com; every page links them in <head>
+oinam-logo.svg, oinam-logo-light.svg
+                         The Oinam logo (dark mark, and the knockout version), from ~/dev/oinam.com
 index.html               Home: the bookshelf (Science; Mathematics and Social Science coming)
 science/index.html       Science: its units (Unit 4 so far)
 science/unit-4.html      Unit 4: Organization in Systems. Topic cards in the book's order,
