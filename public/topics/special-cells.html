@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cells shaped for the job · ELIx</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../science/unit-4.html" aria-label="Back to Unit 4">←<span class="wide-only">&nbsp;Unit 4</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🩸 </span>Cells shaped for the job</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="step-card" aria-live="polite"></div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Pick a cell</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-cell="red" aria-pressed="true">🩸 Red blood cell</button>
+          <button class="btn press" data-cell="nerve" aria-pressed="false">⚡ Nerve cell</button>
+          <button class="btn press" data-cell="muscle" aria-pressed="false">💪 Muscle cell</button>
+          <button class="btn press" data-cell="white" aria-pressed="false">🛡️ White blood cell</button>
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset view</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--purple)">Try its job</span></h2>
+        <div data-for="red">
+          <div class="buttons">
+            <button class="btn big press" id="squeeze">🚇 Squeeze through a tiny tube</button>
+            <button class="btn press" id="oxygen" aria-pressed="false">🫁 Pick up oxygen</button>
+            <button class="btn press" id="ball" aria-pressed="false">⚪ Disc or ball?</button>
+          </div>
+        </div>
+        <div data-for="nerve" hidden>
+          <div class="buttons">
+            <button class="btn big press" id="signal">⚡ Send a message</button>
+          </div>
+          <p class="sub">Or tap the little branches on the left!</p>
+        </div>
+        <div data-for="muscle" hidden>
+          <label class="control">
+            <span class="name">Squeeze the muscle <output id="pull-out"></output></span>
+            <input type="range" id="pull" min="0" max="100" step="1" value="0">
+            <span class="ends"><span>Relaxed</span><span>Squeezed</span></span>
+          </label>
+        </div>
+        <div data-for="white" hidden>
+          <div class="buttons">
+            <button class="btn big press" id="germ">🦠 Let a germ in</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Match the shape to the job</span> <span class="count" id="riddle-count"></span></h2>
+        <p class="riddle" id="riddle"></p>
+        <div class="buttons">
+          <button class="btn press" data-answer="red">🩸 Red blood cell</button>
+          <button class="btn press" data-answer="nerve">⚡ Nerve cell</button>
+          <button class="btn press" data-answer="muscle">💪 Muscle cell</button>
+          <button class="btn press" data-answer="white">🛡️ White blood cell</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="squeeze">Squeeze a <b>red blood cell</b> through a tube thinner than itself.</li>
+          <li data-challenge="oxygen">Load a red blood cell with <b>oxygen</b>. Watch its color!</li>
+          <li data-challenge="disc">Compare a <b>disc</b> and a <b>ball</b>. Which has more skin?</li>
+          <li data-challenge="signal">Send a <b>message</b> all the way down a nerve cell.</li>
+          <li data-challenge="pull">Squeeze a <b>muscle cell</b> all the way, to lift the bone.</li>
+          <li data-challenge="germ">Help a <b>white blood cell</b> catch a germ.</li>
+          <li data-challenge="match">Match all <b>4 shapes</b> to their jobs.</li>
+          <li data-challenge="parts">Tap all <b>13 parts</b> to learn their names. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Your body has more than <b>200 kinds</b> of cells. Each kind has a shape that fits its job.</li>
+          <li>Almost every cell has a <b>membrane</b>, <b>cytoplasm</b>, and a <b>nucleus</b>. Grown-up red blood cells give up their nucleus, to make room for more oxygen.</li>
+          <li>Blood is <b>never blue</b>! It’s dark red without oxygen, and bright red with it.</li>
+          <li>A red blood cell lives for about <b>4 months</b>, and goes around your whole body many times a day.</li>
+          <li>Some nerve cells reach from your back all the way to your toes: about <b>1 meter</b> long!</li>
+          <li>A muscle cell is so long that it has <b>many nuclei</b>, not just one.</li>
+          <li>White blood cells crawl and swallow germs, a lot like an <a href="../organisms/amoeba.html">Amoeba</a>.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/specialcells.js"></script>
+</body>
+</html>
