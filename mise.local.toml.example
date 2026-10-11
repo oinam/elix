@@ -1,0 +1,10 @@
+# Local secrets and overrides for this machine. Copy to mise.local.toml (gitignored),
+# fill it in, and run `mise trust`. mise loads [env] into every task, so `mise run dev`
+# sees these values.
+#
+# Nothing needs a secret yet. When the site gets an API (a Worker `main` script in
+# wrangler.jsonc), its keys go here for local runs, and into Cloudflare for production
+# with `npx wrangler secret put <NAME>`.
+
+[env]
+# ANTHROPIC_API_KEY = ""

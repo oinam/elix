@@ -23,7 +23,8 @@ Let’s try with these topics for now;
 
 - Plain HTML, CSS, and ES modules. No build step. The only npm dependency is Wrangler (dev and deploy).
 - Three.js `0.186.1` from jsDelivr through an import map in each page. `three/addons/` maps to `examples/jsm/` (OrbitControls, CSS2DRenderer). Bump the version in every page’s import map together.
-- Run locally with `npm run dev` (Wrangler, http://localhost:8787). It matches production: clean URLs and the 404 page. No-install fallback: `python3 -m http.server 8000 -d public`. `file://` won’t load modules.
+- Run locally with `mise run dev` (Wrangler, http://localhost:8787; installs it first if needed), or `npm run dev` without mise. It matches production: clean URLs and the 404 page. No-install fallback: `mise run serve` or `python3 -m http.server 8000 -d public`. `file://` won’t load modules.
+- `mise.toml` pins Node 22 and holds the tasks (`mise tasks` lists them). Local secrets go in the gitignored `mise.local.toml` (template: `mise.local.toml.example`); production secrets go in Cloudflare with `npx wrangler secret put`.
 
 ### Deploy (Cloudflare)
 

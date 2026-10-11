@@ -24,6 +24,9 @@ dist/
 .claude/settings.local.json
 CLAUDE.local.md
 
+# mise — local secrets and overrides. The .example template stays tracked.
+mise.local.toml
+
 # Cloudflare Wrangler
 .wrangler/
 .dev.vars
