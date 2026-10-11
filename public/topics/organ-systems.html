@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Organs and organ systems · ELIx</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../science/unit-4.html" aria-label="Back to Unit 4">←<span class="wide-only">&nbsp;Unit 4</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🫁 </span>Organs<span class="wide-only">&nbsp;and organ systems</span></h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite"></div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Pick one</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-chain="human" aria-pressed="true">🧍 Human</button>
+          <button class="btn press" data-chain="plant" aria-pressed="false">🌱 Plant</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Show a system</span></h2>
+        <div class="buttons" id="systems"></div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--purple)">Tinker</span></h2>
+        <div id="human-tools">
+          <div class="buttons">
+            <button class="btn big press" id="eat">🍎 Eat an apple</button>
+            <button class="btn press" id="breathe">🌬️ Deep breath</button>
+            <button class="btn press" id="drink">🚰 Drink water</button>
+          </div>
+          <label class="control">
+            <span class="name">Body <output id="pace-out"></output></span>
+            <input type="range" id="pace" min="0" max="10" step="1" value="2">
+            <span class="ends"><span>Resting</span><span>Running</span></span>
+          </label>
+        </div>
+        <div id="plant-tools" hidden>
+          <div class="buttons">
+            <button class="btn press" id="water" aria-pressed="false">💧 Water the soil</button>
+            <button class="btn press" id="sun" aria-pressed="false">☀️ Sunshine</button>
+          </div>
+        </div>
+        <div class="buttons three" style="margin-top: 14px">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="eat">Eat an apple and follow it <b>all the way through</b> the digestive system.</li>
+          <li data-challenge="breathe">Take a <b>deep breath</b> and watch the lungs fill up.</li>
+          <li data-challenge="run">Slide the body to <b>Running</b>. What do the heart and lungs do?</li>
+          <li data-challenge="kidneys">Drink water until the <b>bladder</b> is full.</li>
+          <li data-challenge="water">Pick <b>Plant</b> and water the soil. Watch the water climb up!</li>
+          <li data-challenge="food">Give the plant <b>sunshine</b> and water. Where does the food go?</li>
+          <li data-challenge="parts">Tap all <b>19 parts</b>, in the human and the plant. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Tissues team up into an <b>organ</b>, like the heart, a lung, or a leaf.</li>
+          <li>Organs team up into an <b>organ system</b>. The heart and blood vessels make the circulatory system.</li>
+          <li>Your heart beats about <b>100,000 times</b> every day.</li>
+          <li>A plant has two systems: the <b>root system</b> under the ground and the <b>shoot system</b> above it.</li>
+          <li><b>Xylem</b> carries water up. <b>Phloem</b> carries food to every part that needs it.</li>
+          <li>No system works alone. Food gives you energy only because your blood carries it, and your lungs bring the oxygen to use it.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/organsystems.js"></script>
+</body>
+</html>
