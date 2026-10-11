@@ -66,11 +66,16 @@ js/progress.js           Stars per topic in localStorage; showStars() fills the 
                          ("⭐ 3 of 5" per topic, or a total for data-topics="a b c")
 organisms/<name>.html    One page per organism (paramecium, amoeba, bacteria, yeast):
                          topbar, 3D stage, control panel
-topics/<name>.html       Concept pages: single-cell (one cell, every job; riddles),
-                         multi-cell (cell → tissue → organ → organ system → organism),
-                         and "Inside a cell": microscope (parts, eyepiece view drawn in
-                         2D, invention timeline with a how-small scale), cell (membrane gatekeeper, nucleus), cytoplasm,
-                         centrioles (cell splitting step by step), plant-vs-animal
+topics/<name>.html       Concept pages: systems (a bicycle to take apart), single-cell
+                         (one cell, every job; riddles), microscope (parts, eyepiece view
+                         drawn in 2D, invention timeline with a how-small scale), cell
+                         (membrane gatekeeper, nucleus), cytoplasm (organelles, smooth ER,
+                         cytoskeleton), centrioles (cell splitting step by step),
+                         plant-vs-animal, multi-cell (cell → tissue → organ → organ system
+                         → organism), organ-systems (body systems; xylem and phloem in a
+                         plant), special-cells (red blood, nerve, muscle, white blood
+                         cells), and cancer (a gentle note: cells that stop following
+                         the rules)
 js/<name>.js             That page's models, animation, and controls
 ```
 
@@ -91,4 +96,5 @@ Books: the scanned chapters live in `tmp/Books/` (gitignored, never published). 
 - Cello reacts to what she does: first-time successes, mistakes, and discoveries. Keep the lines short, warm, and never scolding.
 - Big type and touch-sized controls (at least 44px). Give every scene Pause and Reset view.
 - Keep the science right, even when it’s simplified. Check facts against the NCERT Grade 5 to 8 books. Easy ones to get wrong: bacteria have no nucleus; yeast is a fungus and buds; the fridge stops bacteria growing but doesn’t kill them; boiling does.
+- Where her school book disagrees, the site keeps the right fact. Unit 4’s timeline says electron microscopes came in the 1940s and that the 1982 tunneling microscope sees blood cells; it was 1981 and it sees atoms. Mature human red blood cells have no nucleus. Cancer is not catching, and that page stays calm and never blames anyone.
 - More to keep right: magnification is eyepiece × objective; Leeuwenhoek used a single-lens microscope; the first electron microscope was 1931 (Ruska and Knoll; NCERT says 1940). Centrioles set up the spindle, but the spindle fibers do the pulling; most plant cells have no centrioles and build a new wall instead of pinching. Animal cells have small vacuoles, not none. Mitochondria are in both plant and animal cells.
