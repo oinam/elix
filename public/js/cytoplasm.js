@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
-import { glass, solid, blobGeometry, makeNucleus, makeMitochondrion, makeVacuole, makeER, makeGolgi, makeRibosomes } from './cellparts.js';
+import { glass, solid, seeded, blobGeometry, makeNucleus, makeMitochondrion, makeVacuole, makeER, makeGolgi, makeRibosomes } from './cellparts.js';
 
 // The jelly inside a cell and the little parts (organelles) floating in it.
 // Shake it, make it flow, take the jelly away, and follow sugar and a
@@ -12,11 +12,13 @@ const PARTS = {
   cytoplasm: { name: 'Cytoplasm', text: 'A clear jelly, mostly water, that fills the cell. Every part floats in it, and lots of the cell’s work happens right here.' },
   nucleus: { name: 'Nucleus', text: 'The control center. It floats in the cytoplasm, inside its own skin.' },
   mitochondria: { name: 'Power stations (mitochondria)', text: 'They finish breaking down food to make energy for the cell.' },
-  er: { name: 'Tunnels (endoplasmic reticulum)', text: 'Folded tunnels around the nucleus. The dots on them are ribosomes building things, and the tunnels carry them through the cell.' },
+  er: { name: 'Rough tunnels (rough ER)', text: 'Folded tunnels around the nucleus, dotted with ribosomes. The dots build proteins, and the tunnels carry them through the cell. ER is short for endoplasmic reticulum.' },
+  smoothEr: { name: 'Smooth tunnels (smooth ER)', text: 'Tunnels with no ribosome dots. They make fats and oils for the cell, and help clear out harmful stuff.' },
   golgi: { name: 'Packing room (Golgi body)', text: 'A stack of flat pockets. It packs things into little bubbles and sends them where they need to go, even out of the cell.' },
   ribosomes: { name: 'Builders (ribosomes)', text: 'Tiny dots that build proteins: the stuff a cell is made of and works with.' },
   lysosomes: { name: 'Cleaners (lysosomes)', text: 'Little bags that break down waste and old, worn-out parts.' },
   vacuoles: { name: 'Storage bubbles (vacuoles)', text: 'They keep water, food, and waste until the cell needs them.' },
+  cytoskeleton: { name: 'Scaffold (cytoskeleton)', text: 'A web of tiny threads and tubes. It holds the cell’s shape, helps it move, and works like train tracks that parts ride along.' },
 };
 
 // ---------- Stage ----------
@@ -35,7 +37,12 @@ const explorer = createExplorer({
   stageEl,
   skins: ['membrane', 'cytoplasm'],
   greeting: 'All this clear jelly is the cytoplasm! Shake the cell and see what happens.',
-  allPartsLine: 'All 9 parts! You know what floats in the jelly.',
+  allPartsLine: 'All 11 parts! You know what floats in the jelly.',
+  onPart: (key) => {
+    if (key === 'cytoskeleton' && explorer.complete('scaffold')) {
+      setTimeout(() => cello.say('Without its scaffold, a cell would flop like a water balloon!', { mood: 'wow', ms: 5000 }), 2600);
+    }
+  },
 });
 const { addLabel, tagPart, complete, cello } = explorer;
 
@@ -112,6 +119,41 @@ cell.add(vacGroup);
 });
 tagPart(vacGroup, 'vacuoles');
 
+// Smooth tunnels: bumpy tubes with no ribosome dots, just past the rough ones.
+const smoothEr = new THREE.Group();
+const smoothMat = glass(0x9ad8ff, 0.7);
+for (let i = 0; i < 4; i++) {
+  const a = Math.PI * 1.15 + i * 0.32;
+  const points = [0, 1, 2, 3, 4].map((k) => {
+    const r = 1.45 + (k % 2) * 0.16;
+    const angle = a + k * 0.11;
+    return new THREE.Vector3(Math.sin(angle) * r, (k - 2) * 0.12 + (i - 1.5) * 0.18, Math.cos(angle) * r);
+  });
+  smoothEr.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points), 24, 0.075, 8), smoothMat));
+}
+nucleus.group.add(smoothEr);
+tagPart(smoothEr, 'smoothEr');
+
+// The scaffold: threads from near the nucleus out to the membrane. Hidden
+// until she shows it. Each thread has a wider, unseen tube around it, so
+// it's easy to tap.
+const scaffold = new THREE.Group();
+scaffold.visible = false;
+jelly.add(scaffold);
+const threadMat = solid(0xffb978);
+const hitMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, colorWrite: false });
+const randThread = seeded(7);
+for (let i = 0; i < 34; i++) {
+  const dir = new THREE.Vector3(randThread() * 2 - 1, randThread() * 2 - 1, randThread() * 2 - 1).normalize();
+  const start = dir.clone().multiplyScalar(1.0).add(NUCLEUS_AT);
+  const end = dir.clone().multiplyScalar(R * 0.9).multiply(SHAPE);
+  const mid = start.clone().lerp(end, 0.5).add(new THREE.Vector3(randThread() - 0.5, randThread() - 0.5, randThread() - 0.5).multiplyScalar(0.6));
+  const curve = new THREE.CatmullRomCurve3([start, mid, end]);
+  scaffold.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 20, 0.02, 5), threadMat));
+  scaffold.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 10, 0.08, 5), hitMat));
+}
+tagPart(scaffold, 'cytoskeleton');
+
 addLabel('membrane', cell, new THREE.Vector3(-2.1, 1.6, 0.4));
 addLabel('cytoplasm', cell, new THREE.Vector3(0.6, -1.0, 1.7));
 addLabel('nucleus', nucleus.group, new THREE.Vector3(0, 0.4, 0.75));
@@ -121,6 +163,8 @@ addLabel('mitochondria', mitos[2].object, new THREE.Vector3(0, 0.3, 0));
 addLabel('ribosomes', cell, new THREE.Vector3(-1.2, 0.5, 1.5));
 addLabel('lysosomes', lysoGroup.children[0], new THREE.Vector3(0, 0.3, 0));
 addLabel('vacuoles', vacGroup.children[0], new THREE.Vector3(0, 0.4, 0));
+addLabel('smoothEr', smoothEr.children[0], new THREE.Vector3(0, 0.3, 0));
+addLabel('cytoskeleton', scaffold, new THREE.Vector3(1.4, 1.5, 0.6), { hideWith: scaffold });
 
 // ---------- How the jelly behaves ----------
 
@@ -345,6 +389,12 @@ document.getElementById('package').addEventListener('click', () => {
       cello.say('Another package, wrapped and sent!', { ms: 2500 });
     }
   }, 3600);
+});
+
+bindToggle('scaffold', (on) => {
+  scaffold.visible = on;
+  explorer.showLabels();
+  if (on) cello.say('See the threads? That’s the scaffold. Tap it to learn more!', { ms: 3500 });
 });
 
 document.getElementById('reset').addEventListener('click', () => {
