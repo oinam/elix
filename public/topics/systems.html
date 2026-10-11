@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Systems and their parts · ELIx</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../science/unit-4.html" aria-label="Back to Unit 4">←<span class="wide-only">&nbsp;Unit 4</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🚲 </span>Systems and their parts</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky has-counter" id="stage">
+      <div class="hint" id="hint">Tap a part to learn its job · Press Pedal to ride</div>
+      <div class="counter" id="speed" aria-live="polite"></div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Ride</span></h2>
+        <div class="buttons">
+          <button class="btn big press" id="pedal" aria-pressed="false">🦶 Pedal</button>
+          <button class="btn press" id="brake">✋ Squeeze brakes</button>
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset view</button>
+        </div>
+        <p class="sub">Gears</p>
+        <div class="buttons">
+          <button class="btn press" data-gear="easy" aria-pressed="true">🐢 Easy gear</button>
+          <button class="btn press" data-gear="fast" aria-pressed="false">🐇 Fast gear</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--purple)">Take it apart</span></h2>
+        <p class="sub">Tap to take a part off, or put it back on.</p>
+        <div class="buttons">
+          <button class="btn press" data-part-toggle="chain" aria-pressed="true">⛓️ Chain</button>
+          <button class="btn press" data-part-toggle="brakes" aria-pressed="true">🛑 Brakes</button>
+          <button class="btn press" data-part-toggle="air" aria-pressed="true">💨 Air in tires</button>
+        </div>
+        <p class="sub">Change the shape</p>
+        <div class="buttons">
+          <button class="btn press" data-shape="round" aria-pressed="true">⭕ Round wheels</button>
+          <button class="btn press" data-shape="square" aria-pressed="false">🟥 Square wheels</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Which part am I?</span> <span class="count" id="riddle-count"></span></h2>
+        <p class="riddle" id="riddle"></p>
+        <div class="buttons">
+          <button class="btn press" data-answer="pedals">🦶 Pedals</button>
+          <button class="btn press" data-answer="chain">⛓️ Chain</button>
+          <button class="btn press" data-answer="gears">⚙️ Gears</button>
+          <button class="btn press" data-answer="wheels">⭕ Wheels</button>
+          <button class="btn press" data-answer="brakes">🛑 Brakes</button>
+          <button class="btn press" data-answer="frame">🔺 Frame</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="ride">Press <b>Pedal</b> and get the wheels turning.</li>
+          <li data-challenge="chain">Take the <b>chain</b> off, then pedal. What happens to the wheels?</li>
+          <li data-challenge="brakes">Take the <b>brakes</b> off, ride, and try to stop.</li>
+          <li data-challenge="gears">Pedal in the <b>fast gear</b>. Do the wheels spin faster?</li>
+          <li data-challenge="square">Ride on <b>square wheels</b>. How does it feel?</li>
+          <li data-challenge="riddles">Solve all <b>6 riddles</b> in Which part am I?</li>
+          <li data-challenge="parts">Tap all <b>10 parts</b> to learn their jobs. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>A <b>system</b> is a group of parts that work together to do a job.</li>
+          <li>Take away one part, and the whole system can <b>stop working</b>.</li>
+          <li>A part’s shape (<b>structure</b>) fits its job (<b>function</b>). Round wheels roll. A chain bends around the gears.</li>
+          <li>A bike frame is made of <b>triangles</b>, one of the strongest shapes.</li>
+          <li>Systems are everywhere: a <b>clock</b>, a <b>tree</b>, a <b>school</b>, and your own <b>body</b>!</li>
+          <li>Your body has smaller systems inside it, like your heart and blood vessels. See them team up in <a href="organ-systems.html">Organs and organ systems</a>.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/systems.js"></script>
+</body>
+</html>
