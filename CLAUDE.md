@@ -37,6 +37,7 @@ Let’s try with these topics for now;
 
 - `README.md` is written and edited by me (Brajeshwar). Keep it machine readable (plain Markdown, clear headings), but it’s mine.
 - Never write to `README.md` without my explicit permission, asked for and given in chat for that specific change. This includes small fixes, run instructions, and status tables.
+- Never stage or commit `README.md` as part of other work either; I edit it while you work. Stage commits by path, never `git add -A` or `git add .`.
 - Reading it is fine. If something in it is out of date, tell me and suggest the change; don’t make it.
 
 ### Layout
