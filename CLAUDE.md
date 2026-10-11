@@ -63,7 +63,7 @@ organisms/<name>.html    One page per organism (paramecium, amoeba, bacteria, ye
 topics/<name>.html       Concept pages: single-cell (one cell, every job; riddles),
                          multi-cell (cell → tissue → organ → organ system → organism),
                          and "Inside a cell": microscope (parts, eyepiece view drawn in
-                         2D, timeline), cell (membrane gatekeeper, nucleus), cytoplasm,
+                         2D, invention timeline with a how-small scale), cell (membrane gatekeeper, nucleus), cytoplasm,
                          centrioles (cell splitting step by step), plant-vs-animal
 js/<name>.js             That page's models, animation, and controls
 ```

@@ -2,19 +2,9 @@
 
 > Explain Like I’m X
 
-My daughter is 10-years old and is in Grade-5 at a school whose curriculum is CBSE with NCERT Books. This website is to “Explain Like I’m 10-years” for her on topics taught at her school books.
+https://elix.oinam.com
 
-Live at <https://elix.oinam.com>.
-
-### Topics
-
-Organizations in Systems:
-
-- Organisms: Paramecium, Amoeba, Bacteria, and Yeast, each in 3D to poke, feed, and tinker with
-- Single-cell organisms: one cell does every job
-- Multi-cell organisms: cell → tissue → organ → organ system → organism
-
-### Run it locally
+## Run it locally
 
 The website lives in `public/`. Either:
 

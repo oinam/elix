@@ -86,18 +86,38 @@
           <li data-challenge="cork">See the tiny boxes in <b>cork</b> that Robert Hooke saw in 1665.</li>
           <li data-challenge="zoom">Switch to the <b>40× lens</b> and make it sharp. That’s 400 times bigger!</li>
           <li data-challenge="pond">Find something <b>swimming</b> in pond water.</li>
-          <li data-challenge="timeline">Tap all <b>9 stops</b> on the timeline. <span id="timeline-count"></span></li>
+          <li data-challenge="timeline">Walk all <b>10 stops</b> on the timeline, from eyeglasses to atoms. <span id="timeline-count"></span></li>
           <li data-challenge="parts">Tap all <b>11 parts</b> to learn their names. <span id="parts-count"></span></li>
         </ul>
         <button class="link-btn" id="reset-stars">Start over</button>
       </section>
 
       <section class="chunky">
-        <h2><span class="wavy" style="--wave: var(--orange)">Timeline</span></h2>
+        <h2><span class="wavy" style="--wave: var(--orange)">How it was invented</span></h2>
         <ol class="timeline" id="timeline"></ol>
         <div class="tl-card" id="tl-card" hidden>
           <p id="tl-text"></p>
+          <p class="sub">How small could it see?</p>
+          <div class="scale" aria-hidden="true">
+            <ol class="rungs">
+              <li><i style="--dot: 24px"></i>Hair</li>
+              <li><i style="--dot: 17px"></i>Cell</li>
+              <li><i style="--dot: 11px"></i>Bacteria</li>
+              <li><i style="--dot: 6px"></i>Virus</li>
+              <li><i style="--dot: 3px"></i>Atom</li>
+            </ol>
+            <div class="track">
+              <span class="limit" id="tl-limit"></span>
+              <span class="marker" id="tl-marker"></span>
+            </div>
+            <span class="limit-name" id="tl-limit-name">Light’s limit</span>
+          </div>
+          <p class="sees" id="tl-sees"></p>
           <button class="btn press" id="tl-look" hidden></button>
+          <div class="buttons">
+            <button class="btn press" id="tl-prev">◀ Earlier</button>
+            <button class="btn press" id="tl-next">Later ▶</button>
+          </div>
         </div>
       </section>
 
@@ -109,6 +129,7 @@
           <li>To find how much bigger, multiply the two lenses: <b>10 × 40 = 400 times</b>.</li>
           <li>Always start with the <b>smallest lens</b>, find the picture, then switch up.</li>
           <li>The picture in a microscope is <b>upside down and back to front</b>!</li>
+          <li>Light can’t show anything much smaller than the smallest <b>bacteria</b>. To see viruses and atoms, we need <b>electron microscopes</b>.</li>
         </ul>
       </section>
     </aside>

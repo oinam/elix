@@ -4,7 +4,7 @@ import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 
 // A school microscope to take apart by tapping, a look through its eyepiece
-// at four slides, and a timeline of the people who first saw cells.
+// at four slides, and a timeline of how the microscope was invented.
 // The view through the eyepiece is drawn in 2D, measured in micrometers (µm):
 // a thousand of them make one millimeter.
 
@@ -22,17 +22,22 @@ const PARTS = {
   slide: { name: 'Slide', text: 'A thin strip of glass. What you look at is cut very thin, so light can shine through it.' },
 };
 
+// How the microscope was invented. "size" is how small it could see, on the
+// scale's rungs: 0 a hair, 1 a cell, 2 bacteria, 3 viruses, 4 atoms.
+// Light can't show anything past LIGHT_LIMIT, between bacteria and viruses.
 const TIMELINE = [
-  { year: 'About 1590', who: 'The Janssens', text: 'Hans and Zacharias Janssen, Dutch spectacle makers, are said to have put two lenses in a tube. It was one of the first microscopes.' },
-  { year: '1665', who: 'Robert Hooke', text: 'Robert Hooke looked at a thin slice of cork. He saw rows of tiny empty boxes and called them “cells”, like little rooms.', slide: 'cork' },
-  { year: '1674', who: 'Antonie van Leeuwenhoek', text: 'Antonie van Leeuwenhoek made microscopes with one tiny lens each. He was the first to see living cells swimming in pond water. He called them “little animals”. Later, he even saw bacteria!', slide: 'pond' },
-  { year: '1831', who: 'Robert Brown', text: 'Robert Brown spotted a round blob inside plant cells. He named it the nucleus.', slide: 'onion' },
-  { year: '1838', who: 'Schleiden and Schwann', text: 'Matthias Schleiden (1838) and Theodor Schwann (1839) found that all plants and all animals are made of cells.', slide: 'cheek' },
-  { year: '1855', who: 'Rudolf Virchow', text: 'Rudolf Virchow said every cell comes from another cell. Cells make new cells by splitting in two.' },
-  { year: '1931', who: 'Ruska and Knoll', text: 'Ernst Ruska and Max Knoll built the first electron microscope. It uses tiny particles called electrons instead of light, so it can see much smaller things.' },
-  { year: '1981', who: 'Binnig and Rohrer', text: 'Gerd Binnig and Heinrich Rohrer built a microscope that can see single atoms, the tiny bits everything is made of.' },
-  { year: 'Today', who: 'You!', text: 'Scientists use light microscopes and electron microscopes every day. And you just used one too!' },
+  { year: 'About 1286', who: 'Eyeglasses', size: 0, sees: 'Things as small as a hair', text: 'People in Italy made the first eyeglasses. They shaped glass into curved pieces called lenses. Lens makers got better and better, and that led to the microscope.' },
+  { year: 'About 1590', who: 'The Janssens', size: 0.5, sees: 'A flea, up close', text: 'Hans and Zacharias Janssen made eyeglasses in the Netherlands. They are said to have put two lenses in a tube. Two lenses make things look bigger than one. That’s a compound microscope!' },
+  { year: '1625', who: 'It gets a name', size: 0.6, sees: 'Tiny bugs, up close', text: 'Galileo made a microscope too. His friend Giovanni Faber named it a “microscope”, from two Greek words that mean “small” and “look”.' },
+  { year: '1665', who: 'Robert Hooke', size: 1, sees: 'Cells!', text: 'Robert Hooke lit up his microscope with a lamp and a glass ball full of water. In a thin slice of cork he saw tiny empty boxes, and called them “cells”. He drew them in a famous book, Micrographia.', slide: 'cork' },
+  { year: '1674', who: 'Antonie van Leeuwenhoek', size: 2, sees: 'Bacteria, just barely', text: 'Antonie van Leeuwenhoek made tiny microscopes with just one lens each, smaller than a pea. They made things about 270 times bigger, better than any other microscope of his time! He saw living things swimming in pond water, and later even bacteria.', slide: 'pond' },
+  { year: '1830', who: 'Joseph Jackson Lister', size: 2, sees: 'Bacteria, now nice and sharp', text: 'Old lenses gave everything blurry, rainbow-colored edges. Joseph Jackson Lister found how to put lenses together so the picture came out sharp. Now scientists could see what was inside cells.', slide: 'onion' },
+  { year: '1870s', who: 'Abbe and Zeiss', size: 2.5, sees: 'The smallest bacteria. That’s as small as light can go!', text: 'Ernst Abbe used math to design better lenses, and Carl Zeiss built them in his workshop. One lens even dips into a drop of oil, for a clearer view. Abbe also found that light has a limit. It can’t show things much smaller than the smallest bacteria.' },
+  { year: '1931', who: 'Ruska and Knoll', size: 3, sees: 'Viruses, far smaller than bacteria', text: 'Ernst Ruska and Max Knoll built the first electron microscope. It uses tiny particles called electrons instead of light, so it gets past light’s limit. By 1933 it beat the best light microscope. Later ones showed viruses.' },
+  { year: '1981', who: 'Binnig and Rohrer', size: 4, sees: 'Single atoms!', text: 'Gerd Binnig and Heinrich Rohrer built a microscope with no lenses at all! A needle with a super-sharp tip moves just above a surface, so close it can sense each bump. It showed single atoms, the tiny bits everything is made of.' },
+  { year: 'Today', who: 'You!', size: 2, sees: 'Cells, and bacteria as tiny specks', text: 'A school microscope has two lenses: 10\u00a0×\u00a040 makes things 400 times bigger. That’s plenty to see cells, and even bacteria as tiny specks. Big labs use electron microscopes that can see atoms.', slide: 'cheek' },
 ];
+const LIGHT_LIMIT = 2.5;
 
 // Across the round view, in µm, for each objective (with the 10× eyepiece).
 const FIELD = { 4: 4500, 10: 1800, 40: 450 };
@@ -714,23 +719,40 @@ TIMELINE.forEach((stop, i) => {
   listEl.append(li);
 });
 
+// Where a size sits along the scale: the middle of each of the five rungs.
+const scalePercent = (size) => ((size + 0.5) / 5) * 100;
+document.getElementById('tl-limit').style.left = `${scalePercent(LIGHT_LIMIT)}%`;
+document.getElementById('tl-limit-name').style.left = `${scalePercent(LIGHT_LIMIT)}%`;
+
+let current = -1;
 function showStop(i) {
   const stop = TIMELINE[i];
+  const passedLight = current >= 0 && TIMELINE[current].size <= LIGHT_LIMIT && stop.size > LIGHT_LIMIT;
+  current = i;
   [...listEl.querySelectorAll('.btn')].forEach((b, k) => {
     b.setAttribute('aria-pressed', String(k === i));
     if (k === i) b.classList.add('seen');
   });
   tlCard.hidden = false;
   document.getElementById('tl-text').textContent = stop.text;
+  document.getElementById('tl-sees').textContent = stop.sees;
+  document.getElementById('tl-marker').style.left = `${scalePercent(stop.size)}%`;
+  document.getElementById('tl-prev').disabled = i === 0;
+  document.getElementById('tl-next').disabled = i === TIMELINE.length - 1;
   tlSlide = stop.slide ?? null;
   tlLook.hidden = !tlSlide;
   if (tlSlide) tlLook.textContent = `👁️ Look at ${SLIDES[tlSlide].name}`;
   seen.add(i);
   document.getElementById('timeline-count').textContent = `(${seen.size} of ${TIMELINE.length})`;
   if (seen.size === TIMELINE.length && complete('timeline')) {
-    cello.say('You walked the whole timeline, from the first lenses to seeing atoms!', { mood: 'wow', ms: 5500 });
+    cello.say('You walked the whole timeline, from eyeglasses to atoms!', { mood: 'wow', ms: 5500 });
+  } else if (passedLight) {
+    cello.say('Whoa, past light’s limit! Now we can see even smaller things.', { mood: 'wow', ms: 4500 });
   }
 }
+
+document.getElementById('tl-prev').addEventListener('click', () => showStop(Math.max(current - 1, 0)));
+document.getElementById('tl-next').addEventListener('click', () => showStop(Math.min(current + 1, TIMELINE.length - 1)));
 
 tlLook.addEventListener('click', () => {
   setSlide(tlSlide);
