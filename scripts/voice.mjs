@@ -6,9 +6,9 @@
 //   mise run voice -- --list # print every sentence it would voice
 //   mise run voices          # British female voices on your account, to pick from
 //
-// It reads every sentence-like string in public/js/*.js and in the <script>
-// blocks of public/**/*.html, cuts them into sentences the way js/voice.js
-// does, and keeps one clip per sentence in public/audio/<key>.mp3. Clips that
+// It reads every sentence-like string in public/js/*.js (the home, menu, and
+// 404 pages keep their lines inline and stay quiet), cuts them into sentences
+// the way js/voice.js does, and keeps one clip per sentence in public/audio/<key>.mp3. Clips that
 // no line uses any more are removed. public/audio/manifest.json lists the
 // clips, so the page only asks for clips that exist.
 //
@@ -109,13 +109,9 @@ const looksSpoken = (s) => !s.includes('\0')
 async function collect() {
   const sentences = new Map(); // key → sentence
   const add = (s) => { if (looksSpoken(s)) sentences.set(voiceKey(s), s); };
-  for (const path of await files(PUBLIC)) {
-    let code;
-    if (path.endsWith('.js')) code = await readFile(path, 'utf8');
-    else if (path.endsWith('.html')) {
-      const html = await readFile(path, 'utf8');
-      code = [...html.matchAll(/<script(?![^>]*importmap)[^>]*>([\s\S]*?)<\/script>/g)].map((m) => m[1]).join('\n');
-    } else continue;
+  for (const path of await files(join(PUBLIC, 'js'))) {
+    if (!path.endsWith('.js')) continue;
+    const code = await readFile(path, 'utf8');
     for (const { text, isName } of strings(code)) {
       // A part's name is read out as the first sentence of its card.
       if (isName && !text.includes('\0')) add(voiceSentences(`${text}.`)[0] ?? '');

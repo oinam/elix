@@ -24,7 +24,9 @@ const BODY = `
   <circle cx="86" cy="74" r="5" style="fill:var(--pink)" opacity=".8"/>
 `;
 
-export function createMascot(dock) {
+// voice: true on topic pages, so Cello speaks there and the 🔊 Voice toggle
+// shows. The home, menu, and 404 pages stay quiet: no voice for getting around.
+export function createMascot(dock, { voice = false } = {}) {
   const bubble = document.createElement('div');
   bubble.className = 'bubble quiet';
   bubble.setAttribute('aria-live', 'polite');
@@ -37,19 +39,20 @@ export function createMascot(dock) {
   svg.innerHTML = `${BODY}<g class="mouth">${MOUTHS.happy}</g>`;
   dock.append(svg);
   const mouth = svg.querySelector('.mouth');
-  addVoiceToggle();
+  if (voice) addVoiceToggle();
 
   let timer = null;
   let busyUntil = 0;
 
   // ms = 0 keeps the bubble up. important = false skips it if Cello is mid-sentence.
-  function say(text, { mood = 'happy', ms = 3500, important = true } = {}) {
+  // aloud = false shows the line without saying it.
+  function say(text, { mood = 'happy', ms = 3500, important = true, aloud = true } = {}) {
     const now = performance.now();
     if (!important && now < busyUntil) return;
     busyUntil = now + Math.min(ms || 3500, 2500);
     mouth.innerHTML = MOUTHS[mood];
     bubble.textContent = text;
-    speak(text);
+    if (voice && aloud) speak(text);
     bubble.classList.remove('quiet');
     svg.classList.remove('talk');
     void svg.getBoundingClientRect(); // restart the bob animation

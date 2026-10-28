@@ -30,7 +30,7 @@ export function createExplorer({
   const partCount = Object.keys(parts).length;
   const challenges = [...document.querySelectorAll('[data-challenge]')].map((li) => li.dataset.challenge);
   let progress = loadProgress(topic);
-  const cello = createMascot(document.getElementById('mascot'));
+  const cello = createMascot(document.getElementById('mascot'), { voice: true });
 
   // ---------- Parts and labels ----------
 
@@ -194,7 +194,9 @@ export function createExplorer({
   renderProgress();
   addAsk({ cello, parts });
   setTimeout(() => {
-    cello.say(progress.done.length ? 'Welcome back! Can you get every star?' : greeting, { ms: 6000 });
+    // “Welcome back” is just shown, not said.
+    const back = progress.done.length > 0;
+    cello.say(back ? 'Welcome back! Can you get every star?' : greeting, { ms: 6000, aloud: !back });
   }, 600);
 
   return { addLabel, tagPart, untagPart, showLabels, complete, cello };
