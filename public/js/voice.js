@@ -1,11 +1,13 @@
-// Cello’s voice: short recorded clips, one per sentence, made ahead of time by
-// scripts/voice.mjs (`mise run voice`) and served from /audio/. A line plays
-// sentence by sentence; a sentence with no clip (most lines with numbers in
-// them) is skipped, so the bubble still shows it.
+// Cello’s voice: recorded clips, made ahead of time by scripts/voice.mjs
+// (`mise run voice`) and served from /audio/. Most lines, and every
+// tap-to-learn card, are one clip, so they flow. A line built at run time
+// (with a number or a name spliced in) plays the longest stretches of it that
+// have clips; the rest is skipped, and the bubble still shows it.
 //
 // voiceSentences() and voiceKey() are shared with the generator, so both cut
-// a line the same way and name each clip the same way. Nothing here touches
-// the page until speak() or addVoiceToggle() runs.
+// a line the same way and name each clip the same way: a clip's key is the
+// key of its sentences joined by spaces. Nothing here touches the page until
+// speak() or addVoiceToggle() runs.
 
 // Emoji, and the joiners and variation selectors inside them, aren’t spoken.
 const EMOJI = /[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}\u{1F3FB}-\u{1F3FF}︎️‍⃣]/gu;
@@ -66,18 +68,32 @@ export function stopSpeaking() {
   current?.pause();
 }
 
+// The clips for a line: from each sentence, the longest run of sentences
+// that has a clip. A whole line usually comes back as one key.
+function clipKeys(text, have) {
+  const sentences = voiceSentences(text);
+  const keys = [];
+  for (let i = 0; i < sentences.length;) {
+    let j = sentences.length;
+    while (j > i && !have.has(voiceKey(sentences.slice(i, j).join(' ')))) j--;
+    if (j > i) keys.push(voiceKey(sentences.slice(i, j).join(' ')));
+    i = Math.max(j, i + 1);
+  }
+  return keys;
+}
+
 // Says a line out loud, if Voice is on and its clips exist. A new line cuts
 // off the one before. Each clip gets its own Audio, so a late event from the
-// last line can't end this one early.
+// last line can't end this one early, and they all start loading at once, so
+// there's no wait between them.
 export async function speak(text) {
   if (!voiceOn()) return;
   const mine = ++turn;
   current?.pause();
   const have = await loadClips();
-  const keys = voiceSentences(text).map(voiceKey).filter((k) => have.has(k));
-  for (const key of keys) {
+  const queue = clipKeys(text, have).map((key) => new Audio(`/audio/${key}.mp3`));
+  for (const clip of queue) {
     if (mine !== turn) return;
-    const clip = new Audio(`/audio/${key}.mp3`);
     current = clip;
     const done = new Promise((resolve) => {
       for (const type of ['ended', 'error', 'pause']) clip.addEventListener(type, resolve, { once: true });

@@ -66,7 +66,7 @@ js/cellparts.js          Shared 3D cell parts: blob shapes, nucleus (pores, nucl
                          threads that coil into chromosomes), mitochondria, vacuoles,
                          centrioles, chloroplasts, ER, Golgi body, ribosomes
 js/mascot.js             Cello the cell: createMascot(dock).say(text, { mood }), celebrate()
-js/voice.js              Cello’s voice: speak(text) plays a line’s clips sentence by sentence,
+js/voice.js              Cello’s voice: speak(text) plays a line’s clip (or the clips for its parts),
                          the 🔊 Voice toggle; voiceSentences() and voiceKey() are shared
                          with scripts/voice.mjs
 js/ask.js                Ask Cello: the question box, shown only when /api/ask says it’s ready
@@ -90,7 +90,7 @@ js/<name>.js             That page's models, animation, and controls
 
 ### Voice and Ask Cello
 
-- Voice: `mise run voice` (`scripts/voice.mjs`) finds every sentence-like string in `public/` scripts, and makes one ElevenLabs clip per sentence into `public/audio/`. It’s a dry run (counts lines and characters) until `ELEVENLABS_API_KEY` is set in `mise.local.toml`. The clips are committed; the site never calls ElevenLabs. Every `cello.say()` and every tap-to-learn card speaks, if its clips exist; lines with numbers or names spliced in stay silent. After changing any line, run `mise run voice` again: it only makes the new sentences, and deletes clips nothing uses. The voice is a British female voice (`ELEVENLABS_VOICE_ID`, or the first one `mise run voices` finds); “Cello” is said “Sello”.
+- Voice: `mise run voice` (`scripts/voice.mjs`) reads every sentence-like string in `public/js/`, and makes one ElevenLabs clip per line into `public/audio/`: a whole Cello line, or a whole tap-to-learn card (name, then text), so they flow. A line with a number or a name spliced in plays the stretches that have clips and skips the rest. It’s a dry run (counts lines and characters) until `ELEVENLABS_API_KEY` is set in `mise.local.toml`. The clips are committed; the site never calls ElevenLabs. Only topic pages speak (`createMascot(dock, { voice: true })` in `js/explorer.js`); the home, menu, and 404 pages stay quiet, and “Welcome back” is shown, not said. After changing any line, run `mise run voice` again: it only makes the new lines, and deletes clips nothing uses. The voice is Charlotte, from the ElevenLabs voice library (`ELEVENLABS_VOICE_ID` in `mise.toml`; changing it remakes every clip); “Cello” is said “Sello”.
 - Ask Cello: `worker/index.js` answers `POST /api/ask` with Claude Haiku 5.5 (`claude-haiku-5-5`), low effort, three short sentences at most, kept to the page’s topic. Limits: 5 questions a minute per visitor and 60 a minute for the site (`ratelimits` in `wrangler.jsonc`), and 200 characters a question. Without the key, the box doesn’t appear.
 
 The look follows https://coolphabets.com in spirit: Nunito (self-hosted in `fonts/`, Latin and Latin Extended only), cream dot-grid page, chunky ink outlines (`.chunky`), hard shadows with press-down buttons (`.press`), pastel pills and tiles, wavy underlines (`.wavy`), and a slight tilt on cards. Keep tilts at 2° or less, and put any motion behind `prefers-reduced-motion`.

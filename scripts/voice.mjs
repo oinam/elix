@@ -3,13 +3,15 @@
 //
 //   mise run voice           # no key yet: a dry run (how many lines, how many characters)
 //                            # with ELEVENLABS_API_KEY: makes the missing clips
-//   mise run voice -- --list # print every sentence it would voice
+//   mise run voice -- --list # print every line it would voice
 //   mise run voices          # British female voices on your account, to pick from
 //
 // It reads every sentence-like string in public/js/*.js (the home, menu, and
-// 404 pages keep their lines inline and stay quiet), cuts them into sentences
-// the way js/voice.js does, and keeps one clip per sentence in public/audio/<key>.mp3. Clips that
-// no line uses any more are removed. public/audio/manifest.json lists the
+// 404 pages keep their lines inline and stay quiet) and keeps one clip per
+// line in public/audio/<key>.mp3: a whole Cello line, or a whole tap-to-learn
+// card (its name, then its text). A template line gets a clip for each run of
+// whole sentences between its ${…} parts. Clips that no line uses any more
+// are removed. public/audio/manifest.json lists the
 // clips, so the page only asks for clips that exist.
 //
 // Settings (mise.local.toml, or the [env] in mise.toml):
@@ -91,7 +93,7 @@ function strings(code) {
           text += code[j++];
         }
       }
-      found.push({ text, isName: /\bname:\s*$/.test(before) });
+      found.push({ text, isName: /\bname:\s*$/.test(before), isText: /\btext:\s*$/.test(before) });
       i = j;
     }
     i++;
@@ -100,25 +102,50 @@ function strings(code) {
 }
 
 // A sentence worth voicing: reads like words, ends like a sentence.
-const looksSpoken = (s) => !s.includes('\0')
-  && /^[\p{Lu}\d“‘"(]/u.test(s)
+const looksSpoken = (s) => /^[\p{Lu}\d“‘"(]/u.test(s)
   && /[.!?…][”’)"']*$/.test(s)
   && !/[<>{}#;=\\/_|]/.test(s)
   && s.length <= 400;
 
 async function collect() {
-  const sentences = new Map(); // key → sentence
-  const add = (s) => { if (looksSpoken(s)) sentences.set(voiceKey(s), s); };
+  const lines = new Map(); // key → the line, as spoken
+  // One clip per run of speakable sentences: the whole line, if it all is.
+  // A template's ${…} parts break the runs. The bit after one only starts a
+  // whole sentence if the bit before it ended one (or there was none).
+  const addRuns = (text) => {
+    let run = [];
+    const flush = () => {
+      if (run.length) lines.set(voiceKey(run.join(' ')), run.join(' '));
+      run = [];
+    };
+    const chunks = text.split('\0');
+    chunks.forEach((chunk, k) => {
+      const midSentence = k > 0 && chunks[k - 1].trim() && !/[.!?…][”’)"']*$/.test(chunks[k - 1].trim())
+        && !/^[.!?…]/.test(chunk.trim()); // `Not ${x}. Try again!` ends it right away
+      voiceSentences(chunk).forEach((s, n) => {
+        if (looksSpoken(s) && !(n === 0 && midSentence)) run.push(s);
+        else flush();
+      });
+      flush();
+    });
+  };
   for (const path of await files(join(PUBLIC, 'js'))) {
     if (!path.endsWith('.js')) continue;
-    const code = await readFile(path, 'utf8');
-    for (const { text, isName } of strings(code)) {
-      // A part's name is read out as the first sentence of its card.
-      if (isName && !text.includes('\0')) add(voiceSentences(`${text}.`)[0] ?? '');
-      voiceSentences(text).forEach(add);
+    const found = strings(await readFile(path, 'utf8'));
+    for (let i = 0; i < found.length; i++) {
+      const { text, isName } = found[i];
+      const next = found[i + 1];
+      // A part, { name, text }: its card is read as one clip, the way
+      // js/explorer.js says it.
+      if (isName && next?.isText && !text.includes('\0') && !next.text.includes('\0')) {
+        addRuns(`${text}. ${next.text}`);
+        i++;
+      } else {
+        addRuns(text);
+      }
     }
   }
-  return sentences;
+  return lines;
 }
 
 // ---------- ElevenLabs ----------
@@ -152,8 +179,8 @@ async function chooseVoice(manifest) {
   return pick.voice_id;
 }
 
-async function makeClip(voice, sentence, key) {
-  let text = sentence;
+async function makeClip(voice, line, key) {
+  let text = line;
   for (const [from, to] of SAY_AS) text = text.replace(from, to);
   const res = await api(`/v1/text-to-speech/${voice}?output_format=mp3_44100_64`, {
     method: 'POST',
@@ -187,9 +214,9 @@ async function main() {
     return;
   }
 
-  const sentences = await collect();
+  const lines = await collect();
   if (args.has('--list')) {
-    for (const [key, s] of sentences) console.log(`${key}  ${s}`);
+    for (const [key, s] of lines) console.log(`${key}  ${s}`);
   }
   await mkdir(AUDIO, { recursive: true });
   const manifest = await readManifest();
@@ -197,28 +224,28 @@ async function main() {
   const voice = KEY ? await chooseVoice(manifest) : manifest.voice;
   // A new voice or model means every clip is made again.
   const redo = args.has('--redo') || (KEY && manifest.voice && (manifest.voice !== voice || manifest.model !== MODEL));
-  const missing = [...sentences].filter(([key]) => redo || !onDisk.has(key));
+  const missing = [...lines].filter(([key]) => redo || !onDisk.has(key));
   const chars = missing.reduce((n, [, s]) => n + s.length, 0);
-  console.log(`${sentences.size} sentences; ${missing.length} to make (${chars.toLocaleString()} characters).`);
+  console.log(`${lines.size} lines; ${missing.length} to make (${chars.toLocaleString()} characters).`);
 
   if (!KEY) {
     console.log('Dry run: add ELEVENLABS_API_KEY to mise.local.toml to make the clips.');
     return;
   }
 
-  const made = new Set([...onDisk].filter((k) => sentences.has(k) && !redo));
+  const made = new Set([...onDisk].filter((k) => lines.has(k) && !redo));
   let next = 0;
   let failed = 0;
   async function worker() {
     while (next < missing.length) {
-      const [key, sentence] = missing[next++];
+      const [key, line] = missing[next++];
       try {
-        await makeClip(voice, sentence, key);
+        await makeClip(voice, line, key);
         made.add(key);
-        process.stdout.write(`\r${made.size} of ${sentences.size} clips`);
+        process.stdout.write(`\r${made.size} of ${lines.size} clips`);
       } catch (error) {
         failed++;
-        console.error(`\n${error.message}\n  (${sentence})`);
+        console.error(`\n${error.message}\n  (${line})`);
         if (/ 40[13] /.test(error.message)) throw error; // bad key or out of credits: stop
       }
     }
@@ -230,7 +257,7 @@ async function main() {
     await writeManifest(voice, made);
   }
   for (const key of onDisk) {
-    if (!sentences.has(key)) await unlink(join(AUDIO, `${key}.mp3`));
+    if (!lines.has(key)) await unlink(join(AUDIO, `${key}.mp3`));
   }
   console.log(`\nDone: ${made.size} clips${failed ? `, ${failed} failed (run again to retry)` : ''}.`);
 }

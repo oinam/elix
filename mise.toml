@@ -15,9 +15,9 @@
 node = "22" # Wrangler 4 needs Node 22 or newer
 
 [env]
-# Cello's voice for `mise run voice`: "Female-British-Young" on the ElevenLabs account.
-# Not a secret. Changing it remakes every clip on the next run.
-ELEVENLABS_VOICE_ID = "Y30icDS0UYylcIaw2WwT"
+# Cello's voice for `mise run voice`: Charlotte (warm, clear, modern), from the
+# ElevenLabs voice library. Not a secret. Changing it remakes every clip on the next run.
+ELEVENLABS_VOICE_ID = "6fZce9LFNG3iEITDfqZZ"
 
 [tasks.install]
 description = "Install Wrangler (skipped when node_modules is up to date)"
