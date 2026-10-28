@@ -1,10 +1,19 @@
 # Local secrets and overrides for this machine. Copy to mise.local.toml (gitignored),
 # fill it in, and run `mise trust`. mise loads [env] into every task, so `mise run dev`
-# sees these values.
+# and `mise run voice` see these values.
 #
-# Nothing needs a secret yet. When the site gets an API (a Worker `main` script in
-# wrangler.jsonc), its keys go here for local runs, and into Cloudflare for production
-# with `npx wrangler secret put <NAME>`.
+#   cp mise.local.toml.example mise.local.toml && mise trust
 
 [env]
+# Cello's voice. Clips are made here with `mise run voice` and committed as MP3s,
+# so this key never goes to Cloudflare. Key: elevenlabs.io → Developers → API keys
+# (it needs Text to Speech and Voices read access).
+# ELEVENLABS_API_KEY = ""
+# Leave unset to use the first British female premade voice, or pick one from
+# `mise run voices`. Changing it remakes every clip on the next run.
+# ELEVENLABS_VOICE_ID = ""
+
+# Ask Cello. An Anthropic API key (starts sk-ant-) from console.anthropic.com →
+# API keys. This one is for `mise run dev`; production keeps its own copy in
+# Cloudflare: `npx wrangler secret put ANTHROPIC_API_KEY`.
 # ANTHROPIC_API_KEY = ""

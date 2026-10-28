@@ -1,5 +1,6 @@
 // Cello, a friendly cell who reacts to what you do, plus a confetti burst for
 // big moments. No Three.js needed, so the home page can use it too.
+import { speak, addVoiceToggle } from './voice.js';
 
 const MOUTHS = {
   happy: '<path d="M47 76 Q60 90 73 76" fill="none" stroke-width="4" stroke-linecap="round" style="stroke:var(--ink)"/>',
@@ -36,6 +37,7 @@ export function createMascot(dock) {
   svg.innerHTML = `${BODY}<g class="mouth">${MOUTHS.happy}</g>`;
   dock.append(svg);
   const mouth = svg.querySelector('.mouth');
+  addVoiceToggle();
 
   let timer = null;
   let busyUntil = 0;
@@ -47,6 +49,7 @@ export function createMascot(dock) {
     busyUntil = now + Math.min(ms || 3500, 2500);
     mouth.innerHTML = MOUTHS[mood];
     bubble.textContent = text;
+    speak(text);
     bubble.classList.remove('quiet');
     svg.classList.remove('talk');
     void svg.getBoundingClientRect(); // restart the bob animation

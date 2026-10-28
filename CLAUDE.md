@@ -21,9 +21,9 @@ Let’s try with these topics for now;
 
 ### Stack
 
-- Plain HTML, CSS, and ES modules. No build step. The only npm dependency is Wrangler (dev and deploy).
+- Plain HTML, CSS, and ES modules. No build step for the site. npm holds Wrangler (dev and deploy) and the Anthropic SDK, which Wrangler bundles into the Worker.
 - Three.js `0.186.1` from jsDelivr through an import map in each page. `three/addons/` maps to `examples/jsm/` (OrbitControls, CSS2DRenderer). Bump the version in every page’s import map together.
-- Run locally with `mise run dev` (Wrangler, http://localhost:8787; installs it first if needed), or `npm run dev` without mise. It matches production: clean URLs and the 404 page. No-install fallback: `mise run serve` or `python3 -m http.server 8000 -d public`. `file://` won’t load modules.
+- Run locally with `mise run dev` (Wrangler, http://localhost:8787; installs it first if needed), or `npm run dev` without mise. It matches production: clean URLs, the 404 page, and `/api`. No-install fallback: `mise run serve` or `python3 -m http.server 8000 -d public`. `file://` won’t load modules.
 - `mise.toml` pins Node 22 and holds the tasks (`mise tasks` lists them). Local secrets go in the gitignored `mise.local.toml` (template: `mise.local.toml.example`); production secrets go in Cloudflare with `npx wrangler secret put`.
 
 ### Deploy (Cloudflare)
@@ -31,7 +31,7 @@ Let’s try with these topics for now;
 - A Cloudflare Worker named `elix` serves `public/` as static assets, at `https://elix.oinam.com` (custom domain in `wrangler.jsonc`).
 - Deploys from GitHub: Cloudflare Workers Builds runs `npx wrangler deploy` on every push to `main`. Manual deploy: `npm run deploy`.
 - `public/` is the web root. Everything in it is public, and nothing outside it is served.
-- Server-side code later: add a `main` Worker script to `wrangler.jsonc`; static files keep coming from `public/`.
+- Server-side code: `worker/index.js` (the `main` in `wrangler.jsonc`) runs only for `/api/*` (`run_worker_first`). Every other path is a static file from `public/`, or the 404 page. Its one secret is `ANTHROPIC_API_KEY`.
 
 ### README.md is human-edited
 
@@ -66,6 +66,11 @@ js/cellparts.js          Shared 3D cell parts: blob shapes, nucleus (pores, nucl
                          threads that coil into chromosomes), mitochondria, vacuoles,
                          centrioles, chloroplasts, ER, Golgi body, ribosomes
 js/mascot.js             Cello the cell: createMascot(dock).say(text, { mood }), celebrate()
+js/voice.js              Cello’s voice: speak(text) plays a line’s clips sentence by sentence,
+                         the 🔊 Voice toggle; voiceSentences() and voiceKey() are shared
+                         with scripts/voice.mjs
+js/ask.js                Ask Cello: the question box, shown only when /api/ask says it’s ready
+audio/                   Voice clips, <key>.mp3, and manifest.json; made by `mise run voice`
 js/progress.js           Stars per topic in localStorage; showStars() fills the menu pills
                          ("⭐ 3 of 5" per topic, or a total for data-topics="a b c")
 organisms/<name>.html    One page per organism (paramecium, amoeba, bacteria, yeast):
@@ -82,6 +87,11 @@ topics/<name>.html       Concept pages: systems (a bicycle to take apart), singl
                          the rules)
 js/<name>.js             That page's models, animation, and controls
 ```
+
+### Voice and Ask Cello
+
+- Voice: `mise run voice` (`scripts/voice.mjs`) finds every sentence-like string in `public/` scripts, and makes one ElevenLabs clip per sentence into `public/audio/`. It’s a dry run (counts lines and characters) until `ELEVENLABS_API_KEY` is set in `mise.local.toml`. The clips are committed; the site never calls ElevenLabs. Every `cello.say()` and every tap-to-learn card speaks, if its clips exist; lines with numbers or names spliced in stay silent. After changing any line, run `mise run voice` again: it only makes the new sentences, and deletes clips nothing uses. The voice is a British female voice (`ELEVENLABS_VOICE_ID`, or the first one `mise run voices` finds); “Cello” is said “Sello”.
+- Ask Cello: `worker/index.js` answers `POST /api/ask` with Claude Haiku 5.5 (`claude-haiku-5-5`), low effort, three short sentences at most, kept to the page’s topic. Limits: 5 questions a minute per visitor and 60 a minute for the site (`ratelimits` in `wrangler.jsonc`), and 200 characters a question. Without the key, the box doesn’t appear.
 
 The look follows https://coolphabets.com in spirit: Nunito (self-hosted in `fonts/`, Latin and Latin Extended only), cream dot-grid page, chunky ink outlines (`.chunky`), hard shadows with press-down buttons (`.press`), pastel pills and tiles, wavy underlines (`.wavy`), and a slight tilt on cards. Keep tilts at 2° or less, and put any motion behind `prefers-reduced-motion`.
 

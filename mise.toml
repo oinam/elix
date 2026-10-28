@@ -1,10 +1,11 @@
 # ELIx toolchain + tasks — mise-en-place (https://mise.en.dev).
 # Pins the Node version everyone runs Wrangler with, and hosts the repo tasks.
-# Local secrets (an LLM API key, once the site has an API) live in the gitignored
+# Local secrets (the Anthropic and ElevenLabs keys) live in the gitignored
 # mise.local.toml — copy mise.local.toml.example to get started.
 #
 #   mise install        # fetch the tools, once
 #   mise run dev        # local server on http://localhost:8787
+#   mise run voice      # make Cello's voice clips (ElevenLabs)
 #   mise trust          # after creating mise.local.toml
 #
 # The npm scripts stay: Cloudflare Workers Builds runs `npx wrangler deploy` and knows
@@ -20,9 +21,20 @@ sources = ["package.json", "package-lock.json"]
 outputs = ["node_modules/.package-lock.json"]
 
 [tasks.dev]
-description = "Local server on http://localhost:8787, same as production: clean URLs and the 404 page"
+description = "Local server on http://localhost:8787, same as production: clean URLs, the 404 page, and /api"
 depends = ["install"]
 run = "npm run dev"
+# Hands mise's [env] (the keys in mise.local.toml) to the local Worker, so
+# Ask Cello works locally without a separate .dev.vars file.
+env = { CLOUDFLARE_INCLUDE_PROCESS_ENV = "true" }
+
+[tasks.voice]
+description = "Make Cello's missing voice clips with ElevenLabs (a dry run until ELEVENLABS_API_KEY is set)"
+run = "node scripts/voice.mjs"
+
+[tasks.voices]
+description = "List the British female ElevenLabs voices on your account"
+run = "node scripts/voice.mjs --voices"
 
 [tasks.serve]
 description = "No-install fallback on http://localhost:8000 (no clean URLs or 404 page)"

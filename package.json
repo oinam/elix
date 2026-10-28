@@ -1,6 +1,7 @@
 {
   "name": "elix",
   "private": true,
+  "type": "module",
   "description": "ELIx: Explain Like I’m 10",
   "scripts": {
     "dev": "wrangler dev",
@@ -8,5 +9,8 @@
   },
   "devDependencies": {
     "wrangler": "^4.149.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0"
   }
 }

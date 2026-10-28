@@ -8,6 +8,8 @@ import * as THREE from 'three';
 import { makeLabel } from './scene.js';
 import { createMascot, celebrate } from './mascot.js';
 import { loadProgress, saveProgress, clearProgress } from './progress.js';
+import { speak, stopSpeaking } from './voice.js';
+import { addAsk } from './ask.js';
 
 export function createExplorer({
   topic,
@@ -95,9 +97,14 @@ export function createExplorer({
     onPartFound(key);
     document.getElementById('info-found').textContent = `⭐ ${progress.parts.length} of ${partCount} parts found`;
     onPart?.(key);
+    // Last, so the card is what Cello reads, not the “You found…” line.
+    speak(`${parts[key].name}. ${parts[key].text}`);
   }
 
-  document.getElementById('info-close').addEventListener('click', () => { infoEl.hidden = true; });
+  document.getElementById('info-close').addEventListener('click', () => {
+    infoEl.hidden = true;
+    stopSpeaking();
+  });
 
   renderer.domElement.addEventListener('pointerdown', (e) => { downAt = { x: e.clientX, y: e.clientY }; });
   renderer.domElement.addEventListener('pointerup', (e) => {
@@ -185,6 +192,7 @@ export function createExplorer({
   if (document.getElementById('pause')) bindToggle('pause', (on) => stage.setPaused(on));
 
   renderProgress();
+  addAsk({ cello, parts });
   setTimeout(() => {
     cello.say(progress.done.length ? 'Welcome back! Can you get every star?' : greeting, { ms: 6000 });
   }, 600);

@@ -2,12 +2,21 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "elix",
   "compatibility_date": "2026-10-10",
-  // Static site for now: everything in public/ is the website.
-  // Add "main" (a Worker script) here when the site needs server-side code.
+  // public/ is the website. The Worker (worker/index.js) only runs for /api/*,
+  // so every other path is a static file, or the 404 page.
+  "main": "worker/index.js",
   "assets": {
     "directory": "./public",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
   },
+  // Ask Cello's limits: questions per visitor per minute, and for the whole site.
+  // The namespace ids are ours to pick; they only need to be unique in the account.
+  "ratelimits": [
+    { "name": "ASK_PER_VISITOR", "namespace_id": "4101", "simple": { "limit": 5, "period": 60 } },
+    { "name": "ASK_SITE", "namespace_id": "4102", "simple": { "limit": 60, "period": 60 } }
+  ],
   "routes": [
     { "pattern": "elix.oinam.com", "custom_domain": true }
   ]
