@@ -37,11 +37,13 @@ const TIRE = 0.075;
 const SQUARE = 0.85; // half the side of a square wheel
 const AXLE_Y = R + TIRE;
 const REAR = new THREE.Vector3(-1.45, AXLE_Y, 0);
-const FRONT = new THREE.Vector3(1.45, AXLE_Y, 0);
+const FRONT = new THREE.Vector3(1.65, AXLE_Y, 0);
 const BRACKET = new THREE.Vector3(-0.1, 0.7, 0); // where the cranks turn
 const SEAT_JOINT = new THREE.Vector3(-0.42, 1.95, 0);
-const HEAD_TOP = new THREE.Vector3(1.02, 2.0, 0);
-const HEAD_BOTTOM = new THREE.Vector3(1.12, 1.62, 0);
+// The head tube sits above the front tire, in line with the fork, so the
+// tire and the down tube clear each other.
+const HEAD_TOP = new THREE.Vector3(0.955, 2.18, 0);
+const HEAD_BOTTOM = new THREE.Vector3(1.1, 1.92, 0);
 const CRANK = 0.42;
 const RING = 0.3; // the front gear
 const COGS = { easy: 0.3, fast: 0.14 }; // the back gears
