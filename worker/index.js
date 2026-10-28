@@ -50,7 +50,7 @@ async function ask(request, env) {
 
   // Only the site's own pages may ask.
   const origin = request.headers.get('Origin');
-  if (origin && new URL(origin).host !== new URL(request.url).host) return json({ error: 'origin' }, 403);
+  if (origin && origin !== new URL(request.url).origin) return json({ error: 'origin' }, 403);
 
   const visitor = request.headers.get('CF-Connecting-IP') ?? 'local';
   const limits = [env.ASK_PER_VISITOR?.limit({ key: visitor }), env.ASK_SITE?.limit({ key: 'site' })];

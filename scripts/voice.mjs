@@ -228,7 +228,7 @@ async function main() {
     }
   }
   try {
-    await Promise.all([worker(), worker(), worker()]);
+    await Promise.all([worker(), worker()]); // two at a time: what lower ElevenLabs tiers allow
   } finally {
     // Keep what was made, even if a run stops halfway.
     await writeManifest(voice, made);
