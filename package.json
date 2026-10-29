@@ -4,7 +4,7 @@
   "type": "module",
   "description": "ELIx: Explain Like I’m 10",
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "node scripts/dev.mjs",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {

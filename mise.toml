@@ -4,7 +4,7 @@
 # mise.local.toml — copy mise.local.toml.example to get started.
 #
 #   mise install        # fetch the tools, once
-#   mise run dev        # local server on http://localhost:8787
+#   mise run dev        # local server on http://localhost:8787 (or the next free port)
 #   mise run voice      # make Cello's voice clips (ElevenLabs)
 #   mise trust          # after creating mise.local.toml
 #
@@ -26,7 +26,7 @@ sources = ["package.json", "package-lock.json"]
 outputs = ["node_modules/.package-lock.json"]
 
 [tasks.dev]
-description = "Local server on http://localhost:8787, same as production: clean URLs, the 404 page, and /api"
+description = "Local server on http://localhost:8787 (or the next free port), same as production: clean URLs, the 404 page, and /api"
 depends = ["install"]
 run = "npm run dev"
 # Hands mise's [env] (the keys in mise.local.toml) to the local Worker, so
