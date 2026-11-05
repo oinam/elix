@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ELI10: Explain Like I’m 10 · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+</head>
+<body>
+  <main class="home">
+    <header class="hero">
+      <button class="theme-toggle press" data-theme-toggle></button>
+      <div>
+        <p><a class="back press" href="../" aria-label="Back to ELIx">←<span class="wide-only">&nbsp;ELIx</span></a></p>
+        <h1><span class="l1">E</span><span class="l2">L</span><span class="l3">I</span><span class="l4">10</span></h1>
+        <p class="tagline">Explain Like I’m 10</p>
+        <p>Poke it, spin it, zoom in. Your school books, come to life!</p>
+      </div>
+      <div class="hero-mascot" id="mascot"></div>
+
+      <span class="confetti-dot" aria-hidden="true" style="background: var(--purple); left: 38%; top: 30px;"></span>
+      <span class="confetti-dot diamond" aria-hidden="true" style="background: var(--pink); left: 52%; top: 120px;"></span>
+      <span class="confetti-dot" aria-hidden="true" style="background: var(--teal); left: 46%; top: 190px;"></span>
+      <span class="confetti-dot diamond" aria-hidden="true" style="background: var(--yellow); left: 62%; top: 60px;"></span>
+    </header>
+
+    <section class="topic">
+      <p class="kicker wavy" style="--wave: var(--teal)">📚 My books</p>
+      <h2>Pick a book, then a chapter.</h2>
+      <p>Each chapter turns into things to poke, spin, and try.</p>
+
+      <div class="cards">
+        <a class="card chunky" href="../science/index.html">
+          <span class="pill live">Open it!</span>
+          <span class="tile" style="--tile: var(--teal)" aria-hidden="true">🔬</span>
+          <h3>Science</h3>
+          <p>Cells, tiny living things, and how a body works as a team.</p>
+          <span class="pill stars" data-topics="paramecium amoeba bacteria yeast singlecell multicell microscope cell cytoplasm centrioles plantanimal systems organsystems specialcells cancer" hidden></span>
+        </a>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--yellow)" aria-hidden="true">➗</span>
+          <h3>Mathematics</h3>
+          <p>Numbers, shapes, and patterns to play with.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--green)" aria-hidden="true">🌍</span>
+          <h3>Social Science</h3>
+          <p>Maps, people, and places, near and far.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { createMascot } from '../js/mascot.js';
+    import { showStars } from '../js/progress.js';
+
+    const cello = createMascot(document.getElementById('mascot'));
+    cello.say(
+      showStars()
+        ? 'Welcome back, scientist! Which book today?'
+        : "Hi! I’m Cello, a cell. Pick a book and let’s explore!",
+      { ms: 0 },
+    );
+  </script>
+</body>
+</html>

@@ -50,8 +50,9 @@ favicon.ico, favicon-*.png, apple-touch-icon.png, android-chrome-*.png
                          Icons copied from ~/dev/oinam.com; every page links them in <head>
 oinam-logo.svg, oinam-logo-light.svg
                          The Oinam logo (dark mark, and the knockout version), from ~/dev/oinam.com
-index.html               Home: the bookshelf (Science; Mathematics and Social Science coming)
-science/index.html       Science: its units (Unit 4 so far)
+index.html               Home: what ELIx is (after ELI5), and a card for each age (ELI10 so far)
+10/index.html            ELI10: the bookshelf (Science; Mathematics and Social Science coming)
+science/index.html       Science: its units (Unit 4 so far). Back goes to /10/
 science/unit-4.html      Unit 4: Organization in Systems. Topic cards in the book's order,
                          "Play now" or "Coming next". Every topic page's Back goes here
 css/style.css            All styles, shared by every page
@@ -97,7 +98,7 @@ The look follows https://coolphabets.com in spirit: Nunito (self-hosted in `font
 
 Colors live in CSS variables in `css/style.css`, with a `[data-theme="light"]` block. Never hard-code a color in a rule; add a variable to both themes.
 
-To add an organism: copy `organisms/paramecium.html` for the page shell, write `js/<name>.js` on top of `createStage()` and `createExplorer()`, list its challenges as `<li data-challenge="id">`, then turn its card on the unit page (`science/unit-4.html`) into a link with the “Play now” pill and a `<span class="pill stars" id="stars-<topic>" hidden>`, and add the topic id to the `data-topics` lists on `index.html` and `science/index.html`.
+To add an organism: copy `organisms/paramecium.html` for the page shell, write `js/<name>.js` on top of `createStage()` and `createExplorer()`, list its challenges as `<li data-challenge="id">`, then turn its card on the unit page (`science/unit-4.html`) into a link with the “Play now” pill and a `<span class="pill stars" id="stars-<topic>" hidden>`, and add the topic id to the `data-topics` lists on `index.html`, `10/index.html`, and `science/index.html`.
 
 Books: the scanned chapters live in `tmp/Books/` (gitignored, never published). Each unit page follows its chapter’s order; explainers are in our own words, never copied from the book.
 
