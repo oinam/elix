@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unit 7: Earth’s Systems · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/style.css">
+  <script src="../../js/theme.js"></script>
+</head>
+<body>
+  <main class="home menu">
+    <header class="topbar">
+      <a class="back press" href="index.html" aria-label="Back to Science">←<span class="wide-only">&nbsp;Science</span></a>
+      <h1><span aria-hidden="true">🌍 </span>Unit 7: Earth’s Systems</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <div class="menu-mascot" id="mascot"></div>
+
+    <section class="topic big-questions chunky">
+      <h2>Big questions</h2>
+      <ul class="facts">
+        <li>What makes our planet <b>special</b>?</li>
+        <li>How are Earth’s <b>rocks, water, air, and life</b> connected?</li>
+        <li>How do <b>people</b> change the Earth, and how can we look after it?</li>
+      </ul>
+    </section>
+
+    <section class="topic">
+      <p class="kicker wavy" style="--wave: var(--green)">Part 1</p>
+      <h2>Earth’s systems</h2>
+      <p>Earth has four big systems, called spheres: rock, water, air, and life. Each one needs the others.</p>
+
+      <div class="cards">
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--green)" aria-hidden="true">🌍</span>
+          <h3>Earth’s four spheres</h3>
+          <p>Rock, water, air, and life. Switch them on and off.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--teal)" aria-hidden="true">🫙</span>
+          <h3>Spheres work together</h3>
+          <p>A tiny world in a jar, and what a volcano does to all four spheres.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="topic">
+      <p class="kicker wavy" style="--wave: var(--orange)">Part 2</p>
+      <h2>Inside and around Earth</h2>
+      <p>Under our feet is a hot, layered planet. Over our heads is a blanket of air.</p>
+
+      <div class="cards">
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--orange)" aria-hidden="true">🥚</span>
+          <h3>Layers of the Earth</h3>
+          <p>Slice the Earth open, from the crust to the hot center.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--blue)" aria-hidden="true">🎈</span>
+          <h3>The air around us</h3>
+          <p>Float a balloon up through the layers of the sky.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--teal)" aria-hidden="true">💧</span>
+          <h3>Water on Earth</h3>
+          <p>Where all the water is, and how it goes round and round.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="topic">
+      <p class="kicker wavy" style="--wave: var(--pink)">Part 3</p>
+      <h2>Caring for Earth</h2>
+      <p>People change the Earth. We can also help look after it.</p>
+
+      <div class="cards">
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--yellow)" aria-hidden="true">🚜</span>
+          <h3>Farming and the land</h3>
+          <p>Fields, soil, and why tree roots matter.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--purple)" aria-hidden="true">🏭</span>
+          <h3>Pollution</h3>
+          <p>Dirty air, water, and land, and how to clean them up.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--orange)" aria-hidden="true">🌡️</span>
+          <h3>Global warming</h3>
+          <p>Why the Earth is getting warmer, and what we can do.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--green)" aria-hidden="true">♻️</span>
+          <h3>Recycling</h3>
+          <p>Sort the trash and give it a second life.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Questions, ideas, or spotted a mistake? Email us at <a href="mailto:hi@oinam.com">hi@oinam.com</a>.</p>
+    </footer>
+  </main>
+
+  <script type="module">
+    import { createMascot } from '../../js/mascot.js';
+    import { showStars } from '../../js/progress.js';
+
+    const cello = createMascot(document.getElementById('mascot'));
+    cello.say(showStars() ? 'Welcome back! Can you get every star in this unit?' : 'Our planet is one big team of rock, water, air, and life. Let’s explore it!', { ms: 0 });
+  </script>
+</body>
+</html>
