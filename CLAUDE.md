@@ -54,11 +54,12 @@ oinam-logo.svg, oinam-logo-light.svg
                          The Oinam logo (dark mark, and the knockout version), from ~/dev/oinam.com
 index.html               Home: what ELIx is (after ELI5), and a card for each age (ELI10 so far)
 10/index.html            ELI10: the bookshelf (Science; Mathematics and Social Science coming)
-10/science/index.html    Science: its units (Units 4 and 5). Back goes to /10/
+10/science/index.html    Science: its units (Units 4 to 7). Back goes to /10/
 10/science/unit-4.html   Unit 4: Organization in Systems. Topic cards in the book's order,
                          "Play now" or "Coming next". Every topic page's Back goes here
 10/science/unit-5.html   Unit 5: Transportation Systems in Living Things, the same way
 10/science/unit-6.html   Unit 6: Making Waves, Light and Sound, the same way
+10/science/unit-7.html   Unit 7: Earth’s Systems, the same way
 _redirects               Old /science/, /topics/, and /organisms/ links go to their
                          new homes under /10/science/ (301)
 css/style.css            All styles, shared by every page
@@ -103,7 +104,13 @@ js/progress.js           Stars per topic in localStorage; showStars() fills the 
                          sound (real tones; air, water, steel, space; thunder counter), ear,
                          echoes (bat, sonar, ultrasound), spectrum (radio to gamma), colors
                          (prism, colored light, mixing lamps), light-matter (transparent,
-                         translucent, opaque; mirror; bent straw), and telescopes
+                         translucent, opaque; mirror; bent straw), and telescopes. Unit 7:
+                         spheres (switch rock, water, air, and life off and on), interactions
+                         (a terrarium; volcano, storm, fire, planting), earth-layers (cut open
+                         and drill; moving plates), atmosphere (rocket through the layers;
+                         ozone; 100 bits of air), water (100 cups; water cycle and a well),
+                         farming (erosion), pollution (clean up a town; buried trash),
+                         global-warming (the gas blanket; ice and sea), and recycling
 js/<name>.js             That page's models, animation, and controls
 ```
 
@@ -132,4 +139,4 @@ Books: the scanned chapters live in `tmp/Books/` (gitignored, never published). 
 - Big type and touch-sized controls (at least 44px). Give every scene Pause and Reset view.
 - Keep the science right, even when it’s simplified. Check facts against the NCERT Grade 5 to 8 books. Easy ones to get wrong: bacteria have no nucleus; yeast is a fungus and buds; the fridge stops bacteria growing but doesn’t kill them; boiling does.
 - Where her school book disagrees, the site keeps the right fact. Unit 4’s timeline says electron microscopes came in the 1940s and that the 1982 tunneling microscope sees blood cells; it was 1981 and it sees atoms. Mature human red blood cells have no nucleus. Cancer is not catching, and that page stays calm and never blames anyone.
-- More to keep right: magnification is eyepiece × objective; Leeuwenhoek used a single-lens microscope; the first electron microscope was 1931 (Ruska and Knoll; NCERT says 1940). Centrioles set up the spindle, but the spindle fibers do the pulling; most plant cells have no centrioles and build a new wall instead of pinching. Animal cells have small vacuoles, not none. Mitochondria are in both plant and animal cells. Unit 6’s book says amplitude is crest to trough; it’s the calm line to the crest (crest to trough is the wave height). Sound needs a medium; light doesn’t. Sound speeds: about 343 m/s in air, 1,480 in water, 5,900 in steel. High sounds move hair cells near the base of the cochlea; low sounds, near the tip.
+- More to keep right: magnification is eyepiece × objective; Leeuwenhoek used a single-lens microscope; the first electron microscope was 1931 (Ruska and Knoll; NCERT says 1940). Centrioles set up the spindle, but the spindle fibers do the pulling; most plant cells have no centrioles and build a new wall instead of pinching. Animal cells have small vacuoles, not none. Mitochondria are in both plant and animal cells. Unit 6’s book says amplitude is crest to trough; it’s the calm line to the crest (crest to trough is the wave height). Sound needs a medium; light doesn’t. Sound speeds: about 343 m/s in air, 1,480 in water, 5,900 in steel. High sounds move hair cells near the base of the cochlea; low sounds, near the tip. Unit 7’s book says oceans cover 97.5% of the surface; they cover about 71% and hold about 97% of the water. Its “over six billion people” is out of date (about 8 billion). The inner core is about 5,200 °C (the book says up to 5,700). The Earth-layers page draws the crust thicker than real, and says so. Warming since 1850 is “more than 1 °C”; the page’s rule of thumb is 2 °C per doubling of carbon dioxide.
