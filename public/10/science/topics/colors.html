@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colors of light · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../unit-6.html" aria-label="Back to Unit 6">←<span class="wide-only">&nbsp;Unit 6</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🌈 </span>Colors of light</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">White light is a secret mix of colors. Let’s split it!</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Pick one</span></h2>
+        <div class="buttons three">
+          <button class="btn press" data-view="prism" aria-pressed="true">🔺 Prism</button>
+          <button class="btn press" data-view="fruit" aria-pressed="false">🍎 Fruit</button>
+          <button class="btn press" data-view="mix" aria-pressed="false">💡 Mix</button>
+        </div>
+      </section>
+
+      <section class="chunky" id="prism-tools">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Tinker</span></h2>
+        <div class="buttons">
+          <button class="btn press" id="second" aria-pressed="false">🔻 Add a second prism</button>
+        </div>
+      </section>
+
+      <section class="chunky" id="fruit-tools" hidden>
+        <h2><span class="wavy" style="--wave: var(--yellow)">Light color</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-light="white" aria-pressed="true">⚪ White</button>
+          <button class="btn press" data-light="red" aria-pressed="false">🔴 Red</button>
+          <button class="btn press" data-light="green" aria-pressed="false">🟢 Green</button>
+          <button class="btn press" data-light="blue" aria-pressed="false">🔵 Blue</button>
+        </div>
+      </section>
+
+      <section class="chunky" id="mix-tools" hidden>
+        <h2><span class="wavy" style="--wave: var(--yellow)">Turn on lights</span></h2>
+        <div class="buttons three">
+          <button class="btn press" data-lamp="red" aria-pressed="true">🔴 Red</button>
+          <button class="btn press" data-lamp="green" aria-pressed="false">🟢 Green</button>
+          <button class="btn press" data-lamp="blue" aria-pressed="false">🔵 Blue</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <div class="buttons three">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="rainbow">Tap the <b>rainbow</b> the prism makes.</li>
+          <li data-challenge="rejoin">Add a second prism. Can you turn the rainbow <b>back into white</b>?</li>
+          <li data-challenge="dark">Shine a light that makes the apple look <b>black</b>.</li>
+          <li data-challenge="yellow">Mix two lights to make <b>yellow</b>.</li>
+          <li data-challenge="white">Mix lights to make <b>white</b>.</li>
+          <li data-challenge="parts">Tap all <b>8 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>White light is all the colors mixed: red, orange, yellow, green, blue, indigo, and violet.</li>
+          <li>Red has the longest wavelength we can see (about 700 nanometers). Violet has the shortest (about 400).</li>
+          <li>A prism bends each color a different amount, so the colors fan out. Isaac Newton did this in 1666!</li>
+          <li>Things look colored because they <b>reflect</b> some colors and <b>absorb</b> the rest. A red apple reflects red.</li>
+          <li>White things reflect all colors. Black things absorb them all.</li>
+          <li>Mixing light isn’t like mixing paint: red and green light make yellow!</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../../../js/colors.js"></script>
+</body>
+</html>
