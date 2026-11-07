@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Telescopes · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../unit-6.html" aria-label="Back to Unit 6">←<span class="wide-only">&nbsp;Unit 6</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🔭 </span>Telescopes</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">Telescopes gather light from far away and make it look close.</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--purple)">Pick a telescope</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-view="lens" aria-pressed="true">🔭 Lens telescope</button>
+          <button class="btn press" data-view="mirror" aria-pressed="false">🪞 Mirror telescope</button>
+          <button class="btn press" data-view="radio" aria-pressed="false">📡 Radio telescope</button>
+          <button class="btn press" data-view="moon" aria-pressed="false">🌕 Look at the Moon</button>
+        </div>
+      </section>
+
+      <section class="chunky" id="eyepieces">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Pick an eyepiece</span></h2>
+        <div class="buttons three">
+          <button class="btn press" data-eye="25" aria-pressed="true">25 mm</button>
+          <button class="btn press" data-eye="10" aria-pressed="false">10 mm</button>
+          <button class="btn press" data-eye="5" aria-pressed="false">5 mm</button>
+        </div>
+        <p id="power" aria-live="polite"></p>
+      </section>
+
+      <section class="chunky">
+        <div class="buttons three">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="lens">Follow the light through a <b>lens</b> telescope.</li>
+          <li data-challenge="mirror">Follow the light in a <b>mirror</b> telescope.</li>
+          <li data-challenge="radio">Catch <b>radio waves</b> from space.</li>
+          <li data-challenge="zoom">Look at the Moon at <b>100 times</b> bigger.</li>
+          <li data-challenge="parts">Tap all <b>7 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>A <b>lens telescope</b> (refracting) bends light with lenses. A <b>mirror telescope</b> (reflecting) bounces it with curved mirrors.</li>
+          <li>Galileo pointed a telescope at the sky in <b>1609</b>. He saw mountains on the Moon and moons around Jupiter!</li>
+          <li>Isaac Newton built one of the first mirror telescopes in <b>1668</b>.</li>
+          <li>How much bigger things look = the telescope’s focal length ÷ the eyepiece’s focal length.</li>
+          <li><b>Radio telescopes</b> catch radio waves from space. India’s GMRT, near Pune, has 30 giant dishes.</li>
+          <li>The biggest space telescopes, like James Webb, use mirrors. Big mirrors gather lots of light.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../../../js/telescopes.js"></script>
+</body>
+</html>
