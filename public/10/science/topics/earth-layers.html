@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Layers of the Earth · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../unit-7.html" aria-label="Back to Unit 7">←<span class="wide-only">&nbsp;Unit 7</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🥚 </span>Layers of the Earth</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">Under your feet is a hot, layered planet. Cut it open and dig down!</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Pick one</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-view="globe" aria-pressed="true">🌍 Inside the Earth</button>
+          <button class="btn press" data-view="plates" aria-pressed="false">⛰️ Moving plates</button>
+        </div>
+      </section>
+
+      <section class="chunky" id="globe-tools">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Dig down</span></h2>
+        <div class="buttons">
+          <button class="btn press" id="cut" aria-pressed="false">🔪 Cut it open</button>
+        </div>
+        <label class="control">
+          <span class="name">Depth <output id="depth-out"></output></span>
+          <input type="range" id="depth" min="0" max="6371" step="1" value="0">
+          <span class="ends"><span>Surface</span><span>Center</span></span>
+        </label>
+        <p class="plate" id="layer-now" aria-live="polite"></p>
+        <p id="layer-facts"></p>
+      </section>
+
+      <section class="chunky" id="plates-tools" hidden>
+        <h2><span class="wavy" style="--wave: var(--yellow)">Speed up time</span></h2>
+        <label class="control">
+          <span class="name">Time <output id="time-out"></output></span>
+          <input type="range" id="time" min="0" max="10" step="1" value="3">
+          <span class="ends"><span>Stopped</span><span>Super fast</span></span>
+        </label>
+        <p class="plate" id="years" aria-live="polite"></p>
+      </section>
+
+      <section class="chunky">
+        <div class="buttons three">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--green)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="cut"><b>Cut</b> the Earth open.</li>
+          <li data-challenge="liquid">Dig down to the layer that’s <b>liquid</b>.</li>
+          <li data-challenge="center">Dig all the way to the <b>center</b>.</li>
+          <li data-challenge="crust">Tap the <b>thinnest</b> layer.</li>
+          <li data-challenge="mountain">Speed up time and build a <b>mountain</b>.</li>
+          <li data-challenge="parts">Tap all <b>9 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>It’s about <b>6,371 km</b> from the surface to the center. Driving there at 60 km an hour would take more than 4 days.</li>
+          <li>The <b>crust</b> is the thinnest layer: about 5 to 10 km under the oceans, and 30 to 50 km under land. If Earth were an apple, the crust would be thinner than the skin.</li>
+          <li>The <b>mantle</b> is the thickest layer. Its rock is solid, but so hot it flows very, very slowly.</li>
+          <li>The <b>outer core</b> is liquid iron and nickel. As it swirls, it makes Earth’s magnetism, which is why a compass works.</li>
+          <li>The <b>inner core</b> is about 5,200 °C, nearly as hot as the surface of the Sun. It stays solid because it’s squeezed so hard.</li>
+          <li>Plates move about as fast as your fingernails grow: a few centimeters a year.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../../../js/earthlayers.js"></script>
+</body>
+</html>
