@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Water on Earth · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../unit-7.html" aria-label="Back to Unit 7">←<span class="wide-only">&nbsp;Unit 7</span></a>
+      <h1><span class="wide-only" aria-hidden="true">💧 </span>Water on Earth</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">If all of Earth’s water fit in 100 cups, how many could you drink?</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--blue)">Pick one</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-view="cups" aria-pressed="true">🥤 100 cups</button>
+          <button class="btn press" data-view="cycle" aria-pressed="false">🔁 Water cycle</button>
+        </div>
+      </section>
+
+      <section class="chunky" id="cups-tools">
+        <h2><span class="wavy" style="--wave: var(--teal)">All the water</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-cups="all" aria-pressed="true">🌍 All water</button>
+          <button class="btn press" data-cups="fresh" aria-pressed="false">🥤 Just fresh water</button>
+        </div>
+        <p class="plate" id="cups-count" aria-live="polite"></p>
+      </section>
+
+      <section class="chunky" id="cycle-tools" hidden>
+        <h2><span class="wavy" style="--wave: var(--teal)">Round and round</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-step="evaporation">☀️ Evaporation</button>
+          <button class="btn press" data-step="condensation">☁️ Condensation</button>
+          <button class="btn press" data-step="precipitation">🌧️ Precipitation</button>
+          <button class="btn press" data-step="runoff">🏞️ Runoff</button>
+        </div>
+        <label class="control">
+          <span class="name">Sun’s heat <output id="heat-out"></output></span>
+          <input type="range" id="heat" min="0" max="10" step="1" value="5">
+          <span class="ends"><span>Cool</span><span>Hot</span></span>
+        </label>
+        <div class="buttons" style="margin-top: 14px">
+          <button class="btn big press" id="pump">🪣 Pump the well</button>
+        </div>
+        <p class="plate" id="well-level" aria-live="polite"></p>
+      </section>
+
+      <section class="chunky">
+        <div class="buttons three">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="fresh">Zoom in on the <b>fresh water</b>. Where is most of it?</li>
+          <li data-challenge="cycle">Try all <b>4 steps</b> of the water cycle.</li>
+          <li data-challenge="rain">Fill a cloud until it <b>rains</b>.</li>
+          <li data-challenge="well">Pump water from the <b>well</b>.</li>
+          <li data-challenge="dry">Pump the well <b>dry</b>, then let the rain fill it up again.</li>
+          <li data-challenge="parts">Tap all <b>9 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Oceans cover about <b>71%</b> of Earth’s surface, and hold about <b>97%</b> of all its water.</li>
+          <li>Only about 3 cups out of 100 are <b>fresh water</b>, and most of that is frozen in glaciers and ice caps.</li>
+          <li>About 30% of fresh water hides underground in rocks and sand, called <b>aquifers</b>. Wells reach down to it.</li>
+          <li>Lakes and rivers are only a tiny bit of all the fresh water, about 1 drop in every 100.</li>
+          <li>Water goes round and round: the water you drink today might once have been drunk by a dinosaur!</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../../../js/water.js"></script>
+</body>
+</html>
