@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tubes inside a tree · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../science/unit-5.html" aria-label="Back to Unit 5">←<span class="wide-only">&nbsp;Unit 5</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🌳 </span>Tubes inside a tree</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">A tree looks still. But inside, water and food are always on the move!</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--green)">Tinker</span></h2>
+        <div class="buttons">
+          <button class="btn press" id="rain" aria-pressed="false">🌧️ Rain</button>
+          <button class="btn press" id="sun" aria-pressed="false">☀️ Sunshine</button>
+          <button class="btn press" id="cut" aria-pressed="false">🔪 Cut the trunk open</button>
+        </div>
+        <label class="control">
+          <span class="name">Speed <output id="speed-out"></output></span>
+          <input type="range" id="speed" min="1" max="10" step="1" value="4">
+          <span class="ends"><span>Slow</span><span>Fast</span></span>
+        </label>
+        <div class="buttons three" style="margin-top: 14px">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="cut">Cut the trunk open and find the <b>two kinds of tubes</b>.</li>
+          <li data-challenge="water">Make it rain. Follow the water <b>up</b> to the leaves.</li>
+          <li data-challenge="food">Add sunshine too. Where does the <b>food</b> go?</li>
+          <li data-challenge="vapor">Watch the leaves <b>breathe out</b> water. (Rain and sun, then wait.)</li>
+          <li data-challenge="droop">Stop the rain and wait. What happens to the <b>leaves</b>?</li>
+          <li data-challenge="parts">Tap all <b>7 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Plants with these tubes are called <b>vascular plants</b>. Trees, grass, and roses are all vascular. Mosses aren’t.</li>
+          <li><b>Xylem</b> carries water and minerals <b>up</b>, from the roots to the leaves.</li>
+          <li><b>Phloem</b> carries food (sugar) from the leaves to every part that needs it: down to the roots, and up to fruits and buds.</li>
+          <li>Leaves let water out through tiny holes. That pulls more water up, like sipping through a straw.</li>
+          <li>The tallest trees lift water more than <b>100 meters</b> up, with no pump at all.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/planttransport.js"></script>
+</body>
+</html>
