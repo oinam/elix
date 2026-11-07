@@ -44,6 +44,8 @@ Let’s try with these topics for now;
 
 Everything below lives in `public/`.
 
+Each age owns its pages: everything for ELI10 lives under `10/` (`10/science/`, its `topics/` and `organisms/`), so a later ELI11 or ELI12 can reuse the same topic names. Shared code and assets (`css/`, `js/`, `fonts/`, `audio/`) stay at the root.
+
 ```
 404.html                 "Lost in the pond" page (Cloudflare serves it for missing paths)
 favicon.ico, favicon-*.png, apple-touch-icon.png, android-chrome-*.png
@@ -56,7 +58,8 @@ index.html               Home: what ELIx is (after ELI5), and a card for each ag
 10/science/unit-4.html   Unit 4: Organization in Systems. Topic cards in the book's order,
                          "Play now" or "Coming next". Every topic page's Back goes here
 10/science/unit-5.html   Unit 5: Transportation Systems in Living Things, the same way
-_redirects               Old /science/... links go to /10/science/... (301)
+_redirects               Old /science/, /topics/, and /organisms/ links go to their
+                         new homes under /10/science/ (301)
 css/style.css            All styles, shared by every page
 js/theme.js              Light/dark toggle (plain script in <head>). Follows the OS
                          until a choice is saved; window.elixTheme.watch(fn) for 3D colors
@@ -76,9 +79,11 @@ js/ask.js                Ask Cello: the question box, shown only when /api/ask s
 audio/                   Voice clips, <key>.mp3, and manifest.json; made by `mise run voice`
 js/progress.js           Stars per topic in localStorage; showStars() fills the menu pills
                          ("⭐ 3 of 5" per topic, or a total for data-topics="a b c")
-organisms/<name>.html    One page per organism (paramecium, amoeba, bacteria, yeast):
+10/science/organisms/<name>.html
+                         One page per organism (paramecium, amoeba, bacteria, yeast):
                          topbar, 3D stage, control panel
-topics/<name>.html       Concept pages: systems (a bicycle to take apart), single-cell
+10/science/topics/<name>.html
+                         Concept pages: systems (a bicycle to take apart), single-cell
                          (one cell, every job; riddles), microscope (parts, eyepiece view
                          drawn in 2D, invention timeline with a how-small scale), cell
                          (membrane gatekeeper, nucleus), cytoplasm (organelles, smooth ER,
@@ -108,7 +113,7 @@ The look follows https://coolphabets.com in spirit: Nunito (self-hosted in `font
 
 Colors live in CSS variables in `css/style.css`, with a `[data-theme="light"]` block. Never hard-code a color in a rule; add a variable to both themes.
 
-To add an organism: copy `organisms/paramecium.html` for the page shell, write `js/<name>.js` on top of `createStage()` and `createExplorer()`, list its challenges as `<li data-challenge="id">`, then turn its card on the unit page (`10/science/unit-4.html`) into a link with the “Play now” pill and a `<span class="pill stars" id="stars-<topic>" hidden>`, and add the topic id to the `data-topics` lists on `index.html`, `10/index.html`, and `10/science/index.html`.
+To add an organism: copy `10/science/organisms/paramecium.html` for the page shell, write `js/<name>.js` on top of `createStage()` and `createExplorer()`, list its challenges as `<li data-challenge="id">`, then turn its card on the unit page (`10/science/unit-4.html`) into a link with the “Play now” pill and a `<span class="pill stars" id="stars-<topic>" hidden>`, and add the topic id to the `data-topics` lists on `index.html`, `10/index.html`, and `10/science/index.html`.
 
 Books: the scanned chapters live in `tmp/Books/` (gitignored, never published). Each unit page follows its chapter’s order; explainers are in our own words, never copied from the book.
 

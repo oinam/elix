@@ -1,3 +1,6 @@
-# Science moved under ELI10 (2026-11-07). Old links keep working.
+# Science, its topics, and its organisms live under ELI10 (2026-11-07).
+# Old links keep working.
 /science /10/science/ 301
 /science/* /10/science/:splat 301
+/topics/* /10/science/topics/:splat 301
+/organisms/* /10/science/organisms/:splat 301
