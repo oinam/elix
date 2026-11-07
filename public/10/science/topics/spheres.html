@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Earth’s four spheres · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../unit-7.html" aria-label="Back to Unit 7">←<span class="wide-only">&nbsp;Unit 7</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🌍 </span>Earth’s four spheres</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">Rock, water, air, and life. Switch them off and on to see who needs who.</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--green)">The four spheres</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-sphere="geo" aria-pressed="true">🪨 Geosphere</button>
+          <button class="btn press" data-sphere="hydro" aria-pressed="true">💧 Hydrosphere</button>
+          <button class="btn press" data-sphere="atmo" aria-pressed="true">🌬️ Atmosphere</button>
+          <button class="btn press" data-sphere="bio" aria-pressed="true">🌱 Biosphere</button>
+        </div>
+        <div class="buttons" style="margin-top: 14px">
+          <button class="btn press" id="planet" aria-pressed="false">🌍 Whole planet</button>
+        </div>
+        <div class="buttons three" style="margin-top: 14px">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Which sphere?</span> <span class="count" id="sort-count"></span></h2>
+        <p class="plate" id="sort-item" aria-live="polite"></p>
+        <div class="buttons">
+          <button class="btn press" data-answer="geo">🪨 Geo</button>
+          <button class="btn press" data-answer="hydro">💧 Hydro</button>
+          <button class="btn press" data-answer="atmo">🌬️ Atmo</button>
+          <button class="btn press" data-answer="bio">🌱 Bio</button>
+        </div>
+        <p id="sort-answer" aria-live="polite"></p>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="toggle">Switch <b>each sphere</b> off, and back on.</li>
+          <li data-challenge="life">Switch off the <b>water</b> or the <b>air</b>. What happens to life?</li>
+          <li data-challenge="cloud">Find the thing that belongs to <b>two spheres</b> at once.</li>
+          <li data-challenge="planet">Zoom out to the <b>whole planet</b>.</li>
+          <li data-challenge="sort">Put <b>8 things</b> in the right sphere.</li>
+          <li data-challenge="parts">Tap all <b>11 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Earth has four big systems, called <b>spheres</b>: the <b>geosphere</b> (rock), <b>hydrosphere</b> (water), <b>atmosphere</b> (air), and <b>biosphere</b> (life).</li>
+          <li>The names are old Greek words: <b>geo</b> means earth, <b>hydro</b> means water, <b>atmo</b> means vapor, and <b>bio</b> means life.</li>
+          <li>Earth is the only planet we know with liquid water on top, air we can breathe, and life. That’s what makes it special.</li>
+          <li>Air is mostly <b>nitrogen</b> (about 78%) and <b>oxygen</b> (about 21%).</li>
+          <li>The spheres share all the time: rain falls on rocks, plants drink water, and leaves give oxygen to the air.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../../../js/spheres.js"></script>
+</body>
+</html>
