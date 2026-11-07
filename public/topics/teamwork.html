@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The body relay race · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../science/unit-5.html" aria-label="Back to Unit 5">←<span class="wide-only">&nbsp;Unit 5</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🏃 </span>The body relay race</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">Food + oxygen → energy. It takes a team to get them to your cells!</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--purple)">Run the relay</span></h2>
+        <p class="plate" id="energy" aria-live="polite">⚡ Energy: none yet</p>
+        <div class="buttons three">
+          <button class="btn press" id="eat">🍎 Eat</button>
+          <button class="btn press" id="breathe">🌬️ Breathe</button>
+          <button class="btn press" id="run" aria-pressed="false">🏃 Go!</button>
+        </div>
+        <p id="supplies"></p>
+        <div class="buttons three" style="margin-top: 14px">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Which systems?</span> <span class="count" id="game-count"></span></h2>
+        <p id="scenario"></p>
+        <div class="buttons" id="choices"></div>
+        <div class="buttons" style="margin-top: 12px">
+          <button class="btn press" id="check">✅ Check</button>
+          <button class="btn press" id="next">➡️ Next one</button>
+        </div>
+        <p id="answer" aria-live="polite"></p>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="relay">Eat, breathe, and run <b>one whole relay</b>.</li>
+          <li data-challenge="noair">Try the relay with food but <b>no oxygen</b>.</li>
+          <li data-challenge="energy">Fill the cell up with <b>5 energy stars</b>.</li>
+          <li data-challenge="game">Get <b>3</b> “Which systems?” questions right.</li>
+          <li data-challenge="parts">Tap all <b>8 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Cells get energy from food and oxygen: <b>glucose + oxygen → carbon dioxide + water + energy</b>. That’s <b>cellular respiration</b>.</li>
+          <li>The <b>digestive system</b> brings the glucose. The <b>respiratory system</b> brings the oxygen.</li>
+          <li>The <b>circulatory system</b> carries both to every cell, and takes the carbon dioxide back to the lungs.</li>
+          <li>Like runners in a relay race, each system passes the baton to the next.</li>
+          <li>Almost nothing in your body is done by one system alone.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/teamwork.js"></script>
+</body>
+</html>
