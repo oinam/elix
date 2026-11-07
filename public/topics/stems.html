@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stems and tree rings · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../science/unit-5.html" aria-label="Back to Unit 5">←<span class="wide-only">&nbsp;Unit 5</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🪵 </span>Stems<span class="wide-only">&nbsp;and tree rings</span></h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">Two stems, cut across. Spot the differences!</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Pick a view</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-view="stems" aria-pressed="true">🌿 Woody and soft stems</button>
+          <button class="btn press" data-view="rings" aria-pressed="false">🪵 Tree rings</button>
+        </div>
+      </section>
+
+      <section class="chunky" id="stem-tools">
+        <h2><span class="wavy" style="--wave: var(--purple)">Tinker</span></h2>
+        <div class="buttons">
+          <button class="btn press" id="tint" aria-pressed="false">🎨 Color the tubes</button>
+          <button class="btn press" id="grow-stem">🌱 Cambium, grow!</button>
+        </div>
+      </section>
+
+      <section class="chunky" id="ring-tools" hidden>
+        <h2><span class="wavy" style="--wave: var(--purple)">Grow a tree</span> <span class="count" id="age"></span></h2>
+        <div class="buttons">
+          <button class="btn press" id="wet-year">🌧️ Grow a rainy year</button>
+          <button class="btn press" id="dry-year">☀️ Grow a dry year</button>
+          <button class="btn press" id="ten-years">⏩ Grow 10 years</button>
+          <button class="btn press" id="sapling">🌱 New tree</button>
+        </div>
+        <h2 style="margin-top: 16px"><span class="wavy" style="--wave: var(--teal)">Mystery stump</span></h2>
+        <p id="mystery-text">How old was this tree? Count the dark rings!</p>
+        <div class="buttons three" id="guesses"></div>
+        <button class="btn press" id="mystery" style="margin-top: 12px; width: 100%">🔍 Show me a mystery stump</button>
+      </section>
+
+      <section class="chunky">
+        <div class="buttons three">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="tint">Color the tubes. Where are the <b>xylem</b> and <b>phloem</b> in each stem?</li>
+          <li data-challenge="cambium">Make the <b>cambium</b> grow new tubes.</li>
+          <li data-challenge="grow">Grow a tree to <b>10 years</b> old.</li>
+          <li data-challenge="dry">Grow a <b>dry year</b>. Can you spot its ring?</li>
+          <li data-challenge="count">Count the rings on a <b>mystery stump</b>.</li>
+          <li data-challenge="parts">Tap all <b>8 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>The tubes from the root keep going, all the way up the <b>stem</b>.</li>
+          <li><b>Cambium</b> is a thin layer that makes new cells: xylem on its inside, phloem on its outside.</li>
+          <li>In a woody stem, the tubes make <b>rings</b>. In a soft stem, they come in little <b>bundles</b>.</li>
+          <li>A tree grows one <b>light ring</b> (spring) and one <b>dark ring</b> (late summer) every year. Count them to tell its age!</li>
+          <li>A thin ring means a <b>dry year</b>, with little rain.</li>
+          <li>Some bristlecone pine trees are more than <b>4,800 years</b> old.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/stems.js"></script>
+</body>
+</html>
