@@ -55,6 +55,7 @@ index.html               Home: what ELIx is (after ELI5), and a card for each ag
 science/index.html       Science: its units (Unit 4 so far). Back goes to /10/
 science/unit-4.html      Unit 4: Organization in Systems. Topic cards in the book's order,
                          "Play now" or "Coming next". Every topic page's Back goes here
+science/unit-5.html      Unit 5: Transportation Systems in Living Things, the same way
 css/style.css            All styles, shared by every page
 js/theme.js              Light/dark toggle (plain script in <head>). Follows the OS
                          until a choice is saved; window.elixTheme.watch(fn) for 3D colors
@@ -85,7 +86,13 @@ topics/<name>.html       Concept pages: systems (a bicycle to take apart), singl
                          → organism), organ-systems (body systems; xylem and phloem in a
                          plant), special-cells (red blood, nerve, muscle, white blood
                          cells), and cancer (a gentle note: cells that stop following
-                         the rules)
+                         the rules). Unit 5: plant-transport (a tree's xylem and phloem),
+                         roots (slice one; tap, fibrous, prop roots), stems (woody vs soft;
+                         tree rings and a mystery stump), leaves (stomata, photosynthesis,
+                         a chloroplast), breathing (the path of air), alveoli (gas
+                         exchange), heart, blood-vessels, digestion (a meal's trip, the gut
+                         stretched out, a plate builder), and teamwork (the relay race,
+                         "Which systems?")
 js/<name>.js             That page's models, animation, and controls
 ```
 
