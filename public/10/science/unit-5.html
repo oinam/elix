@@ -8,9 +8,9 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/theme.js"></script>
+  <link rel="preload" href="../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/style.css">
+  <script src="../../js/theme.js"></script>
 </head>
 <body>
   <main class="home menu">
@@ -37,28 +37,28 @@
       <p>A tree looks still, but inside it, water and food are on the move all the time.</p>
 
       <div class="cards">
-        <a class="card chunky" href="../topics/plant-transport.html">
+        <a class="card chunky" href="../../topics/plant-transport.html">
           <span class="pill live">Play now!</span>
           <span class="tile" style="--tile: var(--green)" aria-hidden="true">🌳</span>
           <h3>Tubes inside a tree</h3>
           <p>Water climbs up from the roots. Food flows out from the leaves.</p>
           <span class="pill stars" id="stars-planttransport" hidden></span>
         </a>
-        <a class="card chunky" href="../topics/roots.html">
+        <a class="card chunky" href="../../topics/roots.html">
           <span class="pill live">Play now!</span>
           <span class="tile" style="--tile: var(--orange)" aria-hidden="true">🥕</span>
           <h3>Roots</h3>
           <p>Slice a root open, and meet carrots, grass, and corn roots.</p>
           <span class="pill stars" id="stars-roots" hidden></span>
         </a>
-        <a class="card chunky" href="../topics/stems.html">
+        <a class="card chunky" href="../../topics/stems.html">
           <span class="pill live">Play now!</span>
           <span class="tile" style="--tile: var(--yellow)" aria-hidden="true">🪵</span>
           <h3>Stems and tree rings</h3>
           <p>Woody stems, soft stems, and how to tell a tree’s age.</p>
           <span class="pill stars" id="stars-stems" hidden></span>
         </a>
-        <a class="card chunky" href="../topics/leaves.html">
+        <a class="card chunky" href="../../topics/leaves.html">
           <span class="pill live">Play now!</span>
           <span class="tile" style="--tile: var(--teal)" aria-hidden="true">🍃</span>
           <h3>Leaves make food</h3>
@@ -74,14 +74,14 @@
       <p>Every breath brings in oxygen for your cells, and takes carbon dioxide out.</p>
 
       <div class="cards">
-        <a class="card chunky" href="../topics/breathing.html">
+        <a class="card chunky" href="../../topics/breathing.html">
           <span class="pill live">Play now!</span>
           <span class="tile" style="--tile: var(--blue)" aria-hidden="true">🫁</span>
           <h3>The path of air</h3>
           <p>From your nose, down your windpipe, and into your lungs.</p>
           <span class="pill stars" id="stars-breathing" hidden></span>
         </a>
-        <a class="card chunky" href="../topics/alveoli.html">
+        <a class="card chunky" href="../../topics/alveoli.html">
           <span class="pill live">Play now!</span>
           <span class="tile" style="--tile: var(--purple)" aria-hidden="true">🫧</span>
           <h3>Tiny air sacs</h3>
@@ -97,14 +97,14 @@
       <p>Your heart pumps blood through tubes that reach every cell.</p>
 
       <div class="cards">
-        <a class="card chunky" href="../topics/heart.html">
+        <a class="card chunky" href="../../topics/heart.html">
           <span class="pill live">Play now!</span>
           <span class="tile" style="--tile: var(--pink)" aria-hidden="true">❤️</span>
           <h3>The heart</h3>
           <p>Four rooms, one pump, and a trip around the body.</p>
           <span class="pill stars" id="stars-heart" hidden></span>
         </a>
-        <a class="card chunky" href="../topics/blood-vessels.html">
+        <a class="card chunky" href="../../topics/blood-vessels.html">
           <span class="pill live">Play now!</span>
           <span class="tile" style="--tile: var(--orange)" aria-hidden="true">🩸</span>
           <h3>Blood vessels</h3>
@@ -120,7 +120,7 @@
       <p>How a meal turns into fuel for every cell.</p>
 
       <div class="cards">
-        <a class="card chunky" href="../topics/digestion.html">
+        <a class="card chunky" href="../../topics/digestion.html">
           <span class="pill live">Play now!</span>
           <span class="tile" style="--tile: var(--yellow)" aria-hidden="true">🍎</span>
           <h3>The food journey</h3>
@@ -136,7 +136,7 @@
       <p>Like runners in a relay race, each system passes the baton to the next.</p>
 
       <div class="cards">
-        <a class="card chunky" href="../topics/teamwork.html">
+        <a class="card chunky" href="../../topics/teamwork.html">
           <span class="pill live">Play now!</span>
           <span class="tile" style="--tile: var(--purple)" aria-hidden="true">🏃</span>
           <h3>The body relay race</h3>
@@ -149,8 +149,8 @@
   </main>
 
   <script type="module">
-    import { createMascot } from '../js/mascot.js';
-    import { showStars } from '../js/progress.js';
+    import { createMascot } from '../../js/mascot.js';
+    import { showStars } from '../../js/progress.js';
 
     const cello = createMascot(document.getElementById('mascot'));
     cello.say(showStars() ? 'Welcome back! Can you get every star in this unit?' : 'This unit is all about delivery: water, food, air, and blood, on the move!', { ms: 0 });

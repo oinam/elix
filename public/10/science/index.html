@@ -8,14 +8,14 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../css/style.css">
-  <script src="../js/theme.js"></script>
+  <link rel="preload" href="../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/style.css">
+  <script src="../../js/theme.js"></script>
 </head>
 <body>
   <main class="home menu">
     <header class="topbar">
-      <a class="back press" href="../10/" aria-label="Back to Books">←<span class="wide-only">&nbsp;Books</span></a>
+      <a class="back press" href="../" aria-label="Back to Books">←<span class="wide-only">&nbsp;Books</span></a>
       <h1><span aria-hidden="true">🔬 </span>Science</h1>
       <button class="theme-toggle press" data-theme-toggle></button>
     </header>
@@ -48,8 +48,8 @@
   </main>
 
   <script type="module">
-    import { createMascot } from '../js/mascot.js';
-    import { showStars } from '../js/progress.js';
+    import { createMascot } from '../../js/mascot.js';
+    import { showStars } from '../../js/progress.js';
 
     const cello = createMascot(document.getElementById('mascot'));
     cello.say(showStars() ? 'Welcome back! Ready for more science?' : 'Pick a unit, and I’ll show you around!', { ms: 0 });
