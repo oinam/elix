@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The light family · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../unit-6.html" aria-label="Back to Unit 6">←<span class="wide-only">&nbsp;Unit 6</span></a>
+      <h1><span class="wide-only" aria-hidden="true">📡 </span>The light family</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">Light is a wave. So are radio waves, microwaves, and X-rays! Slide through the family.</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Slide through the family</span></h2>
+        <label class="control">
+          <span class="name">Wave <output id="band-out"></output></span>
+          <input type="range" id="band" min="0" max="6" step="1" value="0">
+          <span class="ends"><span>Long waves</span><span>Short waves</span></span>
+        </label>
+        <p id="band-info" aria-live="polite"></p>
+        <p class="plate" id="energy" aria-live="polite"></p>
+        <div class="buttons" style="margin-top: 8px">
+          <button class="btn press" id="trip">☀️ Sunlight to Earth</button>
+        </div>
+        <div class="buttons three" style="margin-top: 14px">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Think and answer</span></h2>
+        <p>How are microwaves and the Sun’s light alike?</p>
+        <div class="buttons" id="alike"></div>
+        <p id="alike-answer" aria-live="polite"></p>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--orange)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="radio">Start with <b>radio waves</b>, the longest.</li>
+          <li data-challenge="visible">Find the <b>only part we can see</b>.</li>
+          <li data-challenge="xray">Find the waves that <b>see through skin</b>.</li>
+          <li data-challenge="gamma">Find the waves with the <b>most energy</b>.</li>
+          <li data-challenge="sun">Send sunlight to <b>Earth</b>. How long does it take?</li>
+          <li data-challenge="alike">Answer: how are microwaves and sunlight <b>alike</b>?</li>
+          <li data-challenge="parts">Tap all <b>8 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Light belongs to a big family called <b>electromagnetic waves</b>. From longest to shortest: radio, microwave, infrared, visible light, ultraviolet, X-ray, gamma.</li>
+          <li>The shorter the wavelength, the higher the frequency, and the <b>more energy</b> the wave carries.</li>
+          <li>These waves need nothing to travel through. They cross empty space, like sunlight does.</li>
+          <li>They all go at the speed of light: about <b>300,000 km</b> every second. That’s about 7½ times around the Earth!</li>
+          <li>Our eyes see only a tiny slice of the family: <b>visible light</b>.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../../../js/spectrum.js"></script>
+</body>
+</html>
