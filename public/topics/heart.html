@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The heart · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../science/unit-5.html" aria-label="Back to Unit 5">←<span class="wide-only">&nbsp;Unit 5</span></a>
+      <h1><span class="wide-only" aria-hidden="true">❤️ </span>The heart</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">Your heart is a pump with four rooms. It never takes a day off!</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Tinker</span></h2>
+        <div class="buttons">
+          <button class="btn big press" id="follow">🔴 Follow one blood cell</button>
+          <button class="btn press" id="listen" aria-pressed="false">🩺 Listen</button>
+        </div>
+        <label class="control">
+          <span class="name">Heartbeat <output id="bpm-out"></output></span>
+          <input type="range" id="bpm" min="50" max="180" step="10" value="80">
+          <span class="ends"><span>Sleeping</span><span>Racing</span></span>
+        </label>
+        <div class="buttons three" style="margin-top: 14px">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="trip">Follow one blood cell <b>all the way around</b>.</li>
+          <li data-challenge="listen">Listen to the heart. What sound does it make?</li>
+          <li data-challenge="slow">Slow the heart down, like when you’re <b>sleeping</b>.</li>
+          <li data-challenge="fast">Make it <b>race</b>, like after a sprint.</li>
+          <li data-challenge="thick">Tap the <b>left ventricle</b>. Why is its wall so thick?</li>
+          <li data-challenge="parts">Tap all <b>9 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Your heart is about the size of your <b>fist</b>.</li>
+          <li>It has four rooms: two <b>atria</b> on top, and two <b>ventricles</b> below.</li>
+          <li>The right side sends blood to the <b>lungs</b>. The left side sends it to the whole <b>body</b>.</li>
+          <li>The “lub-dub” sound is the <b>valves</b> snapping shut, like doors.</li>
+          <li>A kid’s heart beats about <b>70 to 100</b> times a minute when resting.</li>
+          <li>On this model, the heart’s right side is on <b>your left</b>, as if it’s facing you.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../js/heart.js"></script>
+</body>
+</html>
