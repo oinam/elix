@@ -304,6 +304,7 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); cu
 
 .facts { margin: 0; padding-left: 20px; font-size: 1.05rem; line-height: 1.45; }
 .facts li { margin-bottom: 6px; }
+.plate { font-size: 1.6rem; line-height: 1.3; min-height: 2.2rem; margin: 12px 0 4px; overflow-wrap: anywhere; }
 
 /* Multi-cell: the five levels, cell to organism. */
 .ladder { display: grid; gap: 8px; margin-bottom: 12px; }
