@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The ear · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../unit-6.html" aria-label="Back to Unit 6">←<span class="wide-only">&nbsp;Unit 6</span></a>
+      <h1><span class="wide-only" aria-hidden="true">👂 </span>The ear</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">How does a wiggle in the air become a sound in your head?</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Play a sound</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-sound="low">🥁 Low drum</button>
+          <button class="btn press" data-sound="high">🐦 High whistle</button>
+        </div>
+        <label class="control">
+          <span class="name">Loudness <output id="loud-out"></output></span>
+          <input type="range" id="loud" min="1" max="10" step="1" value="4">
+          <span class="ends"><span>Whisper</span><span>Too loud!</span></span>
+        </label>
+        <div class="buttons">
+          <button class="btn press" id="muffs" aria-pressed="false">🎧 Ear muffs</button>
+          <button class="btn press" id="slow" aria-pressed="false">🐢 Slow motion</button>
+        </div>
+        <div class="buttons three" style="margin-top: 14px">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="listen">Play a sound and follow it <b>all the way to the brain</b>.</li>
+          <li data-challenge="low">Play a <b>low</b> sound. Which hair cells wiggle?</li>
+          <li data-challenge="high">Play a <b>high</b> sound. Is it the same hair cells?</li>
+          <li data-challenge="loud">Play a sound that’s <b>too loud</b>.</li>
+          <li data-challenge="muffs">Put on <b>ear muffs</b> for a loud sound.</li>
+          <li data-challenge="parts">Tap all <b>8 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--teal)">Fast facts</span></h2>
+        <ul class="facts">
+          <li>Your <b>outer ear</b> catches sound and sends it down the ear canal.</li>
+          <li>The <b>eardrum</b> is a thin skin, stretched like a drum. Sound makes it wiggle.</li>
+          <li>The three tiniest bones in your body are in your ear: the <b>hammer</b>, <b>anvil</b>, and <b>stirrup</b>.</li>
+          <li>The <b>cochlea</b> is shaped like a snail shell. It’s full of liquid and tiny <b>hair cells</b>.</li>
+          <li>High sounds wiggle hair cells near the start of the snail. Low sounds wiggle the ones near the end.</li>
+          <li>Very loud sounds can hurt hair cells for good. Turn it down, and cover your ears near loud noises.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../../../js/ear.js"></script>
+</body>
+</html>
