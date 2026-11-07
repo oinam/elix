@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unit 6: Making Waves · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../css/style.css">
+  <script src="../../js/theme.js"></script>
+</head>
+<body>
+  <main class="home menu">
+    <header class="topbar">
+      <a class="back press" href="index.html" aria-label="Back to Science">←<span class="wide-only">&nbsp;Science</span></a>
+      <h1><span aria-hidden="true">🌊 </span>Unit 6: Making Waves</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <div class="menu-mascot" id="mascot"></div>
+
+    <section class="topic big-questions chunky">
+      <h2>Big questions</h2>
+      <ul class="facts">
+        <li>What is a <b>wave</b>, and what does it carry?</li>
+        <li>How does <b>sound</b> get from a guitar to your ears?</li>
+        <li>What is <b>light</b>, and why do things have colors?</li>
+      </ul>
+    </section>
+
+    <section class="topic">
+      <p class="kicker wavy" style="--wave: var(--blue)">Part 1</p>
+      <h2>Waves</h2>
+      <p>A wave carries energy from place to place, without carrying the stuff along.</p>
+
+      <div class="cards">
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--blue)" aria-hidden="true">🌊</span>
+          <h3>What is a wave?</h3>
+          <p>Shake a rope, push a slinky, and drop a pebble in a pond.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--teal)" aria-hidden="true">📏</span>
+          <h3>Parts of a wave</h3>
+          <p>Crest, trough, wavelength, amplitude, and frequency.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="topic">
+      <p class="kicker wavy" style="--wave: var(--orange)">Part 2</p>
+      <h2>Sound</h2>
+      <p>Sound is made by things that vibrate, and it needs something to travel through.</p>
+
+      <div class="cards">
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--orange)" aria-hidden="true">🎸</span>
+          <h3>Sound</h3>
+          <p>Pluck a string, change the pitch, and race sound through air, water, and steel.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--pink)" aria-hidden="true">👂</span>
+          <h3>The ear</h3>
+          <p>How a wiggle in the air turns into a sound in your brain.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--purple)" aria-hidden="true">🦇</span>
+          <h3>Echoes</h3>
+          <p>Bats, ships, and doctors use sound to find things they can’t see.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="topic">
+      <p class="kicker wavy" style="--wave: var(--yellow)">Part 3</p>
+      <h2>Light</h2>
+      <p>Light is a wave too. It’s the fastest thing there is, and it can cross empty space.</p>
+
+      <div class="cards">
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--yellow)" aria-hidden="true">📡</span>
+          <h3>The light family</h3>
+          <p>Radio waves to gamma rays. Light we see is just a tiny part!</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--pink)" aria-hidden="true">🌈</span>
+          <h3>Colors of light</h3>
+          <p>Split white light with a prism, and find out why an apple is red.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--teal)" aria-hidden="true">🔦</span>
+          <h3>Light meets matter</h3>
+          <p>See-through, shadows, mirrors, and a straw that looks bent.</p>
+        </div>
+        <div class="card chunky soon">
+          <span class="pill">Coming next</span>
+          <span class="tile" style="--tile: var(--purple)" aria-hidden="true">🔭</span>
+          <h3>Telescopes</h3>
+          <p>Lenses and mirrors that bring faraway things close.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>Questions, ideas, or spotted a mistake? Email us at <a href="mailto:hi@oinam.com">hi@oinam.com</a>.</p>
+    </footer>
+  </main>
+
+  <script type="module">
+    import { createMascot } from '../../js/mascot.js';
+    import { showStars } from '../../js/progress.js';
+
+    const cello = createMascot(document.getElementById('mascot'));
+    cello.say(showStars() ? 'Welcome back! Can you get every star in this unit?' : 'Waves are everywhere! You hear them, see them, and feel them. Let’s make some!', { ms: 0 });
+  </script>
+</body>
+</html>
