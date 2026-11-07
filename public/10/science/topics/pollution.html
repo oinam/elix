@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pollution · ELIx</title>
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="../../../fonts/nunito-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../../css/style.css">
+  <script src="../../../js/theme.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="explorer">
+    <header class="topbar">
+      <a class="back press" href="../unit-7.html" aria-label="Back to Unit 7">←<span class="wide-only">&nbsp;Unit 7</span></a>
+      <h1><span class="wide-only" aria-hidden="true">🏭 </span>Pollution</h1>
+      <button class="theme-toggle press" data-theme-toggle></button>
+    </header>
+
+    <main class="stage chunky" id="stage">
+      <div class="hint level-card" id="level-card" aria-live="polite">This town is making the air, water, and land dirty. Can you clean it up?</div>
+      <div class="info chunky" id="info" hidden>
+        <button class="close" id="info-close" aria-label="Close">×</button>
+        <h3 id="info-title"></h3>
+        <p id="info-text"></p>
+        <p class="found" id="info-found"></p>
+      </div>
+      <div class="mascot-dock" id="mascot"></div>
+    </main>
+
+    <aside class="panel">
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--purple)">Pick one</span></h2>
+        <div class="buttons">
+          <button class="btn press" data-view="town" aria-pressed="true">🏘️ The town</button>
+          <button class="btn press" data-view="dump" aria-pressed="false">🗑️ Buried trash</button>
+        </div>
+      </section>
+
+      <section class="chunky" id="town-tools">
+        <h2><span class="wavy" style="--wave: var(--green)">Clean it up</span></h2>
+        <p class="plate" id="meters" aria-live="polite"></p>
+        <div class="buttons">
+          <button class="btn press" data-fix="filter" aria-pressed="false">🏭 Filter the smoke</button>
+          <button class="btn press" data-fix="buses" aria-pressed="false">🚌 Buses and bikes</button>
+          <button class="btn press" data-fix="treat" aria-pressed="false">🧪 Clean factory water</button>
+          <button class="btn press" data-fix="sewage" aria-pressed="false">🚽 Treat the sewage</button>
+          <button class="btn press" data-fix="fertilizer" aria-pressed="false">🌾 Less fertilizer</button>
+          <button class="btn press" data-fix="oil" aria-pressed="false">🛢️ Clean the oil spill</button>
+          <button class="btn press" data-fix="recycle" aria-pressed="false">♻️ Recycle and compost</button>
+        </div>
+      </section>
+
+      <section class="chunky" id="dump-tools" hidden>
+        <h2><span class="wavy" style="--wave: var(--green)">How long does trash last?</span></h2>
+        <label class="control">
+          <span class="name">Time underground <output id="years-out"></output></span>
+          <input type="range" id="years" min="0" max="100" step="1" value="0">
+          <span class="ends"><span>Today</span><span>1,000 years</span></span>
+        </label>
+        <p id="trash-left" aria-live="polite"></p>
+      </section>
+
+      <section class="chunky">
+        <div class="buttons three">
+          <button class="btn press" id="labels" aria-pressed="false">🏷️ Labels</button>
+          <button class="btn press" id="pause" aria-pressed="false">⏸️ Pause</button>
+          <button class="btn press" id="reset">🎥 Reset</button>
+        </div>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--yellow)">Try this!</span> <span class="count" id="try-count"></span></h2>
+        <ul class="try">
+          <li data-challenge="air">Make the <b>air</b> clean.</li>
+          <li data-challenge="water">Make the river clean enough for the <b>fish</b> to come back.</li>
+          <li data-challenge="land">Make the <b>landfill</b> shrink.</li>
+          <li data-challenge="all">Clean up the <b>whole town</b>.</li>
+          <li data-challenge="trash">Find out how long a <b>plastic bottle</b> lasts underground.</li>
+          <li data-challenge="parts">Tap all <b>9 parts</b>. <span id="parts-count"></span></li>
+        </ul>
+        <button class="link-btn" id="reset-stars">Start over</button>
+      </section>
+
+      <section class="chunky">
+        <h2><span class="wavy" style="--wave: var(--pink)">Fast facts</span></h2>
+        <ul class="facts">
+          <li><b>Pollution</b> is anything that makes the air, water, or land dirty or harmful.</li>
+          <li>Burning fuel in cars, factories, and power plants gives off smoke and fumes that pollute the air.</li>
+          <li>Too much fertilizer washing into a river feeds a thick layer of algae. When the algae die and rot, the water loses its oxygen, and fish can’t breathe.</li>
+          <li>Oil spilled at sea coats the feathers of birds and the fur of animals, so they can’t stay warm or float.</li>
+          <li>Some trash rots in weeks. Plastic can last hundreds of years. Recycling and composting keep it out of landfills.</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script type="module" src="../../../js/pollution.js"></script>
+</body>
+</html>
