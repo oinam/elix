@@ -5,6 +5,8 @@
   "description": "ELIx: Explain Like I’m 10",
   "scripts": {
     "dev": "node scripts/dev.mjs",
+    "test": "node scripts/check.mjs",
+    "smoke": "node scripts/smoke.mjs",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {

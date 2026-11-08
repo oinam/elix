@@ -221,6 +221,21 @@ async function main() {
   await mkdir(AUDIO, { recursive: true });
   const manifest = await readManifest();
   const onDisk = new Set((await readdir(AUDIO)).filter((f) => f.endsWith('.mp3')).map((f) => f.slice(0, -4)));
+  if (args.has('--check')) {
+    // For `npm test`: every line has a clip, and the manifest matches the clips on disk.
+    // Never calls ElevenLabs.
+    const listed = new Set(manifest.clips);
+    const problems = [
+      ...[...lines].filter(([key]) => !onDisk.has(key)).map(([key, s]) => `no clip ${key}: ${s}`),
+      ...[...lines.keys()].filter((key) => onDisk.has(key) && !listed.has(key)).map((key) => `not in the manifest: ${key}`),
+      ...[...listed].filter((key) => !onDisk.has(key)).map((key) => `in the manifest, but no file: ${key}`),
+      ...[...onDisk].filter((key) => !lines.has(key)).map((key) => `no line uses ${key}.mp3`),
+    ];
+    for (const p of problems) console.log(p);
+    console.log(`${lines.size} lines, ${onDisk.size} clips: ${problems.length ? `${problems.length} problems` : 'all voiced'}.`);
+    process.exitCode = problems.length ? 1 : 0;
+    return;
+  }
   const voice = KEY ? await chooseVoice(manifest) : manifest.voice;
   // A new voice or model means every clip is made again.
   const redo = args.has('--redo') || (KEY && manifest.voice && (manifest.voice !== voice || manifest.model !== MODEL));

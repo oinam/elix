@@ -6,6 +6,7 @@
 #   mise install        # fetch the tools, once
 #   mise run dev        # local server on http://localhost:8787 (or the next free port)
 #   mise run voice      # make Cello's voice clips (ElevenLabs)
+#   mise run check      # the file checks (fast); mise run smoke opens every page in Chrome
 #   mise trust          # after creating mise.local.toml
 #
 # The npm scripts stay: Cloudflare Workers Builds runs `npx wrangler deploy` and knows
@@ -40,6 +41,15 @@ run = "node scripts/voice.mjs"
 [tasks.voices]
 description = "List the British female ElevenLabs voices on your account"
 run = "node scripts/voice.mjs --voices"
+
+[tasks.check]
+description = "Check links, topics, challenges, colors, text, and voice clips (no browser; same as npm test)"
+run = "node scripts/check.mjs"
+
+[tasks.smoke]
+description = "Open every page in headless Chrome, press every button, and fail on errors (starts its own server)"
+depends = ["install"]
+run = "node scripts/smoke.mjs"
 
 [tasks.serve]
 description = "No-install fallback on http://localhost:8000 (no clean URLs or 404 page)"
