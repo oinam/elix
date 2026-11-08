@@ -349,9 +349,9 @@ stage.onFrame((dt) => {
 });
 
 // Camera moves, fades, and coiling keep going even while paused.
-const clockFree = new THREE.Clock();
+const clockFree = new THREE.Timer();
 function follow() {
-  const dt = Math.min(clockFree.getDelta(), 0.05);
+  const dt = Math.min(clockFree.update().getDelta(), 0.05);
   const k = 1 - Math.exp(-dt * 5);
   if (view.fly) {
     view.fly.t = Math.min(view.fly.t + dt / 1.2, 1);

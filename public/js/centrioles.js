@@ -454,9 +454,9 @@ stage.onFrame((dt) => {
 });
 
 // The camera keeps moving even while paused.
-const clockFree = new THREE.Clock();
+const clockFree = new THREE.Timer();
 function follow() {
-  const dt = Math.min(clockFree.getDelta(), 0.05);
+  const dt = Math.min(clockFree.update().getDelta(), 0.05);
   if (fly.t < 1) {
     fly.t = Math.min(fly.t + dt / 1.1, 1);
     const e = smooth(fly.t, 0, 1);

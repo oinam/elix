@@ -57,13 +57,13 @@ export function createStage(container) {
   new ResizeObserver(resize).observe(container);
   resize();
 
-  const clock = new THREE.Clock();
+  const clock = new THREE.Timer();
   const updaters = [];
   let paused = false;
 
   renderer.setAnimationLoop(() => {
     // Cap the step so a hidden tab doesn't cause a huge jump on return.
-    const dt = Math.min(clock.getDelta(), 0.05);
+    const dt = Math.min(clock.update().getDelta(), 0.05);
     if (!paused) updaters.forEach((fn) => fn(dt));
     controls.update();
     renderer.render(scene, camera);

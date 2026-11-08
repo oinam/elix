@@ -773,9 +773,9 @@ stage.onFrame((dt) => {
 });
 
 // Moving parts follow the controls even while paused.
-const clockFree = new THREE.Clock();
+const clockFree = new THREE.Timer();
 function follow() {
-  const dt = Math.min(clockFree.getDelta(), 0.05);
+  const dt = Math.min(clockFree.update().getDelta(), 0.05);
   const k = 1 - Math.exp(-dt * 10);
   // Turning the knobs down lowers the tube toward the slide.
   const y = 0.42 - (state.coarse + state.fine) * 0.0042;
