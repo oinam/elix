@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer, bindToggle } from './explorer.js';
+import { wet } from './materials.js';
 
 // Blood vessels. Up close: a thick, stretchy artery pulses with each beat,
 // branches into capillaries that weave between body cells (oxygen and food
@@ -43,7 +44,7 @@ const { addLabel, tagPart, complete, cello } = explorer;
 
 // ---------- Materials ----------
 
-const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.45, ...extra });
+const mat = (color, extra = {}) => wet({ color, roughness: 0.45, ...extra });
 const seeThrough = (color, opacity) => mat(color, { transparent: true, opacity, depthWrite: false, side: THREE.DoubleSide });
 
 const arteryMat = seeThrough(0xe8445a, 0.42);

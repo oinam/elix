@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
+import { wet } from './materials.js';
 
 // Gas exchange in the alveoli. The smallest tube ends in bunches of air sacs
 // wrapped in capillaries; blood comes in needing oxygen (blue here) and leaves
@@ -42,7 +43,7 @@ const { addLabel, tagPart, complete, cello } = explorer;
 
 // ---------- Materials ----------
 
-const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.45, ...extra });
+const mat = (color, extra = {}) => wet({ color, roughness: 0.45, ...extra });
 const seeThrough = (color, opacity) => mat(color, { transparent: true, opacity, depthWrite: false });
 
 const airwayMat = seeThrough(0xffd1dc, 0.7);

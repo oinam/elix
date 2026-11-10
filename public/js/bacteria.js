@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { MeshSurfaceSampler } from 'three/addons/math/MeshSurfaceSampler.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider } from './explorer.js';
+import { wet } from './materials.js';
 
 // ---------- Kid-friendly descriptions of each part ----------
 
@@ -60,12 +61,12 @@ const { addLabel, tagPart, complete, cello } = explorer;
 
 // ---------- Materials ----------
 
-const wallMaterial = new THREE.MeshStandardMaterial({ roughness: 0.4, transparent: true, opacity: 0.3, depthWrite: false });
-const membraneMaterial = new THREE.MeshStandardMaterial({ roughness: 0.3, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide });
+const wallMaterial = wet({ roughness: 0.4, transparent: true, opacity: 0.3, depthWrite: false });
+const membraneMaterial = wet({ roughness: 0.3, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide });
 const hiddenMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
-const dnaMaterial = new THREE.MeshStandardMaterial({ color: 0xff5c8f, emissive: 0x6a1030, roughness: 0.4 });
-const ribosomeMaterial = new THREE.MeshStandardMaterial({ color: 0xffd75e, roughness: 0.5 });
-const hairMaterial = new THREE.MeshStandardMaterial({ roughness: 0.6 });
+const dnaMaterial = wet({ color: 0xff5c8f, emissive: 0x6a1030, roughness: 0.4 });
+const ribosomeMaterial = wet({ color: 0xffd75e, roughness: 0.5 });
+const hairMaterial = wet({ roughness: 0.6 });
 
 // ---------- The three shapes ----------
 // Each shape is described by its wall surface and how deep its jelly goes, so
@@ -135,6 +136,7 @@ function buildHero(shape) {
   // DNA: one long tangled loop floating in the jelly.
   const loop = shape === 'spiral' ? spiralLoop() : tangle(Array.from({ length: 28 }, () => inside(0.3, 0.85)));
   const dna = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(loop, true), 400, 0.045, 6, true), dnaMaterial);
+  dna.userData.noShade = true;
   group.add(tagPart(dna, 'dna'));
 
   // Ribosomes: lots of tiny dots.
@@ -147,6 +149,7 @@ function buildHero(shape) {
   const wallSampler = new MeshSurfaceSampler(wall).build();
   const hairGeo = new THREE.CylinderGeometry(0.012, 0.018, 0.22, 4).translate(0, 0.11, 0);
   const pili = new THREE.InstancedMesh(hairGeo, hairMaterial, 46);
+  pili.userData.noShade = true;
   const up = new THREE.Vector3(0, 1, 0);
   const q = new THREE.Quaternion();
   for (let i = 0; i < 46; i++) {
@@ -225,7 +228,7 @@ Object.keys(SHAPES).forEach(buildHero);
 // ---------- The colony: bacteria that double ----------
 
 const MAX_COLONY = 256;
-const colonyMaterial = new THREE.MeshStandardMaterial({ roughness: 0.5, transparent: true });
+const colonyMaterial = wet({ roughness: 0.5, transparent: true });
 const colonyGeos = {
   round: new THREE.SphereGeometry(0.16, 12, 8),
   rod: new THREE.CapsuleGeometry(0.09, 0.26, 4, 8).rotateZ(Math.PI / 2),

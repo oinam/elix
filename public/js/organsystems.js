@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { heartGeometry, lungGeometry, stomachGeometry, brainGeometry, createFigure } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
+import { wet } from './materials.js';
 
 // Organs team up into organ systems. A see-through body shows six of them:
 // follow an apple through the digestive system, take a deep breath, speed up
@@ -73,7 +74,7 @@ scene.add(sunLight);
 
 // ---------- Materials ----------
 
-const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.45, ...extra });
+const mat = (color, extra = {}) => wet({ color, roughness: 0.45, ...extra });
 const seeThrough = (color, opacity) => mat(color, { transparent: true, opacity, depthWrite: false });
 
 const skin = seeThrough(0xffd5bd, 0.22);

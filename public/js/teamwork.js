@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { heartGeometry, lungGeometry, stomachGeometry } from './organs.js';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer, bindToggle } from './explorer.js';
+import { wet } from './materials.js';
 
 // Organ systems work together, like a relay race. A blood cell runs laps
 // around a loop: it picks up glucose at the digestive system, oxygen at the
@@ -81,7 +82,7 @@ const { addLabel, tagPart, complete, cello } = explorer;
 
 // ---------- Materials ----------
 
-const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.45, ...extra });
+const mat = (color, extra = {}) => wet({ color, roughness: 0.45, ...extra });
 const seeThrough = (color, opacity) => mat(color, { transparent: true, opacity, depthWrite: false });
 
 const trackMat = seeThrough(0xe8445a, 0.35);

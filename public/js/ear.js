@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { brainGeometry } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
+import { wet } from './materials.js';
 
 // The ear, cut open from the side. Play a low drum or a high whistle and
 // follow it: sound waves go down the ear canal, the eardrum wiggles, three
@@ -58,7 +59,7 @@ const { addLabel, tagPart, complete, cello } = explorer;
 
 // ---------- Materials ----------
 
-const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.5, ...extra });
+const mat = (color, extra = {}) => wet({ color, roughness: 0.5, ...extra });
 const seeThrough = (color, opacity) => mat(color, { transparent: true, opacity, depthWrite: false, side: THREE.DoubleSide });
 
 const skinMat = mat(0xffc2a4, { side: THREE.DoubleSide });

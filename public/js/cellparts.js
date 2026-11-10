@@ -2,11 +2,12 @@
 // plant vs animal): blobby shapes, the nucleus, and the organelles. Each
 // builder makes its own materials, so a tapped part glows on its own.
 import * as THREE from 'three';
+import { wet } from './materials.js';
 
-export const glass = (color, opacity = 0.4, extra = {}) => new THREE.MeshStandardMaterial({
+export const glass = (color, opacity = 0.4, extra = {}) => wet({
   color, roughness: 0.35, transparent: true, opacity, depthWrite: false, ...extra,
 });
-export const solid = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.5, ...extra });
+export const solid = (color, extra = {}) => wet({ color, roughness: 0.5, ...extra });
 
 // A seeded random number, so a model looks the same on every visit.
 export function seeded(seed = 1) {
@@ -114,7 +115,9 @@ export function makeNucleus({
   const threads = new THREE.Group();
   for (let i = 0; i < 6; i++) {
     const curve = new THREE.CatmullRomCurve3(randomWalk(rand, radius * 0.72, 22, radius * 0.18));
-    threads.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 120, radius * 0.025, 5), threadMat));
+    const thread = new THREE.Mesh(new THREE.TubeGeometry(curve, 120, radius * 0.025, 5), threadMat);
+    thread.userData.noShade = true; // a tangle this fine only looks dirty with contact shading
+    threads.add(thread);
   }
   group.add(threads);
 

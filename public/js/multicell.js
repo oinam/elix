@@ -3,6 +3,7 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider } from './explorer.js';
 import { heartGeometry, createFigure } from './organs.js';
+import { wet } from './materials.js';
 
 // Levels of organization: cell → tissue → organ → organ system → organism,
 // shown for a human (heart) and a plant (leaf).
@@ -71,7 +72,7 @@ scene.add(sun);
 
 // ---------- Materials ----------
 
-const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.45, ...extra });
+const mat = (color, extra = {}) => wet({ color, roughness: 0.45, ...extra });
 const muscle = mat(0xff7f86);
 const muscleCellMat = mat(0xff7f86, { transparent: true, opacity: 0.6, depthWrite: false });
 const muscleDark = mat(0xc9475a);

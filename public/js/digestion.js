@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { headGeometry, stomachGeometry, STOMACH_PATH, liverGeometry, torsoGeometry } from './organs.js';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer, bindToggle } from './explorer.js';
+import { wet } from './materials.js';
 
 // The digestive system. Feed a meal and follow it: chewed in the mouth,
 // squeezed down the food pipe, churned in the stomach, soaked into the blood
@@ -51,7 +52,7 @@ const { addLabel, tagPart, complete, cello } = explorer;
 
 // ---------- Materials ----------
 
-const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.5, ...extra });
+const mat = (color, extra = {}) => wet({ color, roughness: 0.5, ...extra });
 const seeThrough = (color, opacity) => mat(color, { transparent: true, opacity, depthWrite: false });
 
 const skinMat = seeThrough(0xffd5bd, 0.16);

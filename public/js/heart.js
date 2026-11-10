@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { shaped, heartGeometry, lungGeometry } from './organs.js';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
+import { wet } from './materials.js';
 
 // The heart: four rooms that beat, with the lungs above and the body below.
 // Blood from the body (blue here: it needs oxygen) fills the right atrium,
@@ -50,7 +51,7 @@ const { addLabel, tagPart, complete, cello } = explorer;
 
 // ---------- Materials ----------
 
-const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.45, ...extra });
+const mat = (color, extra = {}) => wet({ color, roughness: 0.45, ...extra });
 const seeThrough = (color, opacity, extra = {}) => mat(color, { transparent: true, opacity, depthWrite: false, ...extra });
 
 const muscleMat = seeThrough(0xd13c52, 0.45, { roughness: 0.4 });

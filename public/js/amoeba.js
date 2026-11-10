@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
+import { wet } from './materials.js';
 
 // ---------- Kid-friendly descriptions of each part ----------
 
@@ -103,14 +104,14 @@ stage.addMotes({ count: 90, spread: [18, 5, 18] });
 
 // ---------- Shared materials ----------
 
-const bodyMaterial = new THREE.MeshStandardMaterial({
+const bodyMaterial = wet({
   roughness: 0.35,
   transparent: true,
   opacity: 0.5,
   depthWrite: false,
 });
-const nucleusMaterial = new THREE.MeshStandardMaterial({ color: 0xff7aa2, roughness: 0.45 });
-const vacuoleMaterial = new THREE.MeshStandardMaterial({ color: 0x6fc3ff, roughness: 0.2, emissive: 0x1a4c80 });
+const nucleusMaterial = wet({ color: 0xff7aa2, roughness: 0.45 });
+const vacuoleMaterial = wet({ color: 0x6fc3ff, roughness: 0.2, emissive: 0x1a4c80 });
 const speckMaterial = new THREE.PointsMaterial({ size: 0.04 });
 const hiddenMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
 const freshFood = new THREE.Color(0x7be05a);
@@ -273,7 +274,7 @@ class Amoeba {
   swallow(food) {
     removeFood(food);
     if (this.foodVacuoles.length >= 8) return;
-    const mesh = new THREE.Mesh(foodVacuoleGeo, new THREE.MeshStandardMaterial({ color: freshFood.clone(), roughness: 0.4 }));
+    const mesh = new THREE.Mesh(foodVacuoleGeo, wet({ color: freshFood.clone(), roughness: 0.4 }));
     const angle = Math.random() * Math.PI * 2;
     mesh.userData.orbit = { angle, radius: THREE.MathUtils.randFloat(0.35, 0.7), age: 0 };
     this.group.add(mesh);
@@ -381,7 +382,7 @@ function addFood(position, dropped) {
   if (foods.length >= MAX_FOODS) return;
   const mesh = new THREE.Mesh(
     foodGeo,
-    new THREE.MeshStandardMaterial({ color: foodColors[foods.length % foodColors.length], roughness: 0.5 }),
+    wet({ color: foodColors[foods.length % foodColors.length], roughness: 0.5 }),
   );
   mesh.position.copy(position).setY(FLOOR_Y + 0.1);
   mesh.rotation.set(Math.PI / 2, 0, Math.random() * Math.PI);

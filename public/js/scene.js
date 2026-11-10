@@ -4,6 +4,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 // See-through things (cell membranes, glass, water) get a soft bright edge,
 // the way a soap bubble does: more solid where the surface turns away from
@@ -49,6 +51,76 @@ function makeBackdrop() {
   dome.renderOrder = -1000;
   dome.frustumCulled = false;
   return dome;
+}
+
+// The finishing touches are drawn over the finished picture, so the picture
+// itself (its colors, and how see-through things mix) stays as it was.
+
+// Soft shading where things touch or fold (a crease, the gap between two
+// parts, a thing resting on the ground). Only solid things count: see-through
+// ones, flat-colored ones, and parts that are sliced open are left out, so a
+// cell's membrane doesn't shade what is inside it. A page can leave a mesh out
+// too (userData.noShade), for fine hairs and tangles that would only look dirty.
+class ContactShadePass extends GTAOPass {
+  constructor(scene, camera) {
+    super(scene, camera);
+    this.output = GTAOPass.OUTPUT.Off; // work the shading out; drawOver() puts it on
+    this.skipped = [];
+  }
+
+  drawOver(renderer) {
+    // The shadows were just drawn for this frame; don't draw them again.
+    renderer.shadowMap.autoUpdate = false;
+    this.render(renderer);
+    renderer.shadowMap.autoUpdate = true;
+    this.blendMaterial.uniforms.intensity.value = this.blendIntensity;
+    this.blendMaterial.uniforms.tDiffuse.value = this.pdRenderTarget.texture;
+    this._renderPass(renderer, this.blendMaterial, null);
+  }
+
+  _overrideVisibility() {
+    super._overrideVisibility();
+    this.scene.traverse((o) => {
+      if (!o.isMesh && !o.isSprite) return;
+      const m = Array.isArray(o.material) ? o.material[0] : o.material;
+      const solid = o.isMesh && m.isMeshStandardMaterial && !m.transparent && !m.clippingPlanes?.length && !o.userData.noShade;
+      if (solid) return;
+      this.skipped.push(o, o.layers.mask);
+      o.layers.mask = 0;
+    });
+  }
+
+  _restoreVisibility() {
+    super._restoreVisibility();
+    for (let i = 0; i < this.skipped.length; i += 2) this.skipped[i].layers.mask = this.skipped[i + 1];
+    this.skipped.length = 0;
+  }
+}
+
+// A gentle glow around the brightest things: a lamp, a shine on metal or glass.
+class GlowPass extends UnrealBloomPass {
+  constructor() {
+    super(new THREE.Vector2(256, 256), 0.12, 0.4, 0.97);
+    this.frame = new THREE.WebGLRenderTarget(256, 256);
+  }
+
+  setSize(width, height) {
+    super.setSize(width, height);
+    this.frame.setSize(width, height);
+  }
+
+  drawOver(renderer) {
+    // Take a copy of the picture so far, blur its bright spots, and add them on.
+    renderer.initRenderTarget(this.frame);
+    renderer.setRenderTarget(null);
+    renderer.copyFramebufferToTexture(this.frame.texture);
+    this.render(renderer, null, this.frame);
+    const autoClear = renderer.autoClear;
+    renderer.autoClear = false;
+    renderer.setRenderTarget(null);
+    this._fsQuad.render(renderer);
+    renderer.autoClear = autoClear;
+  }
 }
 
 // A soft round dot, for specks that drift in the water.
@@ -135,23 +207,48 @@ export function createStage(container) {
       : THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(FOV / 2)) * MIN_ASPECT / camera.aspect));
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
+    const size = renderer.getDrawingBufferSize(new THREE.Vector2());
+    // On a sharp screen (a phone), the shading is worked out at half size: it
+    // is soft anyway, and that keeps it quick.
+    const part = renderer.getPixelRatio() > 1 ? 0.5 : 1;
+    shade.setSize(Math.ceil(size.x * part), Math.ceil(size.y * part));
+    glow.setSize(size.x, size.y);
     labelRenderer.setSize(w, h);
   }
-  new ResizeObserver(resize).observe(container);
-  resize();
+
+  // The finishing touches (see the top of this file).
+  const shade = new ContactShadePass(scene, camera);
+  shade.updateGtaoMaterial({ radius: 0.35, distanceExponent: 1, thickness: 1, scale: 1, samples: 16 });
+  shade.updatePdMaterial({ lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 10, rings: 2, samples: 16 });
+  shade.blendIntensity = 0.7;
+  const glow = new GlowPass();
+  let effects = true;
 
   const clock = new THREE.Timer();
   const updaters = [];
   let paused = false;
+  let slow = 0;
+  new ResizeObserver(resize).observe(container);
+  resize();
 
   renderer.setAnimationLoop(() => {
     // Cap the step so a hidden tab doesn't cause a huge jump on return.
-    const dt = Math.min(clock.update().getDelta(), 0.05);
+    const raw = clock.update().getDelta();
+    const dt = Math.min(raw, 0.05);
+    // On a device that can't keep up, drop the finishing touches for good.
+    if (effects && document.visibilityState === 'visible') {
+      slow = raw > 0.045 ? slow + Math.min(raw, 0.25) : Math.max(0, slow - raw);
+      if (slow > 1.5) effects = false; // a second and a half of slow frames
+    }
     if (!paused) updaters.forEach((fn) => fn(dt));
     controls.update();
     backdrop.position.copy(camera.position);
     backdrop.material.uniforms.base.value.copy(scene.background);
     renderer.render(scene, camera);
+    if (effects) {
+      if (shade.enabled) shade.drawOver(renderer);
+      if (glow.enabled) glow.drawOver(renderer);
+    }
     labelRenderer.render(scene, camera);
   });
 
@@ -229,6 +326,8 @@ export function createStage(container) {
     renderer,
     controls,
     sun,
+    shade,
+    glow,
     castShadows,
     autoShadows,
     addGround,

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider } from './explorer.js';
+import { wet } from './materials.js';
 
 // ---------- Kid-friendly descriptions of each part ----------
 
@@ -54,14 +55,14 @@ const { addLabel, tagPart, complete, cello } = explorer;
 
 // ---------- Materials ----------
 
-const wallMaterial = new THREE.MeshStandardMaterial({ roughness: 0.4, transparent: true, opacity: 0.35, depthWrite: false });
-const membraneMaterial = new THREE.MeshStandardMaterial({ roughness: 0.3, transparent: true, opacity: 0.3, depthWrite: false });
+const wallMaterial = wet({ roughness: 0.4, transparent: true, opacity: 0.35, depthWrite: false });
+const membraneMaterial = wet({ roughness: 0.3, transparent: true, opacity: 0.3, depthWrite: false });
 const hiddenMaterial = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
-const nucleusMaterial = new THREE.MeshStandardMaterial({ color: 0x9a7cf5, roughness: 0.45 });
-const vacuoleMaterial = new THREE.MeshStandardMaterial({ color: 0x9ccfff, roughness: 0.1, transparent: true, opacity: 0.7 });
+const nucleusMaterial = wet({ color: 0x9a7cf5, roughness: 0.45 });
+const vacuoleMaterial = wet({ color: 0x9ccfff, roughness: 0.1, transparent: true, opacity: 0.7 });
 const speckMaterial = new THREE.PointsMaterial({ size: 0.04 });
-const colonyMaterial = new THREE.MeshStandardMaterial({ roughness: 0.5 });
-const bubbleMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.05, transparent: true, opacity: 0.55 });
+const colonyMaterial = wet({ roughness: 0.5 });
+const bubbleMaterial = wet({ color: 0xffffff, roughness: 0.05, transparent: true, opacity: 0.55 });
 const sugarMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x9fb8c8, roughness: 0.15, metalness: 0.1 });
 const deadColor = new THREE.Color(0x8a8f94);
 

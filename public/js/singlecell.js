@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer } from './explorer.js';
 import { loadProgress } from './progress.js';
+import { wet } from './materials.js';
 
 // One cell does every job. Four single-celled organisms, side by side, each
 // acting out how it moves, eats, gets rid of waste, and makes more of itself.
@@ -81,8 +82,8 @@ const { tagPart, complete, cello } = explorer;
 
 // ---------- Materials ----------
 
-const glass = (color, opacity = 0.5) => new THREE.MeshStandardMaterial({ color, roughness: 0.35, transparent: true, opacity, depthWrite: false });
-const solid = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.45, ...extra });
+const glass = (color, opacity = 0.5) => wet({ color, roughness: 0.35, transparent: true, opacity, depthWrite: false });
+const solid = (color, extra = {}) => wet({ color, roughness: 0.45, ...extra });
 const paraBody = glass(0x8fe3cf);
 const amoebaBody = glass(0xc2a8ff);
 const bactBody = glass(0x7fe0c4, 0.55);

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
+import { wet } from './materials.js';
 
 // ---------- Kid-friendly descriptions of each part ----------
 
@@ -108,7 +109,7 @@ function bodyGeometry() {
   return geo;
 }
 
-const bodyMaterial = new THREE.MeshStandardMaterial({
+const bodyMaterial = wet({
   color: 0x8fe3cf,
   roughness: 0.35,
   transparent: true,
@@ -155,10 +156,11 @@ const CILIA_PER_ROW = MAX_CILIA / CILIA_ROWS;
 
 const ciliumGeo = new THREE.CylinderGeometry(0.003, 0.011, CILIUM_LENGTH, 5, 1);
 ciliumGeo.translate(0, CILIUM_LENGTH / 2, 0);
-const ciliaMaterial = new THREE.MeshStandardMaterial({ roughness: 0.6 });
+const ciliaMaterial = wet({ roughness: 0.6 });
 const cilia = new THREE.InstancedMesh(ciliumGeo, ciliaMaterial, MAX_CILIA);
 cilia.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 cilia.frustumCulled = false;
+cilia.userData.noShade = true;
 cell.add(cilia);
 tagPart(cilia, 'cilia');
 
@@ -202,11 +204,11 @@ addLabel('cilia', cell, new THREE.Vector3(1.6, 0.9, 0.3), { hideWith: cilia });
 
 // ---------- Oral groove and mouth ----------
 
-const darkMaterial = new THREE.MeshStandardMaterial({ color: 0x2f6f63, roughness: 0.5 });
+const darkMaterial = wet({ color: 0x2f6f63, roughness: 0.5 });
 
 const groove = new THREE.Mesh(
   new THREE.SphereGeometry(0.06, 12, 8),
-  new THREE.MeshStandardMaterial({ color: 0x8fe3cf, transparent: true, opacity: 0 }),
+  wet({ color: 0x8fe3cf, transparent: true, opacity: 0 }),
 );
 groove.position.copy(bodyPoint(0.15, grooveCenter(0.15)));
 groove.scale.set(6, 4, 2);
@@ -236,7 +238,7 @@ addLabel('analPore', cell, analSurface.clone().multiplyScalar(1.4));
 
 const macronucleus = new THREE.Mesh(
   new THREE.SphereGeometry(1, 32, 24),
-  new THREE.MeshStandardMaterial({ color: 0x9a7cf5, roughness: 0.45 }),
+  wet({ color: 0x9a7cf5, roughness: 0.45 }),
 );
 macronucleus.scale.set(0.55, 0.3, 0.3);
 macronucleus.position.set(0.25, 0.1, -0.15);
@@ -246,7 +248,7 @@ addLabel('macronucleus', cell, new THREE.Vector3(0.25, 0.75, -0.15));
 
 const micronucleus = new THREE.Mesh(
   new THREE.SphereGeometry(0.09, 20, 14),
-  new THREE.MeshStandardMaterial({ color: 0xf06bd8, roughness: 0.4 }),
+  wet({ color: 0xf06bd8, roughness: 0.4 }),
 );
 micronucleus.position.set(0.75, 0.3, -0.12);
 cell.add(micronucleus);
@@ -255,7 +257,7 @@ addLabel('micronucleus', cell, new THREE.Vector3(1.05, 0.7, -0.1));
 
 // ---------- Contractile vacuoles (the water pumps) ----------
 
-const vacuoleMaterial = new THREE.MeshStandardMaterial({
+const vacuoleMaterial = wet({
   color: 0x6fc3ff,
   roughness: 0.2,
   emissive: 0x1a4c80,
@@ -330,7 +332,7 @@ function addFoodVacuole() {
   if (foodVacuoles.length >= MAX_FOOD_VACUOLES) return;
   const mesh = new THREE.Mesh(
     foodVacuoleGeo,
-    new THREE.MeshStandardMaterial({ color: freshFood.clone(), roughness: 0.4 }),
+    wet({ color: freshFood.clone(), roughness: 0.4 }),
   );
   cell.add(mesh);
   tagPart(mesh, 'foodVacuole');
@@ -365,7 +367,7 @@ function updateFoodVacuoles(dt) {
 function spitWaste() {
   const mesh = new THREE.Mesh(
     wasteGeo,
-    new THREE.MeshStandardMaterial({ color: digestedFood, transparent: true }),
+    wet({ color: digestedFood, transparent: true }),
   );
   analPore.getWorldPosition(mesh.position);
   scene.add(mesh);
@@ -400,7 +402,7 @@ function dropFood() {
   for (let i = 0; i < 12 && foods.length < MAX_FOODS; i++) {
     const mesh = new THREE.Mesh(
       foodGeo,
-      new THREE.MeshStandardMaterial({ color: foodColors[i % foodColors.length], roughness: 0.5 }),
+      wet({ color: foodColors[i % foodColors.length], roughness: 0.5 }),
     );
     const angle = Math.random() * Math.PI * 2;
     const distance = THREE.MathUtils.randFloat(1.4, 3.2);

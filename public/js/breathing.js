@@ -3,6 +3,7 @@ import { shaped, headGeometry, lungGeometry, torsoGeometry } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 import { voiceOn } from './voice.js';
+import { wet } from './materials.js';
 
 // The respiratory system. A see-through chest breathes all by itself: the
 // diaphragm pulls down, the ribs lift, the lungs fill, and air streams in
@@ -50,7 +51,7 @@ const { addLabel, tagPart, complete, cello } = explorer;
 
 // ---------- Materials ----------
 
-const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.5, ...extra });
+const mat = (color, extra = {}) => wet({ color, roughness: 0.5, ...extra });
 const seeThrough = (color, opacity) => mat(color, { transparent: true, opacity, depthWrite: false });
 
 const skinMat = seeThrough(0xffd5bd, 0.16);

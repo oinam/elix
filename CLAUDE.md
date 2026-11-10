@@ -74,7 +74,14 @@ js/scene.js              createStage(): renderer, camera, lights, orbit controls
                          for a scene of solid things on the ground; or
                          stage.castShadows(root) with receiveShadow or
                          stage.addGround(y)) and to drifting water specks
-                         (stage.addMotes())
+                         (stage.addMotes()). Two finishing touches are drawn over each
+                         frame: soft contact shading in creases and where things touch
+                         (stage.shade; solid things only, and a mesh opts out with
+                         userData.noShade, for fine hairs and tangles), and a gentle glow
+                         on the brightest spots (stage.glow). Both switch off by themselves
+                         on a device that can't keep up
+js/materials.js          wet(params): a material with a thin shiny coat, for living things
+                         (cells, organs, organisms)
 js/explorer.js           createExplorer(): tap-to-learn parts, labels, glow, info card,
                          self-ticking "Try this!" stars, Cello, Labels/Pause buttons;
                          bindSlider(), bindToggle()
