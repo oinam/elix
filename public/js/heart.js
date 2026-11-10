@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
+import { shaped, heartGeometry, lungGeometry } from './organs.js';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 
@@ -78,34 +78,10 @@ const heart = new THREE.Group();
 heart.scale.setScalar(1.2);
 scene.add(heart);
 
-// A smooth ball pushed into shape: `push` moves each point of a ball that is
-// 1 across from its middle.
-function shaped(push) {
-  const ball = new THREE.IcosahedronGeometry(1, 14);
-  ball.deleteAttribute('uv');
-  ball.deleteAttribute('normal');
-  const geo = mergeVertices(ball);
-  const pos = geo.attributes.position;
-  const q = new THREE.Vector3();
-  for (let i = 0; i < pos.count; i++) {
-    push(q.fromBufferAttribute(pos, i));
-    pos.setXYZ(i, q.x, q.y, q.z);
-  }
-  geo.computeVertexNormals();
-  return geo;
-}
-
 // The muscle: one heart shape you can see through. Broad on top, where the
 // atria sit, with a dip where the big vessels leave. It narrows to a tip
 // (the apex) at the bottom, under the left ventricle.
-const APEX_LEAN = 0.45;
-const muscle = new THREE.Mesh(shaped((q) => {
-  const down = Math.max(0, -q.y);
-  const width = 1.5 * (1 - 0.4 * down);
-  const dip = 0.28 * Math.exp(-((q.x / 0.32) ** 2)) * THREE.MathUtils.smoothstep(q.y, 0.2, 1);
-  const y = (q.y > 0 ? q.y * 1.3 : q.y * 1.55) - dip - 0.2;
-  q.set(q.x * width + APEX_LEAN * down ** 1.3, y, q.z * 0.62 * width);
-}), muscleMat);
+const muscle = new THREE.Mesh(heartGeometry(), muscleMat);
 muscle.renderOrder = 2; // drawn after the rooms inside it
 heart.add(muscle);
 
@@ -163,16 +139,7 @@ const FORK = v(0, 3.45, -0.2);
 scene.add(tube([v(0, 4, -0.2), FORK], 0.13, airwayMat));
 [LUNG_L, LUNG_R].forEach((at) => {
   const out = Math.sign(at.x); // which way is away from the heart
-  // Lung-shaped: narrow at the top, wide at the bottom, flatter on the side
-  // that faces the heart, and hollow underneath, where the breathing muscle
-  // (the diaphragm) fits.
-  const lung = new THREE.Mesh(shaped((q) => {
-    const down = Math.max(0, -q.y);
-    const inner = q.x * out < 0 ? 0.62 - 0.22 * THREE.MathUtils.smoothstep(down, 0, 0.8) : 1;
-    const width = 0.74 - 0.2 * q.y;
-    const dome = 0.3 * down * down * (1 - q.x * q.x - q.z * q.z);
-    q.set(q.x * width * inner, (q.y > 0 ? q.y * 1.15 : q.y * 0.9) + dome - 0.1, q.z * 0.62 * (1 - 0.15 * q.y));
-  }), lungMat);
+  const lung = new THREE.Mesh(lungGeometry(out), lungMat);
   lung.position.copy(at).add(v(0, -0.15, 0));
   lung.scale.setScalar(1.2);
   lung.renderOrder = 2; // drawn after the airways inside it

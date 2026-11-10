@@ -126,9 +126,16 @@ for (let x = -1.5; x <= 1.5; x += 0.75) {
     tissue.push(v(x + rand(-0.08, 0.08), y + rand(-0.08, 0.08), rand(-0.3, 0.3)));
   }
 }
-const tissueMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(0.42, 0.42, 0.42), tissueMat, tissue.length);
-tissue.forEach((p, i) => tissueMesh.setMatrixAt(i, new THREE.Matrix4().makeTranslation(p.x, p.y, p.z)));
-close.add(tagPart(tissueMesh, 'tissue'));
+// Each cell is a soft, rounded blob with a nucleus inside.
+const tissueMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(0.29, 20, 14), tissueMat, tissue.length);
+const nuclei = new THREE.InstancedMesh(new THREE.SphereGeometry(0.1, 12, 8), mat(0xd8866a), tissue.length);
+tissue.forEach((p, i) => {
+  const m = new THREE.Matrix4().makeTranslation(p.x, p.y, p.z);
+  nuclei.setMatrixAt(i, m);
+  tissueMesh.setMatrixAt(i, m.scale(v(1 + rand(-0.1, 0.1), 1 + rand(-0.1, 0.1), 0.9)));
+});
+tissueMesh.renderOrder = 2; // drawn after the nuclei inside
+close.add(tagPart(tissueMesh, 'tissue'), tagPart(nuclei, 'tissue'));
 
 // Three paths of blood: down the artery, along a capillary, up the vein.
 const LANES = [-0.75, 0.6, 1.95].map((y, k) => {

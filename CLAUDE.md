@@ -85,6 +85,10 @@ js/earth.js              createEarthSurface(): the globe's map, with the real co
                          deserts, and ice, drawn on a canvas (material, setIce(latitude),
                          partAt(uv)); faceLongitude(lon) turns a place toward the camera.
                          Used by spheres, earth-layers, and global-warming
+js/organs.js             Shared body shapes, each a smooth ball pushed into shape:
+                         heartGeometry(), lungGeometry(side), stomachGeometry(),
+                         liverGeometry(), torsoGeometry(), and shaped(push) to make more.
+                         Used by heart, breathing, digestion, teamwork, and organ-systems
 js/mascot.js             Cello the cell: createMascot(dock).say(text, { mood }), celebrate()
 js/voice.js              Cello’s voice: speak(text) plays a line’s clip (or the clips for its parts),
                          the 🔊 Voice toggle; voiceSentences() and voiceKey() are shared

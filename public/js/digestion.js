@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { stomachGeometry, liverGeometry, torsoGeometry } from './organs.js';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer, bindToggle } from './explorer.js';
 
@@ -86,7 +87,7 @@ scene.add(body);
 const head = new THREE.Mesh(new THREE.SphereGeometry(0.8, 32, 24), skinMat);
 head.position.set(0, 3.55, 0);
 body.add(head);
-const torso = new THREE.Mesh(new THREE.CapsuleGeometry(1.35, 2.6, 8, 32).scale(1, 1, 0.55), skinMat);
+const torso = new THREE.Mesh(torsoGeometry(1.4, 5.3, 0.55), skinMat);
 torso.position.y = 0.15;
 body.add(torso);
 
@@ -117,11 +118,11 @@ body.add(tagPart(teeth, 'mouth'));
 });
 const pipe = tube(PIPE, 0.09, pipeMat, 32);
 body.add(tagPart(pipe, 'esophagus'));
-const stomach = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 24).scale(1, 0.75, 0.6), stomachMat);
+const stomach = new THREE.Mesh(stomachGeometry().scale(0.58, 0.58, 0.58), stomachMat);
 stomach.position.copy(STOMACH_AT);
-stomach.rotation.z = -0.5;
+stomach.rotation.z = -0.3;
 body.add(tagPart(stomach, 'stomach'));
-const liver = new THREE.Mesh(new THREE.SphereGeometry(0.6, 32, 16).scale(1.2, 0.5, 0.7), liverMat);
+const liver = new THREE.Mesh(liverGeometry().scale(0.6, 0.6, 0.6), liverMat);
 liver.position.set(-0.45, 1.2, 0.15);
 liver.rotation.z = -0.2;
 body.add(tagPart(liver, 'liver'));

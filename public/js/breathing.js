@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { lungGeometry, torsoGeometry } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 import { voiceOn } from './voice.js';
@@ -89,7 +90,7 @@ body.add(head);
 const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.4, 0.8, 24), skinMat);
 neck.position.y = 2.5;
 body.add(neck);
-const torso = new THREE.Mesh(new THREE.CapsuleGeometry(1.35, 1.6, 8, 32).scale(1, 1, 0.6), skinMat);
+const torso = new THREE.Mesh(torsoGeometry(1.4, 4.3, 0.6), skinMat);
 torso.position.y = 0.6;
 body.add(torso);
 
@@ -130,7 +131,7 @@ const tips = [[], []]; // where the smallest tubes end, per lung
   const lung = new THREE.Group();
   lung.position.set(side * 0.78, 0.35, 0);
   body.add(lung);
-  const bag = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 24).scale(side < 0 ? 0.68 : 0.74, 1.15, 0.6), lungMat);
+  const bag = new THREE.Mesh(lungGeometry(side, { hollow: 0.18 }).scale(side < 0 ? 1.1 : 1.18, 1.18, 1), lungMat);
   lung.add(tagPart(bag, 'lungs'));
   lungs.push(lung);
 

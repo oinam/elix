@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { heartGeometry, lungGeometry, stomachGeometry } from './organs.js';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer, bindToggle } from './explorer.js';
 
@@ -122,9 +123,9 @@ scene.add(tagPart(crowd, 'blood'));
 // Digestive system on the left.
 const digestive = new THREE.Group();
 digestive.position.set(-R - 1.0, 0, 0);
-const stomach = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 16).scale(1, 0.75, 0.6), stomachMat);
-stomach.position.set(0, 0.45, 0);
-stomach.rotation.z = -0.5;
+const stomach = new THREE.Mesh(stomachGeometry().scale(0.5, 0.5, 0.5), stomachMat);
+stomach.position.set(0, 0.5, 0);
+stomach.rotation.z = -0.3;
 digestive.add(stomach);
 const coil = [];
 for (let i = 0; i < 4; i++) coil.push(v(i % 2 ? 0.35 : -0.35, -0.1 - i * 0.18, 0.1));
@@ -135,7 +136,7 @@ scene.add(tagPart(digestive, 'digestive'));
 const lungs = new THREE.Group();
 lungs.position.set(0, R + 1.0, 0);
 [-1, 1].forEach((side) => {
-  const lung = new THREE.Mesh(new THREE.SphereGeometry(0.45, 24, 16).scale(0.75, 1, 0.6), lungMat);
+  const lung = new THREE.Mesh(lungGeometry(side, { hollow: 0.1 }).scale(0.55, 0.5, 0.5), lungMat);
   lung.position.x = side * 0.42;
   lungs.add(lung);
 });
@@ -143,7 +144,7 @@ lungs.add(new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.7, 10).transla
 scene.add(tagPart(lungs, 'lungs'));
 
 // The heart at the bottom.
-const heart = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 16).scale(1, 1.1, 0.8), heartMat);
+const heart = new THREE.Mesh(heartGeometry().scale(0.3, 0.3, 0.3).translate(0, 0.1, 0), heartMat);
 heart.position.set(0, -R, 0);
 scene.add(tagPart(heart, 'heart'));
 

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { heartGeometry, lungGeometry, stomachGeometry } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 
@@ -177,7 +178,7 @@ for (const s of [-1, 1]) windpipe.add(tube([v(0, 1.6, 0.1), v(s * 0.15, 1.52, 0.
 systems.respiratory.add(tagPart(windpipe, 'windpipe'));
 const lungs = new THREE.Group();
 const lungPair = [-1, 1].map((s) => {
-  const lung = new THREE.Mesh(new THREE.SphereGeometry(0.4, 28, 20).scale(0.9, 1.5, 0.75), lungMat);
+  const lung = new THREE.Mesh(lungGeometry(s).scale(0.5, 0.58, 0.5), lungMat);
   lung.position.set(s * 0.46, 1.2, 0);
   lungs.add(lung);
   return lung;
@@ -188,33 +189,9 @@ const airFlows = [-1, 1].map((s) => flow(systems.respiratory,
   { count: 7, material: airMat, radius: 0.045, speed: 0.5 }));
 
 // Circulatory system: the heart and loops of blood vessels.
-function teardrop() {
-  const geo = new THREE.SphereGeometry(1.1, 40, 28);
-  const pos = geo.attributes.position;
-  for (let i = 0; i < pos.count; i++) {
-    const y = pos.getY(i);
-    if (y >= 0) {
-      pos.setXYZ(i, pos.getX(i), y * 0.85, pos.getZ(i) * 0.9);
-      continue;
-    }
-    const taper = 1 + y / 1.25;
-    pos.setXYZ(i, pos.getX(i) * taper, y * 1.55, pos.getZ(i) * taper * 0.9);
-  }
-  geo.computeVertexNormals();
-  return geo;
-}
 const heart = new THREE.Group();
-const lobe = new THREE.SphereGeometry(0.85, 28, 20);
-for (const s of [-1, 1]) {
-  const half = new THREE.Mesh(lobe, heartMat);
-  half.position.set(s * 0.52, 0.35, 0);
-  heart.add(half);
-}
-const tip = new THREE.Mesh(teardrop(), heartMat);
-tip.position.y = -0.2;
-heart.add(tip);
+heart.add(new THREE.Mesh(heartGeometry(), heartMat));
 heart.position.set(0.14, 1.0, 0.3);
-heart.rotation.z = -0.35;
 heart.scale.setScalar(0.19);
 systems.circulatory.add(tagPart(heart, 'heart'));
 
@@ -241,9 +218,9 @@ const MOUTH = v(0, 2.5, 0.48);
 const pipePoints = [MOUTH, v(0, 2.2, 0.15), v(0.02, 1.7, -0.12), v(0.06, 1.1, -0.17), v(0.18, 0.72, -0.04), v(0.32, 0.52, 0.1)];
 systems.digestive.add(tagPart(tube(pipePoints, 0.065, gutMat), 'foodPipe'));
 const STOMACH = v(0.38, 0.4, 0.12);
-const stomach = new THREE.Mesh(new THREE.SphereGeometry(0.36, 28, 20).scale(1.25, 0.85, 0.75), stomachMat);
+const stomach = new THREE.Mesh(stomachGeometry().scale(0.42, 0.42, 0.42), stomachMat);
 stomach.position.copy(STOMACH);
-stomach.rotation.z = 0.5;
+stomach.rotation.z = -0.3;
 systems.digestive.add(tagPart(stomach, 'stomach'));
 const smallPoints = [v(0.12, 0.12, 0.16)];
 for (let row = 0; row < 5; row++) {
