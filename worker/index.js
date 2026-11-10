@@ -75,9 +75,19 @@ async function ask(request, env) {
       max_tokens: 1024,
       output_config: { effort: 'low' },
       system: SYSTEM,
+      // The page's facts are the same for every question on that page, so the
+      // prompt up to them is cached (5 minutes), and only the question is new.
+      // Below 512 tokens nothing caches, which is harmless.
       messages: [{
         role: 'user',
-        content: `<page title="${topic.replace(/"/g, '')}">\n${context}\n</page>\n\n<question>${question}</question>`,
+        content: [
+          {
+            type: 'text',
+            text: `<page title="${topic.replace(/"/g, '')}">\n${context}\n</page>`,
+            cache_control: { type: 'ephemeral' },
+          },
+          { type: 'text', text: `<question>${question}</question>` },
+        ],
       }],
     });
     if (message.stop_reason === 'refusal') return json({ answer: SAY.pass });
