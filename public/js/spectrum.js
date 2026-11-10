@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider } from './explorer.js';
 
@@ -93,7 +94,28 @@ const shows = BANDS.map(() => {
 
 // Radio tower: a tall mast with rings of signal.
 {
-  const mast = new THREE.Mesh(new THREE.ConeGeometry(0.4, 3.2, 4, 1, true), metalMat);
+  // A mast of four legs that lean in, tied together with rungs and braces.
+  const mast = new THREE.Group();
+  const rod = (a, b, r = 0.025) => {
+    const mesh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, a.distanceTo(b), 6), metalMat);
+    mesh.position.copy(a).lerp(b, 0.5);
+    mesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize());
+    mast.add(mesh);
+  };
+  const corner = (k, level) => { // corner k of the mast, `level` of the way up
+    const half = 0.42 - 0.37 * level;
+    const a = (k * Math.PI) / 2 + Math.PI / 4;
+    return new THREE.Vector3(Math.cos(a) * half, -1.6 + 3.1 * level, Math.sin(a) * half);
+  };
+  const LEVELS = 7;
+  for (let k = 0; k < 4; k++) {
+    rod(corner(k, 0), corner(k, 1), 0.035);
+    for (let i = 0; i < LEVELS; i++) {
+      rod(corner(k, i / LEVELS), corner(k + 1, i / LEVELS));
+      rod(corner(k, i / LEVELS), corner(k + 1, (i + 1) / LEVELS), 0.018);
+    }
+  }
+  rod(new THREE.Vector3(0, 1.45, 0), new THREE.Vector3(0, 1.62, 0), 0.03);
   const tip = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 8), mat(0xe8443a, { emissive: 0x7a0a00 }));
   tip.position.y = 1.65;
   shows[0].add(tagPart(new THREE.Group().add(mast, tip), 'tower'));
@@ -101,17 +123,37 @@ const shows = BANDS.map(() => {
 // Microwave oven: a box with a glowing window.
 {
   const g = shows[1];
-  const box = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.1, 1.1), ovenMat);
+  const box = new THREE.Mesh(new RoundedBoxGeometry(1.8, 1.1, 1.1, 4, 0.08), ovenMat);
   const window1 = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 0.7), glowMat);
   window1.position.set(-0.25, 0, 0.56);
-  const plate = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.8, 0.02), blackMat);
-  plate.position.set(0.6, 0, 0.56);
-  g.add(tagPart(new THREE.Group().add(box, window1, plate), 'oven'));
+  const plate = new THREE.Mesh(new RoundedBoxGeometry(0.4, 0.8, 0.03, 2, 0.015), blackMat);
+  plate.position.set(0.6, 0, 0.555);
+  const oven = new THREE.Group().add(box, window1, plate);
+  // A door handle, buttons, a dial, and feet.
+  const handle = new THREE.Mesh(new THREE.CapsuleGeometry(0.03, 0.6, 4, 8), metalMat);
+  handle.position.set(0.33, 0, 0.6);
+  oven.add(handle);
+  for (let i = 0; i < 6; i++) {
+    const button = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.02, 12).rotateX(Math.PI / 2), ovenMat);
+    button.position.set(0.53 + (i % 2) * 0.14, 0.28 - Math.floor(i / 2) * 0.13, 0.58);
+    oven.add(button);
+  }
+  const dial = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.05, 20).rotateX(Math.PI / 2), metalMat);
+  dial.position.set(0.6, -0.22, 0.59);
+  oven.add(dial);
+  for (const x of [-0.7, 0.7]) {
+    for (const z of [-0.4, 0.4]) {
+      const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.08, 12), blackMat);
+      foot.position.set(x, -0.58, z);
+      oven.add(foot);
+    }
+  }
+  g.add(tagPart(oven, 'oven'));
 }
 // A warm hand, glowing like on a heat camera.
 function handShape(material) {
   const hand = new THREE.Group();
-  const palm = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.0, 0.25), material);
+  const palm = new THREE.Mesh(new RoundedBoxGeometry(0.9, 1.0, 0.25, 4, 0.12), material);
   hand.add(palm);
   [-0.33, -0.11, 0.11, 0.33].forEach((x, i) => {
     const finger = new THREE.Mesh(new THREE.CapsuleGeometry(0.09, 0.55 + (i === 1 || i === 2 ? 0.15 : 0), 4, 8), material);
