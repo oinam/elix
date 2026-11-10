@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { shaped } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer } from './explorer.js';
 
@@ -121,13 +122,27 @@ scene.add(fruitView);
 const table = new THREE.Mesh(new THREE.BoxGeometry(5, 0.2, 2.6), mat(0xf4f0e8));
 table.position.y = -0.6;
 fruitView.add(table);
-const apple = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 24), mat(0xff1a1a));
+// An apple: a ball with a dimple on top and a little one underneath, and a stalk.
+const apple = new THREE.Mesh(shaped((q) => {
+  const middle = Math.exp(-((Math.hypot(q.x, q.z) / 0.45) ** 2));
+  q.set(q.x * 0.54, (q.y - (q.y > 0 ? 0.4 : -0.2) * middle) * 0.5, q.z * 0.54);
+}, 10), mat(0xff1a1a));
+apple.add(new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.02, 0.3, 8).translate(0.02, 0.4, 0), mat(0x6b4a2a)));
 apple.position.set(-1.5, 0, 0);
 fruitView.add(tagPart(apple, 'apple'));
-const banana = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.16, 12, 24, Math.PI * 0.8).rotateZ(Math.PI * 1.1), mat(0xffe81a));
-banana.position.set(0, -0.05, 0);
+// A banana: long and curved, thinner toward both ends.
+const banana = new THREE.Mesh(shaped((q) => {
+  const thick = 0.17 * (1 - 0.5 * q.x ** 4);
+  q.set(q.x * 0.8, q.y * thick + 0.32 * q.x * q.x, q.z * thick);
+}, 10), mat(0xffe81a));
+banana.position.set(0, -0.33, 0);
 fruitView.add(tagPart(banana, 'banana'));
-const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.55, 24, 12).scale(1, 0.12, 0.55), mat(0x1ac42a));
+// A leaf: pointed at both ends, and folded a little along its middle.
+const leaf = new THREE.Mesh(shaped((q) => {
+  const across = q.z * 0.36 * (1 - q.x * q.x) ** 0.35;
+  q.set(q.x * 0.62, q.y * 0.03 + 0.35 * Math.abs(across) + 0.08 * q.x * q.x, across);
+}, 10), mat(0x1ac42a));
+leaf.rotation.x = 0.5;
 leaf.position.set(1.5, -0.4, 0);
 leaf.rotation.z = 0.2;
 fruitView.add(tagPart(leaf, 'leaf'));
