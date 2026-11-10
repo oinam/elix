@@ -44,6 +44,7 @@ const VIEWS = {
 const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
+stage.autoShadows(8);
 
 const explorer = createExplorer({
   topic: 'water',

@@ -70,6 +70,7 @@ const VIEWS = {
 const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
+stage.autoShadows(6);
 
 const explorer = createExplorer({
   topic: 'interactions',

@@ -70,9 +70,11 @@ js/scene.js              createStage(): renderer, camera, lights, orbit controls
                          labels, resize, and the animation loop (onFrame, pause).
                          Every scene gets a soft backdrop (it follows scene.background),
                          room-light reflections, and a bright edge on see-through
-                         materials. A page opts in to shadows (stage.castShadows(root),
-                         receiveShadow or stage.addGround(y)) and to drifting water
-                         specks (stage.addMotes())
+                         materials. A page opts in to shadows (stage.autoShadows(size)
+                         for a scene of solid things on the ground; or
+                         stage.castShadows(root) with receiveShadow or
+                         stage.addGround(y)) and to drifting water specks
+                         (stage.addMotes())
 js/explorer.js           createExplorer(): tap-to-learn parts, labels, glow, info card,
                          self-ticking "Try this!" stars, Cello, Labels/Pause buttons;
                          bindSlider(), bindToggle()

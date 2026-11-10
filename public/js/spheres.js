@@ -54,6 +54,7 @@ const VIEWS = {
 const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
+stage.autoShadows(8);
 scene.fog.near = 30;
 scene.fog.far = 60;
 

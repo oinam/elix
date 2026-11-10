@@ -23,6 +23,7 @@ const PARTS = {
 const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
+stage.autoShadows(8);
 
 const CAMERA_HOME = new THREE.Vector3(0, 1.2, 11.5);
 const TARGET_HOME = new THREE.Vector3(0, 0.6, 0);

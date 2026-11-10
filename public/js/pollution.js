@@ -52,6 +52,7 @@ const VIEWS = {
 const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
+stage.autoShadows(10);
 controls.maxDistance = 18;
 
 const explorer = createExplorer({

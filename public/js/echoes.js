@@ -48,7 +48,7 @@ const seeThrough = (color, opacity) => mat(color, { transparent: true, opacity, 
 const batMat = mat(0x4a3a5a);
 const wingMat = mat(0x5a4a6a, { side: THREE.DoubleSide });
 const mothMat = mat(0xe8d2a6);
-const caveMat = mat(0x5a4a3a, { side: THREE.BackSide });
+const caveMat = mat(0x5a4a3a, { side: THREE.BackSide, roughness: 1, envMapIntensity: 0 });
 const outMat = new THREE.MeshBasicMaterial({ color: 0xffd75e, transparent: true, opacity: 0.7, depthWrite: false, side: THREE.DoubleSide });
 const backMat = new THREE.MeshBasicMaterial({ color: 0x22e2cc, transparent: true, opacity: 0.8, depthWrite: false, side: THREE.DoubleSide });
 const outLine = new THREE.LineBasicMaterial({ color: 0xffd75e, transparent: true, opacity: 0.9 });

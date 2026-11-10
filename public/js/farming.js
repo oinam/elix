@@ -24,6 +24,7 @@ const PARTS = {
 const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
+stage.autoShadows(9);
 
 const explorer = createExplorer({
   topic: 'farming',

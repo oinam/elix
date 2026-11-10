@@ -162,6 +162,26 @@ export function createStage(container) {
     });
   }
 
+  // For scenes of solid things on the ground (a town, a tree, a table): every
+  // solid thing casts a shadow and catches them, including things added later.
+  // `size` is how far from the middle the shadows reach.
+  function autoShadows(size = 8) {
+    // From the side, so the shadows fall beside things, where you can see them.
+    sun.position.set(5, 8, 1.5).setLength(size * 2.2);
+    Object.assign(sun.shadow.camera, { left: -size, right: size, top: size, bottom: -size, far: size * 5 });
+    sun.shadow.camera.updateProjectionMatrix();
+    sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.normalBias = 0.004 * size;
+    const mark = () => scene.traverse((o) => {
+      if (!o.isMesh || o === backdrop || o.userData.noShadow) return;
+      const solid = !o.material.transparent && !o.material.isMeshBasicMaterial && !o.material.isShadowMaterial;
+      o.castShadow = solid;
+      o.receiveShadow = solid || o.material.isShadowMaterial;
+    });
+    queueMicrotask(mark); // once the page has built its scene
+    setInterval(mark, 400);
+  }
+
   // An invisible floor at height y that only shows the shadows falling on it.
   function addGround(y = 0, size = 30) {
     const ground = new THREE.Mesh(
@@ -210,6 +230,7 @@ export function createStage(container) {
     controls,
     sun,
     castShadows,
+    autoShadows,
     addGround,
     addMotes,
     onFrame: (fn) => updaters.push(fn),
