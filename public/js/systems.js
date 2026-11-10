@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindToggle } from './explorer.js';
+import { shaped } from './organs.js';
 
 // A bicycle is a system: parts that work together to do a job. Pedal it,
 // take parts off and see it stop working, and swap round wheels for square
@@ -297,12 +298,14 @@ function placeChain() {
 const seat = new THREE.Group();
 const POST_TOP = new THREE.Vector3(-0.52, 2.32, 0);
 seat.add(rod(SEAT_JOINT, POST_TOP, 0.04, barMat));
-const saddle = new THREE.Mesh(new RoundedBoxGeometry(0.6, 0.1, 0.24, 3, 0.05), seatMat);
-saddle.position.set(-0.55, 2.38, 0);
+// The saddle: wide and a little raised at the back, narrowing to a nose at the front.
+const saddle = new THREE.Mesh(shaped((q) => {
+  const along = (q.x + 1) / 2; // 0 at the back, 1 at the nose
+  const width = 0.17 * (1 - 0.66 * THREE.MathUtils.smoothstep(along, 0.2, 0.75));
+  q.set(q.x * 0.42, (q.y > 0 ? q.y * 0.045 : q.y * 0.06) + 0.05 * (1 - along) ** 2, q.z * width);
+}, 8), seatMat);
+saddle.position.set(-0.44, 2.37, 0);
 seat.add(saddle);
-const nose = new THREE.Mesh(new RoundedBoxGeometry(0.3, 0.08, 0.12, 3, 0.04), seatMat);
-nose.position.set(-0.18, 2.37, 0);
-seat.add(nose);
 bike.add(tagPart(seat, 'seat'));
 addLabel('seat', seat, new THREE.Vector3(-0.55, 2.62, 0));
 
