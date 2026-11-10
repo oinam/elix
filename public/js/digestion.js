@@ -138,10 +138,13 @@ const smallTube = tube(SMALL, 0.085, smallMat, 240);
 body.add(tagPart(smallTube, 'small'));
 const largeTube = tube(LARGE, 0.17, largeMat, 96);
 body.add(tagPart(largeTube, 'large'));
-// Round off both ends of the large intestine, so the joins are smooth.
-[LARGE[0], LARGE[LARGE.length - 1]].forEach((end) => {
-  const cap = new THREE.Mesh(new THREE.SphereGeometry(0.17, 20, 14), largeMat);
-  cap.position.copy(end);
+// Round off both ends of the large intestine, so the joins are smooth. Each
+// cap is half a ball, pointing away from the tube, so the two never overlap.
+const largeCurve = curveOf(LARGE);
+[0, 1].forEach((at) => {
+  const cap = new THREE.Mesh(new THREE.SphereGeometry(0.17, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), largeMat);
+  cap.position.copy(largeCurve.getPointAt(at));
+  cap.quaternion.setFromUnitVectors(v(0, 1, 0), largeCurve.getTangentAt(at).multiplyScalar(at ? 1 : -1));
   body.add(tagPart(cap, 'large'));
 });
 body.add(tagPart(tube(RECTUM, 0.14, rectumMat, 16), 'rectum'));
