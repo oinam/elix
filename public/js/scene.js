@@ -218,9 +218,9 @@ export function createStage(container) {
 
   // The finishing touches (see the top of this file).
   const shade = new ContactShadePass(scene, camera);
-  shade.updateGtaoMaterial({ radius: 0.35, distanceExponent: 1, thickness: 1, scale: 1, samples: 16 });
+  shade.updateGtaoMaterial({ radius: 0.45, distanceExponent: 1, thickness: 1, scale: 1.25, samples: 16 });
   shade.updatePdMaterial({ lumaPhi: 10, depthPhi: 2, normalPhi: 3, radius: 10, rings: 2, samples: 16 });
-  shade.blendIntensity = 0.7;
+  shade.blendIntensity = 1;
   const glow = new GlowPass();
   let effects = true;
 
