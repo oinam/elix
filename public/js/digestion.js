@@ -64,7 +64,9 @@ const pancreasMat = mat(0xf2d27a);
 const smallMat = mat(0xffb3a1);
 const largeMat = mat(0xd98a6a, { transparent: true, opacity: 0.9 });
 const rectumMat = mat(0xc4785a);
-const foodMat = mat(0xe8443a, { emissive: 0x3a0a00 });
+// The food is drawn on top of the organs it is inside, with a dark edge, so it is easy to follow.
+const foodMat = mat(0xe8443a, { emissive: 0x3a0a00, transparent: true, depthTest: false });
+const foodEdgeMat = new THREE.MeshBasicMaterial({ color: 0x3a2a20, side: THREE.BackSide, transparent: true, depthTest: false });
 const acidMat = mat(0xb6f07a, { emissive: 0x3a6a10, transparent: true, opacity: 0.8 });
 const nutrientMat = mat(0xffd36b, { emissive: 0x8a5200 });
 const waterMat = mat(0x8fd0ff, { emissive: 0x2a6aa8 });
@@ -185,6 +187,10 @@ const STAGES = [
 ];
 
 const food = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 12), foodMat);
+food.renderOrder = 11;
+const foodEdge = new THREE.Mesh(new THREE.SphereGeometry(0.155, 16, 12), foodEdgeMat);
+foodEdge.renderOrder = 10;
+food.add(foodEdge);
 food.visible = false;
 scene.add(food);
 
@@ -369,7 +375,7 @@ stage.onFrame((dt) => {
   if (s.key === 'stomach') {
     food.position.copy(CHURN).add(v(Math.sin(trip.t * 25) * 0.09, Math.cos(trip.t * 19) * 0.07, 0.04));
     if (trip.t > 0.85) path.getPointAt(along, food.position);
-    foodMat.color.lerp(startColor.set(0xd8b070), dt);
+    foodMat.color.lerp(startColor.set(0xf2d27a), dt);
   }
   if (s.key === 'large' || s.key === 'rectum') foodMat.color.lerp(poop, dt * 1.5);
   if (s.key === 'small') food.scale.setScalar(0.65 - trip.t * 0.15);
