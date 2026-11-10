@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { shaped } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider } from './explorer.js';
 
@@ -81,18 +83,36 @@ batView.add(cave);
 const bat = new THREE.Group();
 const BAT_HOME = v(-3.8, 0.8, 0);
 bat.position.copy(BAT_HOME);
-bat.add(new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 12).scale(1.2, 1, 1), batMat));
+// The bat flies to the right. A furry body, a head with big ears, and two
+// wings of thin skin, with a scalloped back edge.
+bat.add(new THREE.Mesh(shaped((q) => q.set(q.x * 0.34, q.y * 0.19 * (1 - 0.25 * q.x), q.z * 0.2), 6), batMat));
+const batHead = new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 12), batMat);
+batHead.position.set(0.32, 0.1, 0);
+bat.add(batHead);
+const snout = new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 8), batMat);
+snout.position.set(0.45, 0.07, 0);
+bat.add(snout);
+const wingShape = new THREE.Shape();
+wingShape.moveTo(0.2, 0);
+wingShape.quadraticCurveTo(0.42, 0.45, 0.2, 0.7); // the front edge, out to the wrist
+wingShape.quadraticCurveTo(0.1, 1.05, -0.2, 1.3); // and on to the tip
+wingShape.quadraticCurveTo(-0.12, 1.0, -0.32, 0.9); // back along three scallops
+wingShape.quadraticCurveTo(-0.2, 0.62, -0.38, 0.45);
+wingShape.quadraticCurveTo(-0.22, 0.25, -0.3, 0);
 const wings = [-1, 1].map((side) => {
-  const wing = new THREE.Mesh(new THREE.BufferGeometry().setFromPoints([v(0, 0, 0), v(-0.2, 0.1, side * 0.9), v(0.3, 0, side * 0.7)]), wingMat);
-  wing.geometry.computeVertexNormals();
+  const wing = new THREE.Mesh(new THREE.ShapeGeometry(wingShape, 8).rotateX(Math.PI / 2).scale(1, 1, side), wingMat);
+  wing.position.y = 0.05;
   bat.add(wing);
   return wing;
 });
 [-1, 1].forEach((side) => {
-  const ear = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.18, 8), batMat);
-  ear.position.set(0.1, 0.25, side * 0.1);
+  const ear = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.24, 8), batMat);
+  ear.position.set(0.3, 0.3, side * 0.1);
+  ear.rotation.x = side * 0.3;
   bat.add(ear);
 });
+bat.rotation.set(0.8, 0.3, 0); // banked toward us, so both wings show
+bat.scale.setScalar(1.3);
 batView.add(tagPart(bat, 'bat'));
 const moth = new THREE.Group();
 moth.add(new THREE.Mesh(new THREE.CapsuleGeometry(0.06, 0.15, 4, 8).rotateZ(Math.PI / 2), mothMat));
@@ -103,6 +123,7 @@ moth.add(new THREE.Mesh(new THREE.CapsuleGeometry(0.06, 0.15, 4, 8).rotateZ(Math
   moth.add(w);
 });
 moth.scale.setScalar(1.8);
+moth.rotation.x = 0.9; // tipped toward us, so its wings show
 batView.add(tagPart(moth, 'moth'));
 const batOut = soundRing(outLine);
 const batBack = soundRing(backLine);
@@ -131,12 +152,18 @@ floorShape.lineTo(SEA_W / 2, -5.2);
 const seabed = new THREE.Mesh(new THREE.ExtrudeGeometry(floorShape, { depth: 2.4, bevelEnabled: false }).translate(0, 0, -1.2), floorMat);
 shipView.add(tagPart(seabed, 'seabed'));
 const ship = new THREE.Group();
-const hull = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.35, 0.5), hullMat);
-hull.position.y = 0.1;
+// The hull: a flat deck, a rounded bottom, and a pointed bow at the front.
+const hull = new THREE.Mesh(shaped((q) => {
+  const bow = 1 - 0.75 * THREE.MathUtils.smoothstep(q.x, 0.2, 1);
+  q.set(q.x * 0.75 + 0.12 * Math.max(0, q.y + 0.2), q.y > 0 ? 0.28 : 0.28 + q.y * 0.42, q.z * 0.3 * bow);
+}, 8), hullMat);
 ship.add(hull);
-const cabin = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.35, 0.4), mat(0xffffff));
-cabin.position.set(-0.1, 0.45, 0);
+const cabin = new THREE.Mesh(new RoundedBoxGeometry(0.45, 0.3, 0.34, 3, 0.04), mat(0xffffff));
+cabin.position.set(-0.15, 0.43, 0);
 ship.add(cabin);
+const funnel = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.08, 0.3, 14), hullMat);
+funnel.position.set(-0.25, 0.7, 0);
+ship.add(funnel);
 shipView.add(tagPart(ship, 'ship'));
 const ping = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 8), outMat);
 ping.renderOrder = 5; // drawn after the see-through water
@@ -161,18 +188,24 @@ const belly = new THREE.Mesh(new THREE.SphereGeometry(1.8, 32, 24).scale(1.2, 1,
 scanView.add(belly);
 const probe = new THREE.Group();
 probe.position.set(0, 2.1, 0.4);
-const handle = new THREE.Mesh(new THREE.CapsuleGeometry(0.16, 0.7, 4, 10), probeMat);
-handle.position.y = 0.35;
+// The probe: a handle that widens to a curved face, which touches the skin.
+const handle = new THREE.Mesh(new THREE.LatheGeometry(new THREE.SplineCurve([
+  [0, -0.12], [0.2, -0.1], [0.3, -0.02], [0.3, 0.1], [0.17, 0.3], [0.14, 0.6], [0.15, 0.95], [0.1, 1.05], [0, 1.07],
+].map(([r, y]) => new THREE.Vector2(r, y))).getPoints(36).map((q) => q.setX(Math.max(0, q.x))), 24).scale(1, 1, 0.55), probeMat);
 probe.add(handle);
 scanView.add(tagPart(probe, 'probe'));
-// A curled-up baby: head, body, and little arms and legs.
+// A curled-up baby: a big head, a curved body, and an arm and a leg tucked in.
 const baby = new THREE.Group();
 baby.position.set(0, -0.2, 0);
-[[0.45, 0.35, 0, 0.42], [-0.15, -0.05, 0, 0.6], [0.25, -0.35, 0.25, 0.16], [-0.55, -0.45, 0.25, 0.2], [0.05, -0.55, 0.3, 0.18]].forEach(([x, y, z, r]) => {
-  const blob = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), babyMat);
-  blob.position.set(x, y, z);
-  baby.add(blob);
-});
+const babyHead = new THREE.Mesh(new THREE.SphereGeometry(0.42, 24, 16), babyMat);
+babyHead.position.set(0.45, 0.35, 0);
+const babyBody = new THREE.Mesh(shaped((q) => q.set(q.x * 0.5 + 0.2 * q.y * q.y, q.y * 0.62, q.z * 0.42), 8), babyMat);
+babyBody.position.set(-0.2, -0.1, 0);
+const tucked = (points, radius) => new THREE.Mesh(
+  new THREE.TubeGeometry(new THREE.CatmullRomCurve3(points.map((p) => v(...p))), 20, radius, 10), babyMat);
+baby.add(babyHead, babyBody,
+  tucked([[-0.3, -0.55, 0.25], [0.25, -0.75, 0.3], [0.3, -0.4, 0.3]], 0.12),
+  tucked([[0, 0.1, 0.35], [0.3, -0.15, 0.4], [0.5, 0, 0.35]], 0.08));
 scanView.add(tagPart(baby, 'baby'));
 const scanRings = [0, 1, 2].map(() => soundRing(outLine));
 addLabel('probe', probe, v(0.6, 0.6, 0), { hideWith: scanView });
