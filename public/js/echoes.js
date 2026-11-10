@@ -47,8 +47,9 @@ const { addLabel, tagPart, complete, cello } = explorer;
 
 const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.5, ...extra });
 const seeThrough = (color, opacity) => mat(color, { transparent: true, opacity, depthWrite: false, side: THREE.DoubleSide });
-const batMat = mat(0x4a3a5a);
-const wingMat = mat(0x5a4a6a, { side: THREE.DoubleSide });
+// Pale enough to show against the dark cave wall, with a little glow of their own.
+const batMat = mat(0x8f7bb0, { emissive: 0x2a2140 });
+const wingMat = mat(0xb9a6d8, { emissive: 0x3a2f55, side: THREE.DoubleSide });
 const mothMat = mat(0xe8d2a6);
 const caveMat = mat(0x5a4a3a, { side: THREE.BackSide, roughness: 1, envMapIntensity: 0 });
 const outMat = new THREE.MeshBasicMaterial({ color: 0xffd75e, transparent: true, opacity: 0.7, depthWrite: false, side: THREE.DoubleSide });
