@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { createStage } from './scene.js';
+import { shaped } from './organs.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 
 // How materials move in a plant. A tree with tubes inside: rain soaks the
@@ -51,14 +52,14 @@ const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, rough
 
 const soilDry = new THREE.Color(0xc08a58);
 const soilWet = new THREE.Color(0x7a4a26);
-const soilMat = mat(0xc08a58, { transparent: true, opacity: 0.45, depthWrite: false });
+const soilMat = mat(0xc08a58, { transparent: true, opacity: 0.6, depthWrite: false });
 const grassMat = mat(0x7cc35a, { transparent: true, opacity: 0.85 });
 const barkMat = mat(0x7a5233, { roughness: 0.9 });
 const woodMat = mat(0xe9c98f, { transparent: true, opacity: 0.25, depthWrite: false });
 const rootMat = mat(0x9b6a40, { roughness: 0.9 });
 const leafFresh = new THREE.Color(0x4cb050);
 const leafDry = new THREE.Color(0xb3a447);
-const leafMat = mat(0x4cb050, { side: THREE.DoubleSide, emissive: 0x2a8a2a, emissiveIntensity: 0 });
+const leafMat = mat(0x4cb050, { side: THREE.DoubleSide, vertexColors: true, emissive: 0x2a8a2a, emissiveIntensity: 0 });
 const fruitMat = mat(0xe8443a, { roughness: 0.35 });
 const xylemMat = mat(0x5b8def, { emissive: 0x15306b });
 const phloemMat = mat(0xff9f43, { emissive: 0x6b3500 });
@@ -73,6 +74,21 @@ const v = (x, y, z = 0) => new THREE.Vector3(x, y, z);
 const curveOf = (points) => new THREE.CatmullRomCurve3(points);
 const tube = (curve, radius, material) =>
   new THREE.Mesh(new THREE.TubeGeometry(curve, 64, radius, 8, false), material);
+// A tube that narrows along its length, from `thick` to `thin`, like a branch or a root.
+function taperTube(curve, thick, thin, material) {
+  const segments = 40;
+  const geo = new THREE.TubeGeometry(curve, segments, 1, 10, false);
+  const pos = geo.attributes.position;
+  const p = new THREE.Vector3();
+  const q = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i++) {
+    const along = Math.floor(i / 11) / segments; // 11 points around each ring
+    curve.getPointAt(along, p);
+    q.fromBufferAttribute(pos, i).sub(p).multiplyScalar(THREE.MathUtils.lerp(thick, thin, along)).add(p);
+    pos.setXYZ(i, q.x, q.y, q.z);
+  }
+  return new THREE.Mesh(geo, material);
+}
 
 // Little things moving along a path: water, sugar, vapor.
 const m = new THREE.Matrix4();
@@ -109,11 +125,14 @@ inside.visible = false;
 tree.add(inside);
 
 const TRUNK_TOP = 1.5;
-const bark = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.45, TRUNK_TOP - GROUND, 24), barkMat);
-bark.position.y = (TRUNK_TOP + GROUND) / 2;
+// The trunk spreads out where it meets the ground, and is rounded on top,
+// where the branches leave.
+const bark = new THREE.Mesh(new THREE.LatheGeometry([
+  [0.64, 0], [0.54, 0.12], [0.48, 0.32], [0.44, 0.7], [0.4, 1.3], [0.33, 2.2], [0.3, 2.6], [0.24, 2.76], [0.12, 2.84], [0, 2.86],
+].map(([r, y]) => new THREE.Vector2(r, y)), 28).translate(0, GROUND, 0), barkMat);
 tree.add(tagPart(bark, 'bark'));
 const wood = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.38, TRUNK_TOP - GROUND, 24), woodMat);
-wood.position.copy(bark.position);
+wood.position.y = (TRUNK_TOP + GROUND) / 2;
 inside.add(tagPart(wood, 'trunk'));
 
 const CROWNS = [v(-1.55, 2.7, 0.3), v(1.5, 2.9, 0.1), v(0.1, 3.55, -0.2), v(-0.7, 3.2, -0.9), v(0.85, 2.55, 0.9)];
@@ -121,43 +140,64 @@ const ROOT_TIPS = [v(-2.5, -2.9, 0.5), v(2.4, -3.0, -0.3), v(-1.0, -3.25, -0.9),
 
 // A branch: out from the top of the trunk to a crown of leaves.
 const branchCurves = CROWNS.map((c) => curveOf([v(0, TRUNK_TOP - 0.3, 0), v(c.x * 0.35, TRUNK_TOP + 0.35, c.z * 0.35), c]));
-branchCurves.forEach((curve) => tree.add(tagPart(tube(curve, 0.11, barkMat), 'trunk')));
+branchCurves.forEach((curve) => {
+  tree.add(tagPart(taperTube(curve, 0.2, 0.06, barkMat), 'trunk'));
+  // Twigs, reaching into the leaves.
+  for (const [where, side] of [[0.55, 1], [0.72, -1], [0.88, 1]]) {
+    const a = curve.getPointAt(where);
+    const out = a.clone().add(v(side * (0.25 + Math.random() * 0.2), 0.35 + Math.random() * 0.2, (Math.random() - 0.5) * 0.7));
+    tree.add(tagPart(taperTube(curveOf([a, a.clone().lerp(out, 0.5).add(v(0, -0.05, 0)), out]), 0.05, 0.02, barkMat), 'trunk'));
+  }
+});
 
 const rootCurves = ROOT_TIPS.map((t) => curveOf([v(0, GROUND + 0.15, 0), v(t.x * 0.45, GROUND - 0.5, t.z * 0.45), t]));
 rootCurves.forEach((curve) => {
-  tree.add(tagPart(tube(curve, 0.09, rootMat), 'roots'));
+  tree.add(tagPart(taperTube(curve, 0.14, 0.06, rootMat), 'roots'));
   // Little side roots, for the look of it.
   for (let k = 1; k <= 2; k++) {
     const a = curve.getPointAt(k / 3);
     const out = a.clone().add(v((Math.random() - 0.5) * 0.9, -0.5, (Math.random() - 0.5) * 0.9));
-    tree.add(tagPart(tube(curveOf([a, a.clone().lerp(out, 0.5).add(v(0, 0.1, 0)), out]), 0.035, rootMat), 'roots'));
+    tree.add(tagPart(taperTube(curveOf([a, a.clone().lerp(out, 0.5).add(v(0, 0.1, 0)), out]), 0.04, 0.012, rootMat), 'roots'));
   }
 });
 
 // Leaves: a cloud of leaves around each crown. Each one keeps a fresh pose
-// and a droopy pose, and slides between them as the tree dries out.
-function leafGeometry() {
+// and a droopy pose, and slides between them as the tree dries out. A leaf is
+// folded a little along its middle, and comes in three shades of green.
+function leafGeometry(shade) {
   const s = new THREE.Shape();
   s.moveTo(0, 0);
-  s.quadraticCurveTo(0.18, 0.18, 0, 0.45);
-  s.quadraticCurveTo(-0.18, 0.18, 0, 0);
-  return new THREE.ShapeGeometry(s, 6).rotateX(Math.PI / 2); // points along +z
+  s.bezierCurveTo(0.2, 0.08, 0.2, 0.34, 0, 0.56);
+  s.bezierCurveTo(-0.2, 0.34, -0.2, 0.08, 0, 0);
+  const geo = new THREE.ShapeGeometry(s, 8).rotateX(Math.PI / 2); // points along +z
+  const pos = geo.attributes.position;
+  const colors = [];
+  for (let i = 0; i < pos.count; i++) {
+    pos.setY(i, Math.abs(pos.getX(i)) * 0.45 - pos.getZ(i) ** 2 * 0.35);
+    colors.push(shade, shade, shade);
+  }
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  geo.computeVertexNormals();
+  return geo;
 }
-const leafGeo = leafGeometry();
+const leafGeos = [0.7, 1, 1.25].map(leafGeometry);
 const leaves = [];
 const look = new THREE.Object3D();
 CROWNS.forEach((c) => {
   const crown = new THREE.Group();
   crown.position.copy(c);
   tree.add(crown);
-  for (let i = 0; i < 44; i++) {
+  for (let i = 0; i < 80; i++) {
     const dir = new THREE.Vector3().randomDirection();
-    dir.y = Math.abs(dir.y) * 0.8 + 0.1;
+    dir.y = dir.y * 0.75 + 0.2;
     dir.normalize();
-    const leaf = new THREE.Mesh(leafGeo, leafMat);
-    leaf.position.copy(dir).multiplyScalar(0.3 + Math.random() * 0.5);
+    const leaf = new THREE.Mesh(leafGeos[i % 3], leafMat);
+    leaf.position.copy(dir).multiplyScalar(0.35 + Math.random() * 0.5).multiply(v(1.25, 0.85, 1.25));
+    // A fresh leaf lies along the outside of the crown, tipped a little out and down.
+    const along = new THREE.Vector3().randomDirection().cross(dir).normalize().add(dir.clone().multiplyScalar(0.5)).add(v(0, -0.25, 0));
     look.position.copy(leaf.position);
-    look.lookAt(leaf.position.clone().add(dir));
+    look.up.copy(dir);
+    look.lookAt(leaf.position.clone().add(along));
     const fresh = look.quaternion.clone();
     look.lookAt(leaf.position.clone().add(v(dir.x * 0.4, -1, dir.z * 0.4)));
     const droopy = look.quaternion.clone();
@@ -168,9 +208,16 @@ CROWNS.forEach((c) => {
 });
 
 // Fruit hangs below three of the crowns.
-const FRUITS = [0, 1, 4].map((i) => CROWNS[i].clone().add(v(0.15, -0.55, 0.3)));
+// An apple: a ball with a dimple on top, and a little one underneath.
+const appleGeo = shaped((q) => {
+  const middle = Math.exp(-((Math.hypot(q.x, q.z) / 0.45) ** 2));
+  q.set(q.x * 0.18, (q.y - (q.y > 0 ? 0.42 : -0.2) * middle) * 0.18, q.z * 0.18);
+}, 6);
+const stalkGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.2, 6).translate(0.01, 0.17, 0);
+const FRUITS = [0, 1, 4].map((i) => CROWNS[i].clone().add(v(0.15, -0.78, 0.3)));
 FRUITS.forEach((p) => {
-  const fruit = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 12), fruitMat);
+  const fruit = new THREE.Group();
+  fruit.add(new THREE.Mesh(appleGeo, fruitMat), new THREE.Mesh(stalkGeo, barkMat));
   fruit.position.copy(p);
   tree.add(tagPart(fruit, 'fruit'));
 });
