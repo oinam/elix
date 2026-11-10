@@ -67,6 +67,8 @@ const greenMat = mat(0x4cb050, { side: THREE.DoubleSide });
 const thinRootMat = mat(0xe0c69a);
 const propMat = mat(0xd9b96a);
 const stalkMat = mat(0x7fb84e);
+// Corn leaves are thin and shade themselves, so they get a little glow of their own.
+const cornLeafMat = mat(0x6fcf5a, { emissive: 0x1f5a1a, side: THREE.DoubleSide });
 
 // ---------- Helpers ----------
 
@@ -304,7 +306,7 @@ for (let i = 0; i < 6; i++) {
   const y = 1 + i * 0.6;
   const side = i % 2 ? 1 : -1;
   const leafPath = [v(0, y), v(side * 0.7, y + 0.4, 0.1), v(side * 1.5, y + 0.1, 0.2), v(side * 1.9, y - 0.5, 0.2)];
-  const leaf = new THREE.Mesh(ribbon(curveOf(leafPath), 0.26).scale(1, 0.4, 1), greenMat);
+  const leaf = new THREE.Mesh(ribbon(curveOf(leafPath), 0.26).scale(1, 0.4, 1), cornLeafMat);
   leaf.position.y = y * 0.6;
   propView.add(leaf);
 }
