@@ -97,6 +97,8 @@ const STOMACH_AT = v(0.5, 0.92, 0.2);
 const STOMACH_SIZE = 0.58;
 // Food goes through the middle of the stomach, from end to end.
 const STOMACH = STOMACH_PATH.map(([x, y]) => v(x, y).multiplyScalar(STOMACH_SIZE).add(STOMACH_AT));
+// The fat middle of the stomach, where food sits and churns.
+const CHURN = v(0.3, 0.05).multiplyScalar(STOMACH_SIZE).add(STOMACH_AT);
 const PIPE = [v(0, 3.0, 0.15), v(0, 2.2, 0), v(0.2, 1.6, 0.08), STOMACH[0].clone()];
 const SMALL = [STOMACH[STOMACH.length - 1].clone(), v(-0.1, 0.5, 0.3)];
 // The small intestine snakes back and forth in the middle of the belly.
@@ -365,7 +367,7 @@ stage.onFrame((dt) => {
   path.getPointAt(along, food.position);
   if (s.key === 'mouth') food.scale.setScalar(1 - trip.t * 0.35); // chewed smaller
   if (s.key === 'stomach') {
-    food.position.copy(STOMACH_AT).add(v(Math.sin(trip.t * 25) * 0.15, Math.cos(trip.t * 19) * 0.1, 0.1));
+    food.position.copy(CHURN).add(v(Math.sin(trip.t * 25) * 0.09, Math.cos(trip.t * 19) * 0.07, 0.04));
     if (trip.t > 0.85) path.getPointAt(along, food.position);
     foodMat.color.lerp(startColor.set(0xd8b070), dt);
   }
@@ -377,7 +379,7 @@ stage.onFrame((dt) => {
     const phase = (trip.t * 3 + i / bits.length) % 1;
     if (s.key === 'stomach') {
       b.material = acidMat;
-      b.position.copy(STOMACH_AT).add(v(Math.cos(i) * 0.3, -0.2 + phase * 0.4, Math.sin(i) * 0.15));
+      b.position.copy(CHURN).add(v(Math.cos(i) * 0.17, -0.13 + phase * 0.26, Math.sin(i) * 0.1));
       b.visible = true;
     } else if (s.key === 'small') {
       b.material = nutrientMat;
