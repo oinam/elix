@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { stomachGeometry, liverGeometry, torsoGeometry } from './organs.js';
+import { headGeometry, stomachGeometry, liverGeometry, torsoGeometry } from './organs.js';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer, bindToggle } from './explorer.js';
 
@@ -58,7 +58,7 @@ const skinMat = seeThrough(0xffd5bd, 0.16);
 const mouthMat = mat(0xd9576a);
 const glandMat = mat(0xf6c27a);
 const pipeMat = mat(0xf2a08a);
-const stomachMat = mat(0xf7a072, { transparent: true, opacity: 0.55, depthWrite: false });
+const stomachMat = mat(0xf08a5d, { transparent: true, opacity: 0.72, depthWrite: false });
 const liverMat = mat(0x9b3a32);
 const pancreasMat = mat(0xf2d27a);
 const smallMat = mat(0xffb3a1);
@@ -84,7 +84,7 @@ const tube = (points, radius, material, segments = 64) => new THREE.Mesh(new THR
 const body = new THREE.Group();
 scene.add(body);
 
-const head = new THREE.Mesh(new THREE.SphereGeometry(0.8, 32, 24), skinMat);
+const head = new THREE.Mesh(headGeometry().scale(0.88, 0.8, 0.84), skinMat);
 head.position.set(0, 3.55, 0);
 body.add(head);
 const torso = new THREE.Mesh(torsoGeometry(1.4, 5.3, 0.55), skinMat);

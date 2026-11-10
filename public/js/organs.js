@@ -92,6 +92,17 @@ export function torsoGeometry(radius, height, depth = 0.6) {
   }, 18);
 }
 
+/**
+ * A head, facing us (+z): round on top and at the back, narrower at the jaw,
+ * with the chin a little forward. About 1.7 wide and 2.1 tall.
+ */
+export function headGeometry() {
+  return shaped((q) => {
+    const jaw = Math.max(0, -q.y) ** 1.5;
+    q.set(q.x * 0.86 * (1 - 0.3 * jaw), q.y * 1.05, q.z * 0.96 * (1 - 0.12 * jaw) + 0.14 * jaw);
+  }, 10);
+}
+
 /** An arm or a leg: a rounded rod, `top` wide at one end and `bottom` wide at the other. */
 export function limbGeometry(top, bottom, length) {
   return shaped((q) => {
@@ -114,7 +125,7 @@ export function createFigure(material) {
     mesh.rotation.z = rz;
     g.add(mesh);
   };
-  add(shaped((q) => q.set(q.x * 0.58 * (1 - 0.22 * Math.max(0, -q.y)), q.y * 0.66, q.z * 0.62), 8), 0, 2.75);
+  add(headGeometry().scale(0.66, 0.64, 0.66), 0, 2.75);
   add(new THREE.CapsuleGeometry(0.22, 0.3, 6, 20), 0, 2.1);
   add(torsoGeometry(0.84, 3.44, 0.62), 0, 0.7);
   for (const side of [-1, 1]) {

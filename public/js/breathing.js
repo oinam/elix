@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { lungGeometry, torsoGeometry } from './organs.js';
+import { shaped, headGeometry, lungGeometry, torsoGeometry } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 import { voiceOn } from './voice.js';
@@ -84,7 +84,7 @@ const tube = (points, radius, material) => new THREE.Mesh(new THREE.TubeGeometry
 const body = new THREE.Group();
 scene.add(body);
 
-const head = new THREE.Mesh(new THREE.SphereGeometry(0.85, 32, 24).scale(0.9, 1.05, 1), skinMat);
+const head = new THREE.Mesh(headGeometry().scale(0.9, 0.86, 0.88), skinMat);
 head.position.set(0, 3.5, 0);
 body.add(head);
 const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.4, 0.8, 24), skinMat);
@@ -94,7 +94,11 @@ const torso = new THREE.Mesh(torsoGeometry(1.4, 4.3, 0.6), skinMat);
 torso.position.y = 0.6;
 body.add(torso);
 
-const nose = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.36, 16).rotateX(Math.PI / 2 + 0.5), noseMat);
+// The nose: narrow at the bridge, and wider and further out at the tip.
+const nose = new THREE.Mesh(shaped((q) => {
+  const tip = (1 - q.y) / 2; // 0 at the bridge, 1 at the tip
+  q.set(q.x * (0.07 + 0.1 * tip), q.y * 0.24, q.z * (0.06 + 0.13 * tip) + 0.1 * tip);
+}, 6), noseMat);
 nose.position.set(0, 3.42, 0.86);
 body.add(tagPart(nose, 'nose'));
 
