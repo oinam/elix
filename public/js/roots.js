@@ -60,7 +60,7 @@ const phloemMat = mat(0xff9f43, { emissive: 0x6b3500 });
 const waterMat = mat(0x8fd0ff, { emissive: 0x2a6aa8 });
 const sugarMat = mat(0xffd36b, { emissive: 0x8a5200 });
 const grainMat = mat(0x8a6040);
-const soilMat = mat(0x9a6a42, { transparent: true, opacity: 0.35, depthWrite: false });
+const soilMat = mat(0x9a6a42, { transparent: true, opacity: 0.55, depthWrite: false });
 const carrotMat = mat(0xff8a2a);
 const beetMat = mat(0x9b2a5c);
 const greenMat = mat(0x4cb050, { side: THREE.DoubleSide });
@@ -219,7 +219,8 @@ function plantView(depth = 3.2) {
   return g;
 }
 
-function leafyTop(g, x, y, count, height) {
+// Thin blades, like grass or carrot tops. `broad` puts a wide leaf on each one, like a beet's.
+function leafyTop(g, x, y, count, height, broad = false) {
   for (let i = 0; i < count; i++) {
     const a = (i / count) * Math.PI * 2;
     const tilt = rand(0.15, 0.45);
@@ -227,14 +228,25 @@ function leafyTop(g, x, y, count, height) {
     blade.geometry.translate(0, height / 2, 0);
     blade.position.set(x, y, 0);
     blade.rotation.set(Math.sin(a) * tilt, 0, Math.cos(a) * tilt);
+    if (broad) {
+      const leaf = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12).scale(0.24, 0.5, 0.05), greenMat);
+      leaf.position.y = height * 0.75;
+      leaf.rotation.y = a;
+      blade.add(leaf);
+    }
     g.add(blade);
   }
 }
 
 // Taproots: a carrot and a beet.
 const tapView = plantView();
-const carrot = new THREE.Mesh(new THREE.ConeGeometry(0.42, 3, 24).rotateX(Math.PI), carrotMat);
-carrot.position.set(-1.4, -1.5, 0);
+// A shape turned on a lathe, from a list of [how wide, how high] points.
+const turned = (profile) => new THREE.LatheGeometry(
+  new THREE.SplineCurve(profile.map(([r, y]) => new THREE.Vector2(r, y))).getPoints(40).map((q) => q.setX(Math.max(0, q.x))), 28);
+const carrot = new THREE.Mesh(turned([
+  [0, 0.03], [0.2, 0.03], [0.36, -0.04], [0.43, -0.22], [0.4, -0.9], [0.31, -1.8], [0.17, -2.6], [0.06, -2.94], [0, -3],
+]), carrotMat);
+carrot.position.set(-1.4, 0, 0);
 tapView.add(tagPart(carrot, 'tap'));
 for (let i = 0; i < 8; i++) {
   const y = rand(-0.6, -2.6);
@@ -246,12 +258,11 @@ leafyTop(tapView, -1.4, 0, 9, 1.4);
 
 const beet = new THREE.Group();
 beet.position.set(1.5, -0.55, 0);
-beet.add(new THREE.Mesh(new THREE.SphereGeometry(0.55, 24, 16).scale(1, 0.9, 1), beetMat));
-const beetTail = new THREE.Mesh(new THREE.ConeGeometry(0.2, 1.8, 16).rotateX(Math.PI), beetMat);
-beetTail.position.y = -1.2;
-beet.add(beetTail);
+beet.add(new THREE.Mesh(turned([
+  [0, 0.5], [0.22, 0.49], [0.47, 0.32], [0.57, 0.02], [0.5, -0.3], [0.3, -0.55], [0.13, -0.85], [0.05, -1.5], [0, -2.1],
+]), beetMat));
 tapView.add(tagPart(beet, 'tap'));
-leafyTop(tapView, 1.5, 0, 7, 1.2);
+leafyTop(tapView, 1.5, 0, 7, 1.2, true);
 addLabel('tap', tapView, v(-0.4, -1.4, 0.5), { hideWith: tapView });
 
 // Fibrous roots: two tufts of grass.
@@ -267,6 +278,23 @@ const fibrousView = plantView();
 });
 addLabel('fibrous', fibrousView, v(0, -1.8, 0.5), { hideWith: fibrousView });
 
+// A long, flat leaf along a path: widest in the middle, and tipped a little
+// toward us, so its flat side shows.
+function ribbon(curve, width) {
+  const segments = 20;
+  const geo = new THREE.TubeGeometry(curve, segments, 1, 6, false);
+  const pos = geo.attributes.position;
+  const p = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i++) {
+    const along = Math.floor(i / 7) / segments; // 7 points around each ring
+    curve.getPointAt(along, p);
+    const wide = (p.z - pos.getZ(i)) * width * (0.15 + Math.sin(Math.PI * along) ** 0.6);
+    pos.setXYZ(i, p.x + (pos.getX(i) - p.x) * 0.03, p.y + (pos.getY(i) - p.y) * 0.03 + wide * 1.5, p.z + wide * 0.7);
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+
 // Prop roots: a corn plant, with roots coming out of the stem above ground.
 const propView = plantView(2.6);
 const stalk = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.18, 4.6, 16), stalkMat);
@@ -276,13 +304,16 @@ for (let i = 0; i < 6; i++) {
   const y = 1 + i * 0.6;
   const side = i % 2 ? 1 : -1;
   const leafPath = [v(0, y), v(side * 0.7, y + 0.4, 0.1), v(side * 1.5, y + 0.1, 0.2), v(side * 1.9, y - 0.5, 0.2)];
-  const leaf = new THREE.Mesh(new THREE.TubeGeometry(curveOf(leafPath), 16, 0.08, 4, false).scale(1, 0.4, 1), greenMat);
+  const leaf = new THREE.Mesh(ribbon(curveOf(leafPath), 0.26).scale(1, 0.4, 1), greenMat);
   leaf.position.y = y * 0.6;
   propView.add(leaf);
 }
-const cob = new THREE.Mesh(new THREE.CapsuleGeometry(0.16, 0.6, 6, 12), mat(0xf5d15a));
-cob.position.set(0.25, 2.2, 0.1);
-cob.rotation.z = -0.35;
+// The ear of corn: yellow, narrow at the top, wrapped in a green husk.
+const cob = new THREE.Group();
+cob.add(new THREE.Mesh(turned([[0, -0.5], [0.12, -0.47], [0.17, -0.2], [0.16, 0.15], [0.1, 0.42], [0, 0.5]]), mat(0xf5d15a)));
+cob.add(new THREE.Mesh(turned([[0, -0.56], [0.15, -0.52], [0.21, -0.25], [0.2, 0.05], [0.16, 0.2]]), greenMat));
+cob.position.set(0.3, 2.25, 0.1);
+cob.rotation.z = -0.4;
 propView.add(cob);
 [0.35, 0.7].forEach((y, row) => {
   for (let i = 0; i < 7; i++) {
