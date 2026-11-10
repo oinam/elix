@@ -104,16 +104,28 @@ addLabel('ozone', layersView, v(2.8, kmToY(25), -4.6), { hideWith: ozone });
 
 // The rocket you ride.
 const rocket = new THREE.Group();
-const body = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 0.7, 16), mat(0xf4f0e8));
-const nose = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.3, 16), mat(0xff5a7a));
-nose.position.y = 0.5;
+// A body that swells in the middle and narrows to a rounded nose, turned on a lathe.
+const turned = (points) => new THREE.LatheGeometry(
+  new THREE.SplineCurve(points.map(([r, y]) => new THREE.Vector2(r, y))).getPoints(30).map((q) => q.setX(Math.max(0, q.x))), 24);
+const body = new THREE.Mesh(turned([[0.1, -0.36], [0.16, -0.3], [0.19, -0.05], [0.18, 0.2], [0.15, 0.36]]), mat(0xf4f0e8));
+const nose = new THREE.Mesh(turned([[0.15, 0.36], [0.11, 0.52], [0.05, 0.64], [0, 0.67]]), mat(0xff5a7a));
+const porthole = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.016, 8, 20), mat(0xff5a7a));
+porthole.position.set(0, 0.12, 0.185);
+const glass = new THREE.Mesh(new THREE.CircleGeometry(0.055, 20), mat(0x7fc8f0, { roughness: 0.2 }));
+glass.position.set(0, 0.12, 0.183);
 const flame = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.4, 12).rotateX(Math.PI), basic(0xffb347));
 flame.position.y = -0.55;
-rocket.add(body, nose, flame);
+rocket.add(body, nose, porthole, glass, flame);
+// Three swept-back fins.
+const finShape = new THREE.Shape();
+finShape.moveTo(0, 0.12);
+finShape.quadraticCurveTo(0.14, -0.02, 0.2, -0.22);
+finShape.lineTo(0.08, -0.14);
+finShape.lineTo(0, -0.12);
+const finGeo = new THREE.ExtrudeGeometry(finShape, { depth: 0.03, bevelEnabled: false }).translate(0.16, -0.25, -0.015);
 [0, 2.1, 4.2].forEach((a) => {
-  const fin = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.22, 0.16), mat(0xff5a7a));
-  fin.position.set(Math.cos(a) * 0.18, -0.3, Math.sin(a) * 0.18);
-  fin.rotation.y = -a;
+  const fin = new THREE.Mesh(finGeo, mat(0xff5a7a));
+  fin.rotation.y = -a + Math.PI / 2;
   rocket.add(fin);
 });
 rocket.position.set(0, 0.45, 0);

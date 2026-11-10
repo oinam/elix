@@ -142,9 +142,24 @@ sea.position.set((5 + COAST) / 2, (GROUND - 0.08 + ROCK_TOP) / 2, 0);
 cycleView.add(tagPart(sea, 'ocean'));
 
 const MOUNTAIN = v(-3.4, GROUND, -0.3);
-const mountain = new THREE.Mesh(new THREE.ConeGeometry(1.3, 2.6, 8), mat(0x8d8a86, { flatShading: true }));
+// A cone with ridges and gullies running down it. `from` is how high its
+// base sits above the foot of the mountain, so the snow lines up with the rock.
+function ruggedCone(radius, height, from = 0) {
+  const geo = new THREE.ConeGeometry(radius, height, 40, 14);
+  const pos = geo.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const up = pos.getY(i) + height / 2 + from;
+    const around = Math.atan2(pos.getZ(i), pos.getX(i));
+    const ridge = 1 + 0.16 * Math.sin(5 * around + 1.5 * up) + 0.08 * Math.sin(11 * around - 3 * up);
+    pos.setX(i, pos.getX(i) * ridge);
+    pos.setZ(i, pos.getZ(i) * ridge);
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+const mountain = new THREE.Mesh(ruggedCone(1.3, 2.6), mat(0x8d8a86));
 mountain.position.copy(MOUNTAIN).add(v(0, 1.3, 0));
-const snowCap = new THREE.Mesh(new THREE.ConeGeometry(0.55, 1.1, 8), mat(0xf4fbff, { flatShading: true, emissive: 0x223344 }));
+const snowCap = new THREE.Mesh(ruggedCone(0.55, 1.1, 1.5), mat(0xf4fbff, { emissive: 0x223344 }));
 snowCap.position.copy(MOUNTAIN).add(v(0, 2.6 - 0.55 + 0.02, 0));
 snowCap.scale.setScalar(1.04);
 cycleView.add(mountain, tagPart(snowCap, 'ice'));

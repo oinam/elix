@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { shaped } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer } from './explorer.js';
 
@@ -117,11 +118,18 @@ let mud = 0;
 // ---------- Things on the hill ----------
 
 const leafMat = mat(0x3f8f45);
+// A crown of leaves: a ball with soft lumps, a little wider at the bottom.
+const crownGeo = shaped((q) => {
+  const lumps = 1 + 0.12 * Math.sin(5 * q.x + 2 * q.y) * Math.sin(5 * q.z + 1) + 0.1 * Math.sin(6 * q.y + 3 * q.x);
+  q.multiplyScalar(0.4 * lumps * (1 - 0.12 * q.y));
+}, 9);
 function tree(scale = 1) {
   const t = new THREE.Group();
   const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.06 * scale, 0.09 * scale, 0.6 * scale, 8), mat(0x7a5236));
   trunk.position.y = 0.3 * scale;
-  const crown = new THREE.Mesh(new THREE.SphereGeometry(0.4 * scale, 14, 10), leafMat);
+  const crown = new THREE.Mesh(crownGeo, leafMat);
+  crown.scale.setScalar(scale);
+  crown.rotation.y = Math.random() * 6;
   crown.position.y = 0.85 * scale;
   t.add(trunk, crown);
   return t;
