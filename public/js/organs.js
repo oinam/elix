@@ -160,3 +160,30 @@ export function createFigure(material) {
   }
   return g;
 }
+
+/**
+ * An outer ear, seen from the side of the head (it faces +z): a shallow cup,
+ * wide at the top and narrow at the lobe, with a rolled rim. About 1.3 wide
+ * and 2 tall.
+ */
+export function earGeometry() {
+  return shaped((q) => {
+    const from = Math.min(1, q.x * q.x + q.y * q.y); // 0 in the middle, 1 at the rim
+    const cup = 0.32 * (1 - from) ** 0.8;
+    const rim = 0.1 * Math.exp(-(((from - 0.8) / 0.18) ** 2));
+    q.set(q.x * (0.6 + 0.16 * q.y) + 0.06 * q.y, q.y, q.z * (0.08 + rim) - cup + rim * 0.6);
+  }, 14);
+}
+
+/**
+ * A brain, facing us (+z): two wrinkled halves with a groove between them,
+ * flatter underneath. About 1.7 wide, 1.4 tall, and 2.1 front to back.
+ */
+export function brainGeometry() {
+  return shaped((q) => {
+    const folds = 0.05 * Math.sin(11 * q.x + 3 * Math.sin(8 * q.y)) * Math.cos(10 * q.z + 3 * Math.sin(9 * q.x + 4 * q.y));
+    const groove = 0.14 * Math.exp(-((q.x / 0.07) ** 2)) * THREE.MathUtils.smoothstep(q.y, -0.5, 0.2);
+    q.multiplyScalar(1 + folds - groove);
+    q.set(q.x * 0.85, q.y * (q.y > 0 ? 0.78 : 0.6), q.z * 1.05);
+  }, 24);
+}

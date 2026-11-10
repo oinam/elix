@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { heartGeometry, lungGeometry, stomachGeometry, createFigure } from './organs.js';
+import { heartGeometry, lungGeometry, stomachGeometry, brainGeometry, createFigure } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 
@@ -147,7 +147,7 @@ body.children.forEach((c) => { c.renderOrder = 3; });
 human.add(body);
 
 // Nervous system: brain, spinal cord, and nerves out to the arms and legs.
-const brain = new THREE.Mesh(new THREE.SphereGeometry(0.46, 32, 20).scale(1.05, 0.8, 0.95), brainMat);
+const brain = new THREE.Mesh(brainGeometry().scale(0.52, 0.52, 0.44), brainMat);
 brain.position.set(0, 2.85, 0.02);
 systems.nervous.add(tagPart(brain, 'brain'));
 const nerves = new THREE.Group();

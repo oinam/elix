@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { brainGeometry } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 
@@ -139,7 +140,7 @@ scene.add(tagPart(hairs, 'hairs'));
 
 const NERVE = curveOf([COCHLEA_AT.clone().add(v(0, 0, 0.3)), v(1.8, 0.4, 0.2), v(2.6, 1.1, 0), v(3.05, 1.35, 0)]);
 scene.add(tagPart(tube(NERVE, 0.06, nerveMat, 32), 'nerve'));
-const brain = new THREE.Mesh(new THREE.SphereGeometry(0.6, 24, 16).scale(1.2, 0.9, 1), brainMat);
+const brain = new THREE.Mesh(brainGeometry().rotateY(-Math.PI / 2).scale(0.75, 0.75, 0.75), brainMat);
 brain.position.set(3.5, 1.55, 0);
 scene.add(tagPart(brain, 'brain'));
 

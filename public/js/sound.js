@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { shaped, earGeometry } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider } from './explorer.js';
 
@@ -67,15 +68,26 @@ const EAR_X = 4.4;
 
 const guitar = new THREE.Group();
 guitar.position.set(STRING_X - 0.15, 0, -0.3);
-const body = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16).scale(0.75, 0.95, 0.25), woodMat);
+// The body: flat, with a wide bottom, a narrow waist, and a smaller top.
+const body = new THREE.Mesh(shaped((q) => {
+  const waist = 0.26 * Math.exp(-(((q.y - 0.22) / 0.2) ** 2));
+  const width = 0.86 - waist - 0.12 * THREE.MathUtils.smoothstep(q.y, 0.2, 1);
+  q.set(q.x * width, q.y * 1.05, Math.sign(q.z) * Math.abs(q.z) ** 0.35 * 0.22);
+}, 14), woodMat);
 body.position.y = -1.3;
 guitar.add(body);
 const hole = new THREE.Mesh(new THREE.CircleGeometry(0.25, 24), darkWood);
-hole.position.set(0, -1.1, 0.26);
+hole.position.set(0, -1.1, 0.225);
 guitar.add(hole);
 const neck = new THREE.Mesh(new THREE.BoxGeometry(0.25, 2.8, 0.12), darkWood);
 neck.position.y = 1.0;
 guitar.add(neck);
+const headstock = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.5, 0.1), darkWood);
+headstock.position.y = 2.6;
+guitar.add(headstock);
+const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.08, 0.06), darkWood);
+bridge.position.set(0, -1.72, 0.24);
+guitar.add(bridge);
 scene.add(tagPart(guitar, 'guitar'));
 
 // The string bends sideways (toward the air) when it vibrates.
@@ -128,12 +140,10 @@ scene.add(tagPart(squeezeBand, 'compression'), tagPart(spreadBand, 'rarefaction'
 
 const ear = new THREE.Group();
 ear.position.set(EAR_X, 0, 0);
-const outer = new THREE.Mesh(new THREE.TorusGeometry(0.55, 0.18, 12, 32, Math.PI * 1.6).rotateY(Math.PI / 2).rotateX(Math.PI * 0.2), earMat);
-outer.scale.set(1, 1.3, 1);
+// The outer ear faces the guitar, turned a little toward us.
+const outer = new THREE.Mesh(earGeometry().scale(0.8, 0.85, 0.8), earMat);
+outer.rotation.y = -Math.PI / 2 + 0.6;
 ear.add(outer);
-const lobe = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 12), earMat);
-lobe.position.y = -0.7;
-ear.add(lobe);
 const head = new THREE.Mesh(new THREE.SphereGeometry(1.2, 24, 16), mat(0xffd5bd, { transparent: true, opacity: 0.4, depthWrite: false }));
 head.position.x = 1.2;
 ear.add(head);
