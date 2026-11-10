@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { headGeometry, stomachGeometry, liverGeometry, torsoGeometry } from './organs.js';
+import { headGeometry, stomachGeometry, STOMACH_PATH, liverGeometry, torsoGeometry } from './organs.js';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer, bindToggle } from './explorer.js';
 
@@ -93,10 +93,12 @@ body.add(torso);
 
 // The path food takes, in pieces.
 const MOUTH = [v(0, 3.3, 0.85), v(0, 3.25, 0.45), v(0, 3.0, 0.15)];
-const PIPE = [v(0, 3.0, 0.15), v(0, 2.2, 0), v(0.05, 1.5, 0), v(0.3, 1.15, 0.15)];
-const STOMACH_AT = v(0.62, 0.95, 0.2);
-const STOMACH = [v(0.3, 1.15, 0.15), v(0.75, 1.15, 0.25), v(0.85, 0.85, 0.25), v(0.55, 0.6, 0.25), v(0.25, 0.62, 0.2)];
-const SMALL = [v(0.25, 0.62, 0.2), v(-0.1, 0.5, 0.3)];
+const STOMACH_AT = v(0.5, 0.92, 0.2);
+const STOMACH_SIZE = 0.58;
+// Food goes through the middle of the stomach, from end to end.
+const STOMACH = STOMACH_PATH.map(([x, y]) => v(x, y).multiplyScalar(STOMACH_SIZE).add(STOMACH_AT));
+const PIPE = [v(0, 3.0, 0.15), v(0, 2.2, 0), v(0.2, 1.6, 0.08), STOMACH[0].clone()];
+const SMALL = [STOMACH[STOMACH.length - 1].clone(), v(-0.1, 0.5, 0.3)];
 // The small intestine snakes back and forth in the middle of the belly.
 for (let row = 0; row < 6; row++) {
   const y = 0.3 - row * 0.24;
@@ -118,9 +120,8 @@ body.add(tagPart(teeth, 'mouth'));
 });
 const pipe = tube(PIPE, 0.09, pipeMat, 32);
 body.add(tagPart(pipe, 'esophagus'));
-const stomach = new THREE.Mesh(stomachGeometry().scale(0.58, 0.58, 0.58), stomachMat);
+const stomach = new THREE.Mesh(stomachGeometry().scale(STOMACH_SIZE, STOMACH_SIZE, STOMACH_SIZE), stomachMat);
 stomach.position.copy(STOMACH_AT);
-stomach.rotation.z = -0.3;
 body.add(tagPart(stomach, 'stomach'));
 const liver = new THREE.Mesh(liverGeometry().scale(0.6, 0.6, 0.6), liverMat);
 liver.position.set(-0.45, 1.2, 0.15);

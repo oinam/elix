@@ -56,15 +56,39 @@ export function lungGeometry(out, { hollow = 0.3 } = {}) {
 }
 
 /**
- * A stomach: a bag bent like the letter J. Food comes in at the top left and
- * leaves at the narrow end, bottom left. About 1.3 wide and 1.5 tall.
+ * The way through the stomach, as [x, y] points: in at the top, where the
+ * food pipe joins, around the bend, and out at the narrow end on our left.
+ */
+export const STOMACH_PATH = [[0.05, 0.62], [0.32, 0.35], [0.38, -0.1], [0.1, -0.5], [-0.4, -0.62], [-0.72, -0.42]];
+
+/**
+ * A stomach: a bag bent like the letter J, fat at the top and narrow where
+ * food leaves. It follows STOMACH_PATH. About 1.6 wide and 1.7 tall.
  */
 export function stomachGeometry() {
-  return shaped((q) => {
-    const t = q.y;
-    const width = 0.62 * (1 + 0.2 * t) * (t < 0 ? 1 + 0.5 * t : 1);
-    q.set(q.x * width + 0.12 - 0.32 * t * t - (t < 0 ? 0.25 * t * t : 0), t * 0.78, q.z * width * 0.8);
-  });
+  const curve = new THREE.CatmullRomCurve3(STOMACH_PATH.map(([x, y]) => new THREE.Vector3(x, y, 0)));
+  const segments = 48;
+  const around = 20;
+  const tube = new THREE.TubeGeometry(curve, segments, 1, around, false);
+  tube.deleteAttribute('uv');
+  tube.deleteAttribute('normal');
+  const pos = tube.attributes.position;
+  const p = new THREE.Vector3();
+  const q = new THREE.Vector3();
+  const { lerp, smoothstep } = THREE.MathUtils;
+  for (let i = 0; i < pos.count; i++) {
+    const along = Math.floor(i / (around + 1)) / segments;
+    // Fat near the top, thin at the far end, and rounded off at both ends.
+    const fat = lerp(lerp(0.36, 0.5, smoothstep(along, 0, 0.3)), 0.15, smoothstep(along, 0.35, 1));
+    const end = Math.min(1, along / 0.14, (1 - along) / 0.08);
+    const r = fat * Math.sqrt(1 - (1 - end) ** 2);
+    curve.getPointAt(along, p);
+    q.fromBufferAttribute(pos, i).sub(p).multiplyScalar(r);
+    pos.setXYZ(i, p.x + q.x, p.y + q.y, p.z + q.z * 0.85);
+  }
+  const geo = mergeVertices(tube);
+  geo.computeVertexNormals();
+  return geo;
 }
 
 /**

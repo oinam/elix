@@ -202,14 +202,13 @@ systems.circulatory.add(tagPart(vessels, 'vessels'));
 
 // Digestive system: mouth → food pipe → stomach → small intestine → large intestine.
 const MOUTH = v(0, 2.5, 0.48);
-const pipePoints = [MOUTH, v(0, 2.2, 0.15), v(0.02, 1.7, -0.12), v(0.06, 1.1, -0.17), v(0.18, 0.72, -0.04), v(0.32, 0.52, 0.1)];
+const pipePoints = [MOUTH, v(0, 2.2, 0.15), v(0.02, 1.7, -0.12), v(0.06, 1.1, -0.17), v(0.3, 0.8, 0), v(0.4, 0.66, 0.1)];
 systems.digestive.add(tagPart(tube(pipePoints, 0.065, gutMat), 'foodPipe'));
 const STOMACH = v(0.38, 0.4, 0.12);
 const stomach = new THREE.Mesh(stomachGeometry().scale(0.42, 0.42, 0.42), stomachMat);
 stomach.position.copy(STOMACH);
-stomach.rotation.z = -0.3;
 systems.digestive.add(tagPart(stomach, 'stomach'));
-const smallPoints = [v(0.12, 0.12, 0.16)];
+const smallPoints = [v(0.08, 0.22, 0.14)];
 for (let row = 0; row < 5; row++) {
   const y = -0.15 - row * 0.16;
   const [a, b] = row % 2 ? [0.4, -0.42] : [-0.42, 0.4];

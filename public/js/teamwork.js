@@ -63,8 +63,8 @@ const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
 
-const CAMERA_HOME = new THREE.Vector3(0, 0.7, 11.2);
-const TARGET_HOME = new THREE.Vector3(0, 0.4, 0);
+const CAMERA_HOME = new THREE.Vector3(0, 0.3, 12.6);
+const TARGET_HOME = new THREE.Vector3(0, 0, 0);
 camera.position.copy(CAMERA_HOME);
 controls.target.copy(TARGET_HOME);
 
@@ -125,11 +125,10 @@ const digestive = new THREE.Group();
 digestive.position.set(-R - 1.0, 0, 0);
 const stomach = new THREE.Mesh(stomachGeometry().scale(0.5, 0.5, 0.5), stomachMat);
 stomach.position.set(0, 0.5, 0);
-stomach.rotation.z = -0.3;
 digestive.add(stomach);
 const coil = [];
 for (let i = 0; i < 4; i++) coil.push(v(i % 2 ? 0.35 : -0.35, -0.1 - i * 0.18, 0.1));
-digestive.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([v(0.2, 0.15, 0), ...coil, v(0.6, -0.4, 0)]), 48, 0.07, 8), gutMat));
+digestive.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([v(-0.36, 0.29, 0), ...coil, v(0.6, -0.4, 0)]), 48, 0.07, 8), gutMat));
 scene.add(tagPart(digestive, 'digestive'));
 
 // Lungs at the top.
