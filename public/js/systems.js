@@ -301,8 +301,9 @@ seat.add(rod(SEAT_JOINT, POST_TOP, 0.04, barMat));
 // The saddle: wide and a little raised at the back, narrowing to a nose at the front.
 const saddle = new THREE.Mesh(shaped((q) => {
   const along = (q.x + 1) / 2; // 0 at the back, 1 at the nose
-  const width = 0.17 * (1 - 0.66 * THREE.MathUtils.smoothstep(along, 0.2, 0.75));
-  q.set(q.x * 0.42, (q.y > 0 ? q.y * 0.045 : q.y * 0.06) + 0.05 * (1 - along) ** 2, q.z * width);
+  const width = 0.21 * (1 - 0.62 * THREE.MathUtils.smoothstep(along, 0.2, 0.75));
+  const thick = 0.07 + 0.06 * (1 - along); // padded at the back, slim at the nose
+  q.set(q.x * 0.44, (q.y > 0 ? q.y * thick : q.y * thick * 1.2) + 0.07 * (1 - along) ** 2, q.z * width);
 }, 8), seatMat);
 saddle.position.set(-0.44, 2.37, 0);
 seat.add(saddle);
