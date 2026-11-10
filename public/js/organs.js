@@ -91,3 +91,37 @@ export function torsoGeometry(radius, height, depth = 0.6) {
     q.set(q.x * square * radius * waist, Math.sign(q.y) * Math.abs(q.y) ** 0.7 * (height / 2), q.z * square * radius * waist * depth);
   }, 18);
 }
+
+/** An arm or a leg: a rounded rod, `top` wide at one end and `bottom` wide at the other. */
+export function limbGeometry(top, bottom, length) {
+  return shaped((q) => {
+    const around = Math.hypot(q.x, q.z) || 1;
+    const r = THREE.MathUtils.lerp(bottom, top, (q.y + 1) / 2) * Math.sqrt(1 - q.y * q.y) ** 0.3 / around;
+    q.set(q.x * r, Math.sign(q.y) * Math.abs(q.y) ** 0.8 * (length / 2), q.z * r);
+  }, 8);
+}
+
+/**
+ * A whole person, standing and facing us, all in one material: a head with a
+ * chin, a neck, a torso, and arms and legs that narrow to hands and feet.
+ * About 6.9 tall: the top of the head is near y = 3.4 and the feet near -3.5.
+ */
+export function createFigure(material) {
+  const g = new THREE.Group();
+  const add = (geo, x, y, rz = 0) => {
+    const mesh = new THREE.Mesh(geo, material);
+    mesh.position.set(x, y, 0);
+    mesh.rotation.z = rz;
+    g.add(mesh);
+  };
+  add(shaped((q) => q.set(q.x * 0.58 * (1 - 0.22 * Math.max(0, -q.y)), q.y * 0.66, q.z * 0.62), 8), 0, 2.75);
+  add(new THREE.CapsuleGeometry(0.22, 0.3, 6, 20), 0, 2.1);
+  add(torsoGeometry(0.84, 3.44, 0.62), 0, 0.7);
+  for (const side of [-1, 1]) {
+    add(limbGeometry(0.24, 0.14, 2.4), side * 1.12, 0.75, side * 0.16);
+    add(new THREE.SphereGeometry(0.19, 20, 14).scale(0.8, 1.15, 0.6), side * 1.33, -0.55, side * 0.16); // hand
+    add(limbGeometry(0.33, 0.19, 2.56), side * 0.4, -2.1, side * -0.03);
+    add(new THREE.SphereGeometry(0.24, 20, 14).scale(0.95, 0.6, 1.7).translate(0, 0, 0.2), side * 0.44, -3.36); // foot
+  }
+  return g;
+}

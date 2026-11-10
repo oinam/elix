@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider } from './explorer.js';
+import { heartGeometry, createFigure } from './organs.js';
 
 // Levels of organization: cell → tissue → organ → organ system → organism,
 // shown for a human (heart) and a plant (leaf).
@@ -131,9 +132,8 @@ function muscleTissue() {
 
 function heart(scale = 1) {
   const g = new THREE.Group();
-  const body = new THREE.Mesh(heartGeometry(), heartMat);
+  const body = new THREE.Mesh(heartGeometry().scale(0.82, 0.82, 0.82), heartMat); // its tip already points a little to one side
   body.position.y = 0.05;
-  body.rotation.z = -0.22; // the tip points a little to one side, like a real heart
   const aorta = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
     new THREE.Vector3(0.1, 0.6, 0), new THREE.Vector3(0.2, 1.5, 0), new THREE.Vector3(0.9, 1.75, 0), new THREE.Vector3(1.3, 1.2, 0),
   ]), 20, 0.2, 12), artery);
@@ -143,23 +143,6 @@ function heart(scale = 1) {
   g.add(body, aorta, vena);
   g.scale.setScalar(scale);
   return g;
-}
-
-// One smooth heart: a ball that is wider at the top, has a dip in the middle
-// of the top, and tapers to a rounded point at the bottom.
-function heartGeometry() {
-  const geo = new THREE.SphereGeometry(1, 56, 40);
-  const pos = geo.attributes.position;
-  for (let i = 0; i < pos.count; i++) {
-    const x = pos.getX(i);
-    const y = pos.getY(i);
-    const z = pos.getZ(i);
-    const width = (1 + 0.3 * y) * (y < 0 ? 1 + 0.3 * y : 1);
-    const dip = 0.45 * Math.exp(-((x / 0.34) ** 2)) * THREE.MathUtils.smoothstep(y, 0, 1);
-    pos.setXYZ(i, x * 1.3 * width, (y < 0 ? y * 1.6 : y) - dip + 0.15, z * 0.85 * width);
-  }
-  geo.computeVertexNormals();
-  return geo;
 }
 
 // A loop of blood vessels: red going out from the heart, blue coming back,
@@ -195,17 +178,11 @@ function circulatory(scale = 1) {
 
 function human() {
   const g = new THREE.Group();
-  const limb = (r, len, x, y, rz) => {
-    const mesh = new THREE.Mesh(new THREE.CapsuleGeometry(r, len, 6, 16), skin);
-    mesh.position.set(x, y, 0);
-    mesh.rotation.z = rz;
-    return mesh;
-  };
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.5, 24, 16), skin);
-  head.position.y = 2.55;
-  g.add(head, limb(0.62, 1.5, 0, 1.0, 0), limb(0.2, 1.5, -0.95, 1.05, -0.25), limb(0.2, 1.5, 0.95, 1.05, 0.25),
-    limb(0.25, 1.7, -0.35, -1.25, 0.05), limb(0.25, 1.7, 0.35, -1.25, -0.05));
-  g.children.forEach((c) => { c.renderOrder = 2; });
+  const figure = createFigure(skin);
+  figure.scale.setScalar(0.8);
+  figure.position.y = 0.4;
+  figure.children.forEach((c) => { c.renderOrder = 2; });
+  g.add(figure);
   const h = heart(0.22);
   h.position.set(0.15, 1.35, 0.1);
   g.add(h);
@@ -381,6 +358,8 @@ function show(chain, level) {
   const from = levels[state.chain][state.level];
   const to = levels[chain][level];
   if (from === to) return;
+  // A second tap before the last pop ended: put away the thing that was leaving.
+  if (pop && pop.from !== to) pop.from.visible = false;
   state.chain = chain;
   state.level = level;
   pop = { from, to, t: 0 };

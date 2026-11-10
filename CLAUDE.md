@@ -87,8 +87,10 @@ js/earth.js              createEarthSurface(): the globe's map, with the real co
                          Used by spheres, earth-layers, and global-warming
 js/organs.js             Shared body shapes, each a smooth ball pushed into shape:
                          heartGeometry(), lungGeometry(side), stomachGeometry(),
-                         liverGeometry(), torsoGeometry(), and shaped(push) to make more.
-                         Used by heart, breathing, digestion, teamwork, and organ-systems
+                         liverGeometry(), torsoGeometry(), limbGeometry(), and shaped(push)
+                         to make more; createFigure(material) is a whole standing person.
+                         Used by heart, breathing, digestion, teamwork, organ-systems,
+                         multi-cell, and systems (the bike's saddle)
 js/mascot.js             Cello the cell: createMascot(dock).say(text, { mood }), celebrate()
 js/voice.js              Cello’s voice: speak(text) plays a line’s clip (or the clips for its parts),
                          the 🔊 Voice toggle; voiceSentences() and voiceKey() are shared

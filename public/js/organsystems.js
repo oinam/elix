@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { heartGeometry, lungGeometry, stomachGeometry } from './organs.js';
+import { heartGeometry, lungGeometry, stomachGeometry, createFigure } from './organs.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 
@@ -142,20 +142,7 @@ for (const key of ['digestive', 'circulatory', 'respiratory', 'skeletal', 'excre
 }
 
 // The see-through skin, so every organ shows.
-const body = new THREE.Group();
-const capsule = (r, len, x, y, rz = 0) => {
-  const mesh = new THREE.Mesh(new THREE.CapsuleGeometry(r, len, 6, 20), skin);
-  mesh.position.set(x, y, 0);
-  mesh.rotation.z = rz;
-  return mesh;
-};
-const head = new THREE.Mesh(new THREE.SphereGeometry(0.62, 32, 20), skin);
-head.position.y = 2.75;
-const torso = capsule(0.82, 1.8, 0, 0.7);
-torso.scale.z = 0.62;
-body.add(head, capsule(0.22, 0.3, 0, 2.1), torso,
-  capsule(0.2, 2, -1.12, 0.75, -0.16), capsule(0.2, 2, 1.12, 0.75, 0.16),
-  capsule(0.28, 2, -0.4, -2.1, 0.03), capsule(0.28, 2, 0.4, -2.1, -0.03));
+const body = createFigure(skin);
 body.children.forEach((c) => { c.renderOrder = 3; });
 human.add(body);
 
