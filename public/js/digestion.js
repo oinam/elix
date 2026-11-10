@@ -138,6 +138,12 @@ const smallTube = tube(SMALL, 0.085, smallMat, 240);
 body.add(tagPart(smallTube, 'small'));
 const largeTube = tube(LARGE, 0.17, largeMat, 96);
 body.add(tagPart(largeTube, 'large'));
+// Round off both ends of the large intestine, so the joins are smooth.
+[LARGE[0], LARGE[LARGE.length - 1]].forEach((end) => {
+  const cap = new THREE.Mesh(new THREE.SphereGeometry(0.17, 20, 14), largeMat);
+  cap.position.copy(end);
+  body.add(tagPart(cap, 'large'));
+});
 body.add(tagPart(tube(RECTUM, 0.14, rectumMat, 16), 'rectum'));
 
 // A few blood vessels by the small intestine, for the food to soak into.
