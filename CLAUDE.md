@@ -81,6 +81,10 @@ js/explorer.js           createExplorer(): tap-to-learn parts, labels, glow, inf
 js/cellparts.js          Shared 3D cell parts: blob shapes, nucleus (pores, nucleolus,
                          threads that coil into chromosomes), mitochondria, vacuoles,
                          centrioles, chloroplasts, ER, Golgi body, ribosomes
+js/earth.js              createEarthSurface(): the globe's map, with the real continents,
+                         deserts, and ice, drawn on a canvas (material, setIce(latitude),
+                         partAt(uv)); faceLongitude(lon) turns a place toward the camera.
+                         Used by spheres, earth-layers, and global-warming
 js/mascot.js             Cello the cell: createMascot(dock).say(text, { mood }), celebrate()
 js/voice.js              Cello’s voice: speak(text) plays a line’s clip (or the clips for its parts),
                          the 🔊 Voice toggle; voiceSentences() and voiceKey() are shared

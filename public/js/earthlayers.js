@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createEarthSurface } from './earth.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider } from './explorer.js';
 
@@ -69,26 +70,18 @@ const earth = new THREE.Group();
 earth.rotation.y = 2.75;
 globeView.add(earth);
 
-// The surface: whole, or with a quarter missing.
-const surfaceColors = (geo) => {
-  const colors = [];
-  const p = new THREE.Vector3();
-  const sea = new THREE.Color(0x2f7fd6);
-  const land = new THREE.Color(0x5aa64a);
-  const ice = new THREE.Color(0xf4fbff);
-  for (let i = 0; i < geo.attributes.position.count; i++) {
-    p.fromBufferAttribute(geo.attributes.position, i).normalize();
-    const n = Math.sin(p.x * 3.1 + 1.3) * Math.cos(p.z * 2.7 - 0.4) + Math.sin(p.y * 3.6 + p.x * 2.3) * 0.7;
-    const c = Math.abs(p.y) > 0.88 ? ice : n > 0 ? land : sea;
-    colors.push(c.r, c.g, c.b);
-  }
-  geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+// The surface: whole, or with a quarter missing. The map is slid around so
+// India faces us before the cut, and the cut ball keeps the same map.
+const R = 2.5;
+const surface = createEarthSurface({ doubleSided: true });
+const surfaceMat = surface.material;
+const mapped = (geo, span) => {
+  const uv = geo.attributes.uv;
+  for (let i = 0; i < uv.count; i++) uv.setX(i, uv.getX(i) * span - 0.16);
   return geo;
 };
-const R = 2.5;
-const surfaceMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.7, side: THREE.DoubleSide });
-const whole = new THREE.Mesh(surfaceColors(new THREE.SphereGeometry(R, 64, 48)), surfaceMat);
-const cutSurface = new THREE.Mesh(surfaceColors(new THREE.SphereGeometry(R, 64, 48, 0, Math.PI * 1.5)), surfaceMat);
+const whole = new THREE.Mesh(mapped(new THREE.SphereGeometry(R, 64, 48), 1), surfaceMat);
+const cutSurface = new THREE.Mesh(mapped(new THREE.SphereGeometry(R, 64, 48, 0, Math.PI * 1.5), 0.75), surfaceMat);
 cutSurface.visible = false;
 earth.add(tagPart(whole, 'crust'), tagPart(cutSurface, 'crust'));
 

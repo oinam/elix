@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createEarthSurface, faceLongitude } from './earth.js';
 import { createStage } from './scene.js';
 import { createExplorer } from './explorer.js';
 
@@ -280,24 +281,10 @@ const planet = new THREE.Group();
 planet.visible = false;
 scene.add(planet);
 const EARTH_R = 2.2;
-const globeGeo = new THREE.SphereGeometry(EARTH_R, 96, 64);
-const colors = [];
-const p = new THREE.Vector3();
-const OCEAN = new THREE.Color(0x2f7fd6);
-const GREEN = new THREE.Color(0x5aa64a);
-const DRY = new THREE.Color(0xc9a66b);
-const ICE = new THREE.Color(0xf4fbff);
-// Made-up continents from a few overlapping waves; about 30% land, like Earth.
-function landiness(q) {
-  return Math.sin(q.x * 3.1 + 1.3) * Math.cos(q.z * 2.7 - 0.4) + Math.sin(q.y * 3.6 + q.x * 2.3) * 0.7 + Math.cos(q.z * 4.1 - q.y * 1.5 + q.x) * 0.5;
-}
-for (let i = 0; i < globeGeo.attributes.position.count; i++) {
-  p.fromBufferAttribute(globeGeo.attributes.position, i).divideScalar(EARTH_R);
-  const c = Math.abs(p.y) > 0.86 ? ICE : landiness(p) > -0.1 ? (Math.abs(p.y) < 0.3 ? DRY : GREEN) : OCEAN;
-  colors.push(c.r, c.g, c.b);
-}
-globeGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-const globe = new THREE.Mesh(globeGeo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.7 }));
+// The real continents, turned so India faces us first.
+const surface = createEarthSurface();
+const globe = new THREE.Mesh(new THREE.SphereGeometry(EARTH_R, 96, 64), surface.material);
+globe.rotation.y = faceLongitude(78);
 planet.add(tagPart(globe, 'land'));
 const sky = new THREE.Mesh(new THREE.SphereGeometry(EARTH_R * 1.12, 48, 32), mat(0x9fd4ff, { transparent: true, opacity: 0.12, depthWrite: false, emissive: 0x4a90c0 }));
 planet.add(tagPart(sky, 'air'));
@@ -313,12 +300,9 @@ for (let i = 0; i < 14; i++) {
 }
 planet.add(tagPart(planetClouds, 'cloud'));
 
-// Which part of the globe was tapped, from the color under the finger.
+// Which part of the globe was tapped: land, sea, or ice.
 function globePart(hit) {
-  const c = new THREE.Color().fromBufferAttribute(globeGeo.attributes.color, hit.face.a);
-  if (c.r > 0.85) return 'glacier';
-  if (c.b > c.r && c.b > c.g) return 'ocean';
-  return 'land';
+  return { land: 'land', ocean: 'ocean', ice: 'glacier' }[surface.partAt(hit.uv)];
 }
 
 // ---------- Switching spheres ----------

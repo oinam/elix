@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 import { createStage, makeLabel } from './scene.js';
 import { createExplorer, bindSlider, bindToggle } from './explorer.js';
 
@@ -50,9 +51,9 @@ const { addLabel, tagPart, complete, cello } = explorer;
 // ---------- Materials ----------
 
 const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.45, ...extra });
-const seeThrough = (color, opacity) => mat(color, { transparent: true, opacity, depthWrite: false });
+const seeThrough = (color, opacity, extra = {}) => mat(color, { transparent: true, opacity, depthWrite: false, ...extra });
 
-const muscleMat = seeThrough(0xd6455a, 0.42);
+const muscleMat = seeThrough(0xd13c52, 0.45, { roughness: 0.4 });
 const blueBlood = mat(0x4a6fd6);
 const redBlood = mat(0xd62839);
 const blueVessel = seeThrough(0x5b8def, 0.5);
@@ -74,34 +75,71 @@ const tube = (points, radius, material) => new THREE.Mesh(new THREE.TubeGeometry
 // ---------- The heart ----------
 
 const heart = new THREE.Group();
+heart.scale.setScalar(1.2);
 scene.add(heart);
 
-// Each room: a muscle wall you can see through, and the blood pool inside.
-// The left ventricle’s wall is much thicker than the right’s.
+// A smooth ball pushed into shape: `push` moves each point of a ball that is
+// 1 across from its middle.
+function shaped(push) {
+  const ball = new THREE.IcosahedronGeometry(1, 14);
+  ball.deleteAttribute('uv');
+  ball.deleteAttribute('normal');
+  const geo = mergeVertices(ball);
+  const pos = geo.attributes.position;
+  const q = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i++) {
+    push(q.fromBufferAttribute(pos, i));
+    pos.setXYZ(i, q.x, q.y, q.z);
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+
+// The muscle: one heart shape you can see through. Broad on top, where the
+// atria sit, with a dip where the big vessels leave. It narrows to a tip
+// (the apex) at the bottom, under the left ventricle.
+const APEX_LEAN = 0.45;
+const muscle = new THREE.Mesh(shaped((q) => {
+  const down = Math.max(0, -q.y);
+  const width = 1.5 * (1 - 0.4 * down);
+  const dip = 0.28 * Math.exp(-((q.x / 0.32) ** 2)) * THREE.MathUtils.smoothstep(q.y, 0.2, 1);
+  const y = (q.y > 0 ? q.y * 1.3 : q.y * 1.55) - dip - 0.2;
+  q.set(q.x * width + APEX_LEAN * down ** 1.3, y, q.z * 0.62 * width);
+}), muscleMat);
+muscle.renderOrder = 2; // drawn after the rooms inside it
+heart.add(muscle);
+
+// Each room is a pool of blood inside the muscle. The atria are round. The
+// ventricles narrow toward the tip. The left ventricle sits deepest in the
+// muscle: its wall is much thicker than the right’s.
 const ROOMS = {
-  ra: { at: v(-0.72, 0.62, 0), outer: [0.55, 0.5, 0.5], inner: 0.42, blood: blueBlood },
-  rv: { at: v(-0.42, -0.55, 0.12), outer: [0.62, 0.72, 0.55], inner: 0.48, blood: blueBlood },
-  la: { at: v(0.75, 0.66, -0.12), outer: [0.52, 0.46, 0.48], inner: 0.38, blood: redBlood },
-  lv: { at: v(0.42, -0.62, 0), outer: [0.78, 0.9, 0.7], inner: 0.4, blood: redBlood },
+  ra: { at: v(-0.7, 0.44, 0), size: [0.45, 0.38, 0.42], grab: [0.62, 0.52, 0.6], blood: blueBlood },
+  rv: { at: v(-0.5, -0.42, 0.1), size: [0.56, 0.68, 0.46], lean: 0.34, grab: [0.72, 0.8, 0.6], blood: blueBlood },
+  la: { at: v(0.68, 0.46, -0.1), size: [0.42, 0.37, 0.4], grab: [0.6, 0.5, 0.58], blood: redBlood },
+  lv: { at: v(0.5, -0.55, 0), size: [0.4, 0.86, 0.4], lean: 0.1, grab: [0.72, 1.05, 0.62], blood: redBlood },
 };
+// Takes taps anywhere in a room’s part of the heart, wall included; draws nothing.
+const grabMat = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false });
 const rooms = {};
 Object.entries(ROOMS).forEach(([key, r]) => {
   const g = new THREE.Group();
   g.position.copy(r.at);
-  const wall = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 24).scale(...r.outer), muscleMat);
-  g.add(tagPart(wall, key));
-  const pool = new THREE.Mesh(new THREE.SphereGeometry(r.inner, 24, 16), r.blood);
-  g.add(pool);
-  heart.add(g);
+  const [sx, sy, sz] = r.size;
+  const pool = new THREE.Mesh(shaped((q) => {
+    const down = Math.max(0, -q.y);
+    const taper = r.lean ? 1 - 0.45 * down : 1;
+    q.set(q.x * sx * taper + (r.lean ?? 0) * down ** 1.3, q.y * sy, q.z * sz * taper);
+  }), r.blood.clone()); // its own material, so one room glows at a time
+  const grab = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12).scale(...r.grab), grabMat);
+  g.add(pool, grab);
+  heart.add(tagPart(g, key));
   rooms[key] = g;
 });
-// The heart tips a little, the way it sits in the chest.
-heart.rotation.z = -0.25;
 
 // Valves between each atrium and ventricle, and at the two exits.
 const VALVES = [
-  [v(-0.6, 0.05, 0.08), 0.22], [v(0.6, 0.02, -0.05), 0.22],
-  [v(-0.2, 0.25, 0.32), 0.15], [v(0.22, 0.25, 0.1), 0.17],
+  [v(-0.62, 0.06, 0.06), 0.24], [v(0.6, 0.08, -0.05), 0.22],
+  [v(-0.36, 0.2, 0.3), 0.16], [v(0.38, 0.22, 0.05), 0.17],
 ];
 const valves = VALVES.map(([at, r]) => {
   const valve = new THREE.Group();
@@ -119,20 +157,75 @@ const valves = VALVES.map(([at, r]) => {
 
 const LUNG_L = v(-2.6, 2.7, -0.2);
 const LUNG_R = v(2.6, 2.7, -0.2);
+const airwayMat = seeThrough(0xf6eadb, 0.75);
+// The windpipe comes down and splits in two, one branch for each lung.
+const FORK = v(0, 3.45, -0.2);
+scene.add(tube([v(0, 4, -0.2), FORK], 0.13, airwayMat));
 [LUNG_L, LUNG_R].forEach((at) => {
-  const lung = new THREE.Mesh(new THREE.SphereGeometry(0.8, 24, 16).scale(0.8, 1.1, 0.6), lungMat);
-  lung.position.copy(at);
+  const out = Math.sign(at.x); // which way is away from the heart
+  // Lung-shaped: narrow at the top, wide at the bottom, flatter on the side
+  // that faces the heart, and hollow underneath, where the breathing muscle
+  // (the diaphragm) fits.
+  const lung = new THREE.Mesh(shaped((q) => {
+    const down = Math.max(0, -q.y);
+    const inner = q.x * out < 0 ? 0.62 - 0.22 * THREE.MathUtils.smoothstep(down, 0, 0.8) : 1;
+    const width = 0.74 - 0.2 * q.y;
+    const dome = 0.3 * down * down * (1 - q.x * q.x - q.z * q.z);
+    q.set(q.x * width * inner, (q.y > 0 ? q.y * 1.15 : q.y * 0.9) + dome - 0.1, q.z * 0.62 * (1 - 0.15 * q.y));
+  }), lungMat);
+  lung.position.copy(at).add(v(0, -0.15, 0));
+  lung.scale.setScalar(1.2);
+  lung.renderOrder = 2; // drawn after the airways inside it
   scene.add(lung);
+  // The airways branch again and again inside the lung.
+  const door = at.clone().add(v(-out * 0.3, 0.35, 0));
+  scene.add(tube([FORK, v(out * 1.2, 3.3, -0.2), door], 0.09, airwayMat));
+  [[v(out * 0.15, 0.85, 0), 0.05], [v(out * 0.5, 0.15, 0.05), 0.05], [v(out * 0.1, -0.75, 0), 0.06], [v(out * 0.6, -0.65, -0.05), 0.04]].forEach(([to, r]) => {
+    const end = at.clone().add(to);
+    scene.add(tube([door, door.clone().lerp(end, 0.5).add(v(out * 0.08, -0.04, 0)), end], r, airwayMat));
+  });
   const tag = makeLabel('🫁 Lungs');
-  tag.position.copy(at).add(v(0, 1.05, 0));
+  tag.position.copy(at).add(v(out * 0.45, -1.5, 0));
   scene.add(tag);
 });
+
+// The body: a patch of cells, with hair-thin vessels (capillaries) running
+// between them. Blood goes in red and comes out blue.
 const BODY = v(0, -3.4, -0.3);
-const bodyBox = new THREE.Mesh(new THREE.CapsuleGeometry(0.5, 2.4, 6, 16).rotateZ(Math.PI / 2), bodyMat);
-bodyBox.position.copy(BODY);
-scene.add(bodyBox);
+const nucleusMat = mat(0xd8866a);
+const bodyCells = new THREE.Group();
+bodyCells.position.copy(BODY);
+for (let i = 0; i < 15; i++) {
+  const row = i % 2;
+  const cell = new THREE.Mesh(new THREE.SphereGeometry(0.3, 20, 14), bodyMat);
+  // Two rows, a little uneven, like cells packed in a tissue.
+  cell.position.set(-1.68 + i * 0.24, (row ? -0.37 : 0.37) + Math.sin(i * 2.3) * 0.04, -0.12 + Math.cos(i * 1.7) * 0.08);
+  cell.scale.set(1 + Math.sin(i * 1.3) * 0.1, 0.92 + Math.cos(i * 2.1) * 0.08, 0.85);
+  const nucleus = new THREE.Mesh(new THREE.SphereGeometry(0.1, 12, 8), nucleusMat);
+  nucleus.position.set(Math.sin(i * 3.1) * 0.06, Math.cos(i * 2.7) * 0.05, 0);
+  cell.add(nucleus);
+  bodyCells.add(cell);
+}
+scene.add(bodyCells);
+// Capillaries: red where the blood comes in, blue where it leaves.
+const capillaryMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.45, transparent: true, opacity: 0.6, depthWrite: false });
+const BODY_IN = BODY.clone().add(v(1.2, 0, 0.3));
+const BODY_OUT = BODY.clone().add(v(-1.2, 0, 0.3));
+[[0, 0, 0.1], [0.62, 0.3, 0.055], [-0.62, 0.3, 0.055]].forEach(([dy, dz, r]) => {
+  const points = [BODY_IN, BODY.clone().add(v(0.6, dy, dz)), BODY.clone().add(v(-0.6, dy, dz)), BODY_OUT];
+  const geo = new THREE.TubeGeometry(curveOf(points), 40, r, 10, false);
+  const uv = geo.attributes.uv;
+  const colors = [];
+  const c = new THREE.Color();
+  for (let i = 0; i < uv.count; i++) {
+    c.set(0xe8445a).lerp(new THREE.Color(0x5b8def), THREE.MathUtils.smoothstep(uv.getX(i), 0.3, 0.7));
+    colors.push(c.r, c.g, c.b);
+  }
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  scene.add(new THREE.Mesh(geo, capillaryMat));
+});
 const bodyTag = makeLabel('🧍 Body cells');
-bodyTag.position.copy(BODY).add(v(0, -0.75, 0));
+bodyTag.position.copy(BODY).add(v(0, -1, 0));
 scene.add(bodyTag);
 
 // ---------- Blood vessels ----------
@@ -141,37 +234,38 @@ heart.updateMatrixWorld(true);
 const world = (key, offset = v(0, 0, 0)) => heart.localToWorld(ROOMS[key].at.clone().add(offset));
 
 const SVC = [v(-1.1, 2.5, 0.05), v(-1.05, 1.6, 0.05), world('ra', v(0, 0.3, 0))];
-const IVC = [BODY.clone().add(v(-1.2, 0, 0.3)), v(-1.7, -2.2, 0.1), v(-1.5, -0.6, -0.1), world('ra', v(-0.2, -0.25, -0.1))];
+const IVC = [BODY.clone().add(v(-1.2, 0, 0.3)), v(-2, -2.2, 0.1), v(-2.2, -0.8, 0), v(-1.95, 0.15, 0), world('ra', v(-0.25, -0.05, 0))];
 const PA_TRUNK = [world('rv', v(0.1, 0.4, 0.2)), v(-0.05, 1.3, 0.45), v(0, 1.85, 0.35)];
 const PA_L = [v(0, 1.85, 0.35), v(-1.2, 2.3, 0.1), LUNG_L.clone().add(v(0.4, -0.2, 0.2))];
 const PA_R = [v(0, 1.85, 0.35), v(1.2, 2.3, 0.1), LUNG_R.clone().add(v(-0.4, -0.2, 0.2))];
 const PV_L = [LUNG_L.clone().add(v(0.5, -0.5, -0.2)), v(-0.9, 1.6, -0.6), world('la', v(-0.15, 0.1, -0.2))];
 const PV_R = [LUNG_R.clone().add(v(-0.5, -0.5, -0.2)), v(1.7, 1.5, -0.4), world('la', v(0.2, 0.1, -0.2))];
-const AORTA = [world('lv', v(-0.1, 0.5, 0.05)), v(0.4, 1.4, 0.05), v(0.45, 2.2, -0.2), v(1.05, 2.15, -0.5), v(1.3, 1.2, -0.6), v(1.4, -1.6, -0.5), BODY.clone().add(v(1.2, 0, 0.3))];
+const AORTA = [world('lv', v(-0.1, 0.5, 0.05)), v(0.4, 1.4, 0.05), v(0.45, 2.2, -0.2), v(1.15, 2.15, -0.5), v(1.7, 1.2, -0.6), v(1.95, -0.6, -0.5), v(1.8, -2.2, -0.2), BODY.clone().add(v(1.2, 0, 0.3))];
 
-// The vessels live in the scene, not in the tipped heart.
+// The vessels live in the scene, not in the heart’s group.
 const vessel = (points, r, material, part) => scene.add(tagPart(tube(points, r, material), part));
-vessel(SVC, 0.13, blueVessel, 'venaCava');
-vessel(IVC, 0.13, blueVessel, 'venaCava');
-vessel(PA_TRUNK, 0.13, blueVessel, 'pulmonaryArtery');
-vessel(PA_L, 0.1, blueVessel, 'pulmonaryArtery');
-vessel(PA_R, 0.1, blueVessel, 'pulmonaryArtery');
-vessel(PV_L, 0.09, redVessel, 'pulmonaryVeins');
-vessel(PV_R, 0.09, redVessel, 'pulmonaryVeins');
-vessel(AORTA, 0.14, redVessel, 'aorta');
+vessel(SVC, 0.16, blueVessel, 'venaCava');
+vessel(IVC, 0.16, blueVessel, 'venaCava');
+vessel(PA_TRUNK, 0.17, blueVessel, 'pulmonaryArtery');
+vessel(PA_L, 0.12, blueVessel, 'pulmonaryArtery');
+vessel(PA_R, 0.12, blueVessel, 'pulmonaryArtery');
+vessel(PV_L, 0.11, redVessel, 'pulmonaryVeins');
+vessel(PV_R, 0.11, redVessel, 'pulmonaryVeins');
+vessel(AORTA, 0.19, redVessel, 'aorta');
 
 // ---------- Blood flow ----------
 
 // Two loops, one through each lung. Each loop has a blue half (body to
-// lungs) and a red half (lungs to body).
+// lungs) and a red half (lungs to body). They meet in the middle of the
+// body’s cells.
 const RA = world('ra');
 const RV = world('rv');
 const LA = world('la');
 const LV = world('lv');
 function loop(lung, paIn, pvOut) {
   return [
-    curveOf([BODY.clone().add(v(-0.6, 0, 0)), ...IVC, RA, RV, ...PA_TRUNK, ...paIn.slice(1), lung]),
-    curveOf([lung, ...pvOut, LA, LV, ...AORTA, BODY.clone().add(v(0.6, 0, 0))]),
+    curveOf([BODY, BODY.clone().add(v(-0.6, 0, 0)), ...IVC, RA, RV, ...PA_TRUNK, ...paIn.slice(1), lung]),
+    curveOf([lung, ...pvOut, LA, LV, ...AORTA, BODY.clone().add(v(0.6, 0, 0)), BODY]),
   ];
 }
 const loops = [loop(LUNG_L, PA_L, PV_L), loop(LUNG_R, PA_R, PV_R)];
@@ -217,7 +311,7 @@ addLabel('lv', rooms.lv, v(0.5, -0.5, 0.6));
 addLabel('valves', heart, VALVES[0][0].clone().add(v(-0.1, 0, 0.5)));
 addLabel('venaCava', scene, v(-1.6, 1.9, 0.2));
 addLabel('pulmonaryArtery', scene, v(-0.8, 2.55, 0.3));
-addLabel('pulmonaryVeins', scene, v(1.9, 1.1, -0.2));
+addLabel('pulmonaryVeins', scene, v(2.3, 1.85, -0.3));
 addLabel('aorta', scene, v(0.85, 2.55, -0.2));
 
 // ---------- Controls ----------
@@ -311,6 +405,7 @@ stage.onFrame((dt) => {
   rooms.la.scale.setScalar(1 - atria * 0.12);
   rooms.rv.scale.setScalar(1 - ventricles * 0.12);
   rooms.lv.scale.setScalar(1 - ventricles * 0.1);
+  muscle.scale.setScalar(1 - ventricles * 0.035);
   // Valves between the rooms close while the ventricles squeeze; the exit
   // valves open then.
   const squeezing = ventricles > 0.05;

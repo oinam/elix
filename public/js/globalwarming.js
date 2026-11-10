@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { createEarthSurface, faceLongitude } from './earth.js';
 import { createStage } from './scene.js';
 import { createExplorer, bindSlider } from './explorer.js';
 
@@ -77,34 +78,13 @@ scene.add(globeView);
 const EARTH = v(1.2, 0, 0);
 const ER = 1.5;
 const AR = 2.25;
-const earthGeo = new THREE.SphereGeometry(ER, 64, 48);
-const earthColors = [];
-const iceIdx = [];
-const p = new THREE.Vector3();
-for (let i = 0; i < earthGeo.attributes.position.count; i++) {
-  p.fromBufferAttribute(earthGeo.attributes.position, i).normalize();
-  const n = Math.sin(p.x * 3.1 + 1.3) * Math.cos(p.z * 2.7 - 0.4) + Math.sin(p.y * 3.6 + p.x * 2.3) * 0.7;
-  const c = new THREE.Color(n > 0 ? 0x5aa64a : 0x2f7fd6);
-  earthColors.push(c.r, c.g, c.b);
-  iceIdx.push({ i, lat: Math.abs(p.y), land: n > 0 });
-}
-earthGeo.setAttribute('color', new THREE.Float32BufferAttribute(earthColors, 3));
-const earth = new THREE.Mesh(earthGeo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.7 }));
+const surface = createEarthSurface();
+const earth = new THREE.Mesh(new THREE.SphereGeometry(ER, 64, 48), surface.material);
 earth.position.copy(EARTH);
+earth.rotation.set(0.4, faceLongitude(60), 0); // tipped toward us, to show the ice on top
 globeView.add(earth);
-function paintIce(dt) {
-  // Ice reaches lower the colder it is.
-  const edge = 0.78 + dt * 0.05;
-  const colors = earthGeo.attributes.color;
-  const ice = new THREE.Color(0xf4fbff);
-  const land = new THREE.Color(0x5aa64a);
-  const sea = new THREE.Color(0x2f7fd6);
-  iceIdx.forEach(({ i, lat, land: isLand }) => {
-    const c = lat > edge ? ice : isLand ? land : sea;
-    colors.setXYZ(i, c.r, c.g, c.b);
-  });
-  colors.needsUpdate = true;
-}
+// The sea ice reaches farther from the pole the colder it is.
+const paintIce = (dt) => surface.setIce(THREE.MathUtils.clamp(66 + dt * 5.5, 60, 88));
 
 const airMat = mat(0x9fd4ff, { transparent: true, opacity: 0.15, depthWrite: false, side: THREE.DoubleSide, emissive: 0x2a5070 });
 const air = new THREE.Mesh(new THREE.SphereGeometry(AR, 48, 32), airMat);
