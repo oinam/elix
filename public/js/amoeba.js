@@ -37,7 +37,7 @@ const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
 
-const CAMERA_HOME = new THREE.Vector3(0, 6.5, 8);
+const CAMERA_HOME = new THREE.Vector3(0, 5.2, 6.6);
 camera.position.copy(CAMERA_HOME);
 
 const RADIUS = 1.25;
@@ -73,7 +73,33 @@ const floorMaterial = new THREE.MeshStandardMaterial({ roughness: 1 });
 const floor = new THREE.Mesh(new THREE.CircleGeometry(POND_RADIUS + 2, 64), floorMaterial);
 floor.rotation.x = -Math.PI / 2;
 floor.position.y = FLOOR_Y - 0.02;
+floor.receiveShadow = true;
 scene.add(floor);
+
+// Pebbles and bits of green on the floor, so you can see the Amoeba creep
+// across it. They take the floor's color (in the theme, below).
+const pebbleMaterial = new THREE.MeshStandardMaterial({ roughness: 1 });
+const mossMaterial = new THREE.MeshStandardMaterial({ roughness: 1 });
+{
+  const pebbleGeo = new THREE.SphereGeometry(1, 10, 8);
+  const pebbles = new THREE.InstancedMesh(pebbleGeo, pebbleMaterial, 90);
+  const moss = new THREE.InstancedMesh(pebbleGeo, mossMaterial, 40);
+  const m = new THREE.Matrix4();
+  const q = new THREE.Quaternion();
+  const place = (mesh, i, size) => {
+    const r = Math.sqrt(Math.random()) * (POND_RADIUS + 1.5);
+    const a = Math.random() * Math.PI * 2;
+    const s = size * (0.5 + Math.random());
+    q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.random() * Math.PI);
+    m.compose(new THREE.Vector3(Math.cos(a) * r, FLOOR_Y - 0.02, Math.sin(a) * r), q, new THREE.Vector3(s, s * 0.22, s * (0.6 + Math.random() * 0.4)));
+    mesh.setMatrixAt(i, m);
+  };
+  for (let i = 0; i < pebbles.count; i++) place(pebbles, i, 0.16);
+  for (let i = 0; i < moss.count; i++) place(moss, i, 0.26);
+  pebbles.receiveShadow = moss.receiveShadow = true;
+  scene.add(pebbles, moss);
+}
+stage.addMotes({ count: 90, spread: [18, 5, 18] });
 
 // ---------- Shared materials ----------
 
@@ -121,6 +147,7 @@ class Amoeba {
     this.directions = geo.attributes.position.array.slice();
     this.body = new THREE.Mesh(geo, bodyMaterial);
     this.body.renderOrder = 2;
+    this.body.castShadow = true; // it creeps along the floor
     this.body.userData.amoeba = this;
     this.group.add(this.body);
     tagPart(this.body, 'membrane');
@@ -479,8 +506,8 @@ document.getElementById('reset').addEventListener('click', () => {
 // ---------- Theme ----------
 
 const THEME_COLORS = {
-  dark: { body: 0xc2a8ff, specks: 0xe6dcff, floor: 0x10283a },
-  light: { body: 0x9a7be8, specks: 0x6a4fc2, floor: 0xb6d9e6 },
+  dark: { body: 0xc2a8ff, specks: 0xe6dcff, floor: 0x10283a, pebble: 0x1b3b52, moss: 0x1f5a4a },
+  light: { body: 0x9a7be8, specks: 0x6a4fc2, floor: 0xb6d9e6, pebble: 0x9cc3d3, moss: 0x9fd6ad },
 };
 
 window.elixTheme.watch((theme) => {
@@ -488,6 +515,8 @@ window.elixTheme.watch((theme) => {
   bodyMaterial.color.set(colors.body);
   speckMaterial.color.set(colors.specks);
   floorMaterial.color.set(colors.floor);
+  pebbleMaterial.color.set(colors.pebble);
+  mossMaterial.color.set(colors.moss);
 });
 
 // ---------- Main loop ----------

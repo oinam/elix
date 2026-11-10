@@ -105,14 +105,23 @@ const at = (v, z) => new THREE.Vector3(v.x, v.y, z);
 
 // ---------- The road ----------
 
-const road = new THREE.Mesh(new THREE.BoxGeometry(14, 0.06, 2.4), roadMat);
+// The road and the grass run off into the haze, and catch the bike's shadow.
+const road = new THREE.Mesh(new THREE.BoxGeometry(60, 0.06, 2.4), roadMat);
 road.position.y = -0.03;
+road.receiveShadow = true;
 scene.add(road);
+const grassMat = paint(0x1c4436, { roughness: 1 });
+const grass = new THREE.Mesh(new THREE.CircleGeometry(34, 48), grassMat);
+grass.rotation.x = -Math.PI / 2;
+grass.position.y = -0.07;
+grass.receiveShadow = true;
+scene.add(grass);
 const DASH_GAP = 1.2;
+const ROAD_HALF = 18;
 const dashes = [];
-for (let i = 0; i < 12; i++) {
+for (let i = 0; i < (ROAD_HALF * 2) / DASH_GAP; i++) {
   const dash = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.01, 0.08), dashMat);
-  dash.position.set(-7 + i * DASH_GAP, 0.006, 0.75);
+  dash.position.set(-ROAD_HALF + i * DASH_GAP, 0.006, 0.75);
   scene.add(dash);
   dashes.push(dash);
 }
@@ -414,7 +423,7 @@ stage.onFrame((dt) => {
   const travel = state.spin * AXLE_Y * dt;
   dashes.forEach((d) => {
     d.position.x -= travel;
-    if (d.position.x < -7) d.position.x += dashes.length * DASH_GAP;
+    if (d.position.x < -ROAD_HALF) d.position.x += dashes.length * DASH_GAP;
   });
 
   // Square wheels lift the bike as they tip onto each corner.
@@ -577,12 +586,13 @@ document.querySelectorAll('[data-answer]').forEach((b) => {
 // ---------- Theme ----------
 
 const THEME_COLORS = {
-  dark: { road: 0x2b3a48, frame: 0x22c7b5 },
-  light: { road: 0xb9c7d1, frame: 0x17a596 },
+  dark: { road: 0x2b3a48, grass: 0x1c4436, frame: 0x22c7b5 },
+  light: { road: 0x9fb0bd, grass: 0xbfe3b4, frame: 0x17a596 },
 };
 window.elixTheme.watch((theme) => {
   const c = THEME_COLORS[theme];
   roadMat.color.set(c.road);
+  grassMat.color.set(c.grass);
   frameMat.color.set(c.frame);
 });
 
@@ -590,3 +600,4 @@ window.elixTheme.watch((theme) => {
 
 placeChain();
 showRiddle();
+stage.castShadows(bike);

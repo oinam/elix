@@ -84,6 +84,14 @@ const beamMat = new THREE.MeshBasicMaterial({ color: 0xfff1a8, transparent: true
 const scope = new THREE.Group();
 scene.add(scope);
 
+// It stands on a round table, which catches its shadow.
+const tableMat = new THREE.MeshStandardMaterial({ roughness: 0.8 });
+const table = new THREE.Mesh(new THREE.CylinderGeometry(4.4, 4.3, 0.14, 64), tableMat);
+table.position.y = -0.07;
+table.receiveShadow = true;
+scene.add(table);
+window.elixTheme.watch((theme) => tableMat.color.set(theme === 'dark' ? 0x3b4a5c : 0xf3e2c8));
+
 const AXIS_Z = 0.2; // the light goes straight up through here
 
 const base = new THREE.Mesh(new RoundedBoxGeometry(2.2, 0.3, 2, 4, 0.1), paint());
@@ -800,3 +808,5 @@ setSlide('cork');
 setPower(4);
 updateReadouts();
 requestAnimationFrame(follow);
+stage.castShadows(scope);
+base.receiveShadow = true;

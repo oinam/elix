@@ -135,6 +135,7 @@ async function collect() {
     for (let i = 0; i < found.length; i++) {
       const { text, isName } = found[i];
       const next = found[i + 1];
+      if (/\bgl_\w+|#(include|if|endif)\b/.test(text)) continue; // shader code, not something Cello says
       // A part, { name, text }: its card is read as one clip, the way
       // js/explorer.js says it.
       if (isName && next?.isText && !text.includes('\0') && !next.text.includes('\0')) {

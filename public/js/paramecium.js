@@ -148,9 +148,12 @@ const speckMaterial = new THREE.PointsMaterial({ size: 0.035 });
 // rowing "wave" that sweeps down the body.
 
 const MAX_CILIA = 2000;
-const CILIUM_LENGTH = 0.15;
+const CILIUM_LENGTH = 0.19;
+// Real cilia grow in neat rows that run the length of the body.
+const CILIA_ROWS = 40;
+const CILIA_PER_ROW = MAX_CILIA / CILIA_ROWS;
 
-const ciliumGeo = new THREE.CylinderGeometry(0.004, 0.009, CILIUM_LENGTH, 4, 1);
+const ciliumGeo = new THREE.CylinderGeometry(0.003, 0.011, CILIUM_LENGTH, 5, 1);
 ciliumGeo.translate(0, CILIUM_LENGTH / 2, 0);
 const ciliaMaterial = new THREE.MeshStandardMaterial({ roughness: 0.6 });
 const cilia = new THREE.InstancedMesh(ciliumGeo, ciliaMaterial, MAX_CILIA);
@@ -167,8 +170,12 @@ const ciliaData = [];
   const pa = new THREE.Vector3();
   const e = 0.01;
   for (let i = 0; i < MAX_CILIA; i++) {
-    const u = THREE.MathUtils.randFloat(-0.97, 0.97);
-    const angle = Math.random() * Math.PI * 2;
+    const row = Math.floor(i / CILIA_PER_ROW);
+    const step = i % CILIA_PER_ROW;
+    // Every other row is shifted half a step, and nothing is perfectly placed.
+    const u = -0.95 + (1.9 * (step + (row % 2) * 0.5 + THREE.MathUtils.randFloatSpread(0.3))) / CILIA_PER_ROW;
+    // The rows twist gently around the body, the same way the groove does.
+    const angle = ((row + THREE.MathUtils.randFloatSpread(0.25)) / CILIA_ROWS) * Math.PI * 2 + grooveCenter(u);
     bodyPoint(u, angle, p);
     const along = bodyPoint(u + e, angle, pu).sub(p).normalize();
     const around = bodyPoint(u, angle + e, pa).sub(p).normalize();
@@ -183,6 +190,11 @@ const ciliaData = [];
       .normalize()
       .applyQuaternion(baseQuat.clone().invert());
     ciliaData.push({ position: p.clone(), u, baseQuat, axis });
+  }
+  // Shuffled, so the "Number of cilia" slider thins them out evenly.
+  for (let i = ciliaData.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [ciliaData[i], ciliaData[j]] = [ciliaData[j], ciliaData[i]];
   }
 }
 
@@ -574,7 +586,10 @@ document.getElementById('bump').addEventListener('click', () => {
   cello.say('Ouch! Back up, turn, and try a new way!', { mood: 'wow' });
 });
 
-const CAMERA_OFFSET = new THREE.Vector3(0, 3, 7);
+const CAMERA_OFFSET = new THREE.Vector3(0, 2.4, 5.8);
+camera.position.copy(CAMERA_OFFSET);
+// Specks in the water show how fast it swims past them.
+stage.addMotes({ count: 260, spread: [POOL_RADIUS * 2 + 14, 7, POOL_RADIUS * 2 + 14] });
 document.getElementById('reset').addEventListener('click', () => {
   controls.target.copy(cell.position);
   camera.position.copy(cell.position).add(CAMERA_OFFSET);
@@ -585,7 +600,7 @@ document.getElementById('reset').addEventListener('click', () => {
 
 const THEME_COLORS = {
   dark: { body: 0x8fe3cf, cilia: 0xe4fff6, specks: 0xc8f5e6 },
-  light: { body: 0x4cc4a6, cilia: 0x1f7f6b, specks: 0x2f8f7a },
+  light: { body: 0x4cc4a6, cilia: 0x2a9a82, specks: 0x2f8f7a },
 };
 
 window.elixTheme.watch((theme) => {

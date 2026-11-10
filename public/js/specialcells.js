@@ -46,6 +46,7 @@ const RIDDLES = [
 const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
+stage.addMotes(); // specks drifting in the water
 camera.position.copy(CELLS.red.camera);
 controls.target.copy(CELLS.red.target);
 

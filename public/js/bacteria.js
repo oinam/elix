@@ -41,6 +41,7 @@ const PARTS = {
 const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
+stage.addMotes(); // specks drifting in the water
 
 const CAMERA_HOME = new THREE.Vector3(0, 2.2, 7.5);
 camera.position.copy(CAMERA_HOME);

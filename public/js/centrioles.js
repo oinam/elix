@@ -35,6 +35,7 @@ const COUNT_QUESTIONS = [
 const stageEl = document.getElementById('stage');
 const stage = createStage(stageEl);
 const { scene, camera, controls } = stage;
+stage.addMotes(); // specks drifting in the water
 
 const HOME = {
   close: { camera: new THREE.Vector3(0.8, 2.2, 7.4), target: new THREE.Vector3(0, 0, 0) },

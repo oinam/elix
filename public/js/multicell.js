@@ -131,37 +131,32 @@ function muscleTissue() {
 
 function heart(scale = 1) {
   const g = new THREE.Group();
-  const lobe = new THREE.SphereGeometry(0.85, 32, 24);
-  const left = new THREE.Mesh(lobe, heartMat);
-  left.position.set(-0.52, 0.35, 0);
-  const right = new THREE.Mesh(lobe, heartMat);
-  right.position.set(0.52, 0.35, 0);
-  const tip = new THREE.Mesh(teardrop(), heartMat);
-  tip.position.y = -0.2;
+  const body = new THREE.Mesh(heartGeometry(), heartMat);
+  body.position.y = 0.05;
+  body.rotation.z = -0.22; // the tip points a little to one side, like a real heart
   const aorta = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
     new THREE.Vector3(0.1, 0.6, 0), new THREE.Vector3(0.2, 1.5, 0), new THREE.Vector3(0.9, 1.75, 0), new THREE.Vector3(1.3, 1.2, 0),
   ]), 20, 0.2, 12), artery);
   const vena = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
     new THREE.Vector3(-0.6, 0.7, 0), new THREE.Vector3(-0.7, 1.6, 0),
   ]), 8, 0.17, 12), vein);
-  g.add(left, right, tip, aorta, vena);
+  g.add(body, aorta, vena);
   g.scale.setScalar(scale);
   return g;
 }
 
-// A ball whose bottom half tapers to a rounded point: the bottom of the heart.
-function teardrop() {
-  const geo = new THREE.SphereGeometry(1.1, 40, 28);
+// One smooth heart: a ball that is wider at the top, has a dip in the middle
+// of the top, and tapers to a rounded point at the bottom.
+function heartGeometry() {
+  const geo = new THREE.SphereGeometry(1, 56, 40);
   const pos = geo.attributes.position;
   for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
     const y = pos.getY(i);
-    if (y >= 0) {
-      // Tuck the top half inside the two lobes.
-      pos.setXYZ(i, pos.getX(i), y * 0.85, pos.getZ(i) * 0.9);
-      continue;
-    }
-    const taper = 1 + y / 1.25;
-    pos.setXYZ(i, pos.getX(i) * taper, y * 1.55, pos.getZ(i) * taper * 0.9);
+    const z = pos.getZ(i);
+    const width = (1 + 0.3 * y) * (y < 0 ? 1 + 0.3 * y : 1);
+    const dip = 0.45 * Math.exp(-((x / 0.34) ** 2)) * THREE.MathUtils.smoothstep(y, 0, 1);
+    pos.setXYZ(i, x * 1.3 * width, (y < 0 ? y * 1.6 : y) - dip + 0.15, z * 0.85 * width);
   }
   geo.computeVertexNormals();
   return geo;
