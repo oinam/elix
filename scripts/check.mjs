@@ -102,6 +102,8 @@ for (const f of html) {
   if (page.includes('three@') && !page.includes('"three/addons/"')) fail('pages', rel(f), 'import map has no three/addons/');
   pass('pages', rel(f));
 }
+// js/preload.js names the Three.js files too, so it has to keep up with the import maps.
+for (const m of (await readFile(join(PUBLIC, 'js', 'preload.js'), 'utf8')).matchAll(/three@([\d.]+)\//g)) threeVersions.add(m[1]);
 if (threeVersions.size > 1) fail('pages', 'import maps', `more than one Three.js version: ${[...threeVersions].join(', ')}`);
 
 // Menu pages end with the contact footer; topic pages don’t.

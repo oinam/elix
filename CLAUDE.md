@@ -22,7 +22,7 @@ Let’s try with these topics for now;
 ### Stack
 
 - Plain HTML, CSS, and ES modules. No build step for the site. npm holds Wrangler (dev and deploy) and the Anthropic SDK, which Wrangler bundles into the Worker.
-- Three.js `0.186.1` from jsDelivr through an import map in each page. `three/addons/` maps to `examples/jsm/` (OrbitControls, CSS2DRenderer). Bump the version in every page’s import map together.
+- Three.js `0.186.1` from jsDelivr through an import map in each page. `three/addons/` maps to `examples/jsm/` (OrbitControls, CSS2DRenderer). The map points at the minified build (`three.module.min.js`), and sends its `three.core.js` to `three.core.min.js`, which halves the download. Bump the version in every page’s import map and in `js/preload.js` together (`npm test` checks they match).
 - Run locally with `mise run dev` (Wrangler, http://localhost:8787, or the next free port if another server has it; `scripts/dev.mjs` picks it. Installs Wrangler first if needed), or `npm run dev` without mise. It matches production: clean URLs, the 404 page, and `/api`. No-install fallback: `mise run serve` or `python3 -m http.server 8000 -d public`. `file://` won’t load modules.
 - Tests: `npm test` (`scripts/check.mjs`: links, topic wiring, challenge ids, CSS colors, quotes and spelling, voice clips; no browser) and `npm run smoke` (`scripts/smoke.mjs`: every page in headless Chrome over the DevTools protocol, no dependencies; presses every button and slider, and fails on JS errors, failed requests, or a page wider than 390px). Run both after adding or changing a page.
 - `mise.toml` pins Node 22 and holds the tasks (`mise tasks` lists them). Local secrets go in the gitignored `mise.local.toml` (template: `mise.local.toml.example`); production secrets go in Cloudflare with `npx wrangler secret put`.
@@ -66,6 +66,9 @@ _redirects               Old /science/, /topics/, and /organisms/ links go to th
 css/style.css            All styles, shared by every page
 js/theme.js              Light/dark toggle (plain script in <head>). Follows the OS
                          until a choice is saved; window.elixTheme.watch(fn) for 3D colors
+js/preload.js            Fetches the 3D code early (plain script in <head>, after the import
+                         map). A topic page asks for Three.js and the shared modules all at
+                         once; a menu page fetches Three.js ahead, for the first topic
 js/scene.js              createStage(): renderer, camera, lights, orbit controls,
                          labels, resize, and the animation loop (onFrame, pause).
                          Every scene gets a soft backdrop (it follows scene.background),
@@ -79,7 +82,8 @@ js/scene.js              createStage(): renderer, camera, lights, orbit controls
                          (stage.shade; solid things only, and a mesh opts out with
                          userData.noShade, for fine hairs and tangles), and a gentle glow
                          on the brightest spots (stage.glow). Both switch off by themselves
-                         on a device that can't keep up
+                         on a device that can't keep up. Until the first frame is drawn, the
+                         stage shows a "Loading…" note (.stage:not(.ready) in css/style.css)
 js/materials.js          wet(params): a material with a thin shiny coat, for living things
                          (cells, organs, organisms)
 js/explorer.js           createExplorer(): tap-to-learn parts, labels, glow, info card,

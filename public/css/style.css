@@ -230,6 +230,25 @@ a.card:hover, a.card:focus-visible {
 .stage { position: relative; min-height: 0; overflow: hidden; }
 .stage canvas { display: block; touch-action: none; }
 
+/* Until the 3D view draws its first picture (js/scene.js adds .ready). It waits
+   a moment before showing, so a quick load doesn't flash it. */
+.stage:not(.ready)::before, .stage:not(.ready)::after {
+  position: absolute; top: 50%; left: 50%; z-index: 2; pointer-events: none;
+  animation: loading-in .2s .3s backwards;
+}
+.stage:not(.ready)::before {
+  content: ''; width: 22px; height: 22px; margin: -50px 0 0 -11px;
+  border-radius: 50%; border: 2px solid var(--ink); box-shadow: 0 3px 0 var(--ink);
+  background: var(--yellow);
+  animation: loading-in .2s .3s backwards, loading-hop .7s .3s ease-in-out infinite alternate;
+}
+.stage:not(.ready)::after {
+  content: 'Loading…'; transform: translate(-50%, -50%);
+  padding: 6px 16px; border-radius: 999px; border: 2px solid var(--ink);
+  background: var(--overlay); color: var(--text);
+  font-size: 1.15rem; font-weight: 900; letter-spacing: 1px; white-space: nowrap;
+}
+
 .label {
   padding: 3px 10px; border-radius: 999px;
   background: var(--overlay); border: 2px solid var(--ink);
@@ -473,6 +492,8 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); cu
   pointer-events: none;
   animation: burst 1.6s ease-out forwards;
 }
+@keyframes loading-in { from { opacity: 0; } }
+@keyframes loading-hop { to { transform: translateY(-16px); } }
 @keyframes burst {
   from { transform: translate(0, 0) rotate(0); opacity: 1; }
   to { transform: translate(var(--dx), var(--dy)) rotate(540deg); opacity: 0; }
@@ -480,6 +501,7 @@ input[type="range"] { width: 100%; height: 44px; accent-color: var(--accent); cu
 
 @media (prefers-reduced-motion: reduce) {
   .mascot .eye, .mascot.talk, .burst { animation: none; }
+  .stage:not(.ready)::before { animation: loading-in .2s .3s backwards; }
   .burst { display: none; }
   .card, a.card:hover { transition: none; }
   .scale .marker { transition: none; }

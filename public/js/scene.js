@@ -250,6 +250,8 @@ export function createStage(container) {
       if (glow.enabled) glow.drawOver(renderer);
     }
     labelRenderer.render(scene, camera);
+    // The first picture is up: the "Loading" note goes (.stage in css/style.css).
+    container.classList.add('ready');
   });
 
   // Solid things under `root` cast a shadow (see-through ones don't).
